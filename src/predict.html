@@ -1,337 +1,1064 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ChurnOps | Predict</title>
-  <meta name="description" content="ChurnOps customer churn prediction form -- enter customer details and get an instant churn probability.">
-  <style>
-    :root {
-      --ink:#1a1f36; --muted:#6b7280; --line:#e5e7eb; --paper:#f8fafc;
-      --white:#fff; --indigo:#4f46e5; --amber:#f59e0b;
-      --red:#dc2626; --green:#16a34a; --shadow:0 16px 40px rgba(26,31,54,.08);
-    }
-    * { box-sizing:border-box; }
-    body { margin:0; color:var(--ink); background:var(--paper); font:15px/1.6 system-ui,sans-serif; }
-    .topbar { background:var(--ink); color:white; padding:22px clamp(20px,6vw,88px) 28px; border-bottom:4px solid var(--indigo); }
-    nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:36px; font:700 12px sans-serif; }
-    nav a { color:#9ca3af; text-decoration:none; padding:7px 12px; border:1px solid transparent; border-radius:6px; }
-    nav a:hover, nav a.active { color:white; border-color:#4f46e5; background:#312e81; }
-    .eyebrow { color:#818cf8; text-transform:uppercase; letter-spacing:.14em; font:700 11px sans-serif; margin-bottom:9px; }
-    h1 { font-size:clamp(30px,5vw,54px); line-height:1.05; margin:0 0 12px; font-weight:800; }
-    .subtitle { color:#93c5fd; max-width:680px; margin:0; font-size:16px; }
-    main { max-width:1200px; margin:0 auto; padding:32px clamp(20px,6vw,88px) 60px; }
-    .layout { display:grid; grid-template-columns:1.4fr 0.6fr; gap:20px; align-items:start; }
-    .panel { background:var(--white); border:1px solid var(--line); box-shadow:var(--shadow); border-radius:8px; padding:24px; }
-    .panel h2 { margin:0 0 4px; font-size:20px; font-weight:700; }
-    .note { color:var(--muted); margin:0 0 22px; font-size:14px; }
-    .section-label { font:700 12px sans-serif; text-transform:uppercase; letter-spacing:.08em; color:var(--indigo); margin:20px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--line); }
-    .fields { display:grid; grid-template-columns:repeat(2,1fr); gap:14px 20px; }
-    .field { display:flex; flex-direction:column; gap:5px; }
-    label { color:var(--muted); font:700 12px sans-serif; }
-    select, input[type=number] {
-      padding:9px 12px; border:1px solid var(--line); border-radius:6px;
-      font:14px system-ui; color:var(--ink); background:var(--white);
-      width:100%; transition:border-color .15s;
-    }
-    select:focus, input[type=number]:focus { outline:none; border-color:var(--indigo); box-shadow:0 0 0 3px #e0e7ff; }
-    .submit-row { margin-top:20px; }
-    button[type=submit] {
-      background:var(--indigo); color:white; border:none; padding:12px 28px;
-      border-radius:6px; font:700 15px system-ui; cursor:pointer; transition:background .15s;
-    }
-    button[type=submit]:hover { background:#3730a3; }
-    button[type=submit]:disabled { background:#9ca3af; cursor:default; }
-    /* Result panel */
-    .result { min-height:240px; position:sticky; top:24px; }
-    .result-idle { color:var(--muted); text-align:center; padding:40px 20px; }
-    .result-idle svg { display:block; margin:0 auto 16px; opacity:.3; }
-    .result-churn  { background:#fef2f2; border-color:#fca5a5; }
-    .result-stay   { background:#f0fdf4; border-color:#86efac; }
-    .prob-bar-wrap { margin:16px 0; }
-    .prob-label { display:flex; justify-content:space-between; font:700 13px sans-serif; margin-bottom:6px; }
-    .prob-bar  { height:12px; background:#e5e7eb; border-radius:4px; overflow:hidden; }
-    .prob-bar span { display:block; height:100%; border-radius:4px; transition:width .5s; }
-    .churn-high  .prob-bar span { background:var(--red); }
-    .churn-low   .prob-bar span { background:var(--green); }
-    .verdict { font-size:22px; font-weight:800; margin:12px 0 6px; }
-    .verdict.churn { color:var(--red); }
-    .verdict.stay  { color:var(--green); }
-    .meta { font-size:13px; color:var(--muted); }
-    .error-box { color:var(--red); background:#fee2e2; border:1px solid #fca5a5; padding:12px; border-radius:6px; font-size:14px; }
-    footer { color:var(--muted); margin-top:22px; font-size:13px; }
-    @media(max-width:860px) { .layout { grid-template-columns:1fr; } .result { position:static; } }
-    @media(max-width:540px) { .fields { grid-template-columns:1fr; } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CreditOps Real-Time Fraud Inference & Scoring Console">
+<title>CreditOps — Real-Time Inference Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root[data-theme="dark"] {
+    --bg-base: #0f1219;
+    --bg-surface: #151924;
+    --bg-card: #1c2230;
+    --bg-card-hover: #222a3c;
+    --bg-sidebar: #11141c;
+    --bg-sidebar-hover: #191f2d;
+    --bg-sidebar-active: #22293b;
+    --sidebar-text: #e2e8f0;
+    --sidebar-muted: #64748b;
+    --sidebar-border: #283246;
+    --bg-sidebar-footer: rgba(0, 0, 0, 0.25);
+    --bg-input: #111520;
+    --border: #283246;
+    --border-subtle: #1e2638;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --notice-bg: #171a22;
+    --notice-border: #283246;
+    --notice-text: #cbd5e1;
+    --notice-tag-bg: rgba(245, 158, 11, 0.15);
+    --notice-tag-color: #fbbf24;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-green: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-red: #ef4444;
+    --accent-purple: #8b5cf6;
+    --gauge-bg: #222b3d;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  :root[data-theme="light"] {
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-sidebar: #ffffff;
+    --bg-sidebar-hover: #f1f5f9;
+    --bg-sidebar-active: #eff6ff;
+    --sidebar-text: #1e293b;
+    --sidebar-muted: #64748b;
+    --sidebar-border: #e2e8f0;
+    --bg-sidebar-footer: #f8fafc;
+    --bg-input: #ffffff;
+    --border: #e2e8f0;
+    --border-subtle: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --notice-bg: #f1f5f9;
+    --notice-border: #e2e8f0;
+    --notice-text: #475569;
+    --notice-tag-bg: rgba(245, 158, 11, 0.15);
+    --notice-tag-color: #b45309;
+    --accent-blue: #2563eb;
+    --accent-cyan: #0891b2;
+    --accent-green: #059669;
+    --accent-amber: #d97706;
+    --accent-red: #dc2626;
+    --accent-purple: #7c3aed;
+    --gauge-bg: #e2e8f0;
+    --shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    line-height: 1.5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .notice-bar {
+    background: var(--notice-bg);
+    color: var(--notice-text);
+    border-bottom: 1px solid var(--notice-border);
+    padding: 6px 20px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: 0.02em;
+    z-index: 110;
+  }
+  .notice-tag {
+    background: var(--notice-tag-bg);
+    color: var(--notice-tag-color);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-right: 8px;
+  }
+
+  header {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .brand-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-primary); }
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 800; font-size: 0.85rem;
+  }
+  .brand-title { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; }
+  .brand-sub { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin-left: 6px; border-left: 1px solid var(--border); padding-left: 10px; }
+
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-btn {
+    background: none; border: 1px solid transparent; color: var(--text-secondary);
+    padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; text-decoration: none; transition: all 0.15s;
+  }
+  .header-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--border); }
+  .status-pill {
+    display: flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3); color: var(--accent-green);
+    padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+  }
+  .pulse-dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; }
+
+  .theme-toggle {
+    display: flex; align-items: center; gap: 8px; background: var(--bg-input);
+    border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; cursor: pointer;
+    user-select: none;
+  }
+
+  .layout-container { display: flex; flex: 1; overflow: hidden; }
+
+  /* Sidebar */
+  aside.sidebar {
+    width: 240px; background: var(--bg-sidebar); color: var(--sidebar-text);
+    border-right: 1px solid var(--sidebar-border); display: flex; flex-direction: column;
+    flex-shrink: 0; user-select: none; transition: background-color 0.25s, border-color 0.25s;
+  }
+  .sidebar-nav-wrap {
+    flex: 1; overflow-y: auto; padding: 12px 10px 8px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .nav-group-title {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--sidebar-muted); padding: 4px 10px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-item {
+    display: flex; align-items: center; justify-content: space-between; padding: 8px 12px;
+    border-radius: 6px; color: var(--sidebar-text); text-decoration: none; font-size: 0.84rem;
+    font-weight: 500; transition: all 0.15s ease; margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--bg-sidebar-hover); color: var(--text-primary); }
+  .nav-item.active {
+    background: var(--bg-sidebar-active); color: var(--accent-blue);
+    font-weight: 600; border-left: 3px solid var(--accent-blue);
+  }
+  .nav-item-left { display: flex; align-items: center; gap: 10px; }
+  .item-badge {
+    font-size: 0.68rem; padding: 2px 7px; border-radius: 99px;
+    background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); font-weight: 700;
+  }
+  .item-badge.green { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+
+  .sidebar-footer {
+    padding: 12px 10px; border-top: 1px solid var(--sidebar-border);
+    background: var(--bg-sidebar-footer);
+  }
+
+  main.workspace {
+    flex: 1; overflow-y: auto; padding: 24px 32px 60px;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+
+  .preset-bar {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px;
+  }
+  .preset-btn {
+    background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary);
+    padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .preset-btn:hover { border-color: var(--accent-blue); background: var(--bg-card-hover); }
+
+  .predict-grid {
+    display: grid; grid-template-columns: 1.25fr 1fr; gap: 24px;
+  }
+  @media (max-width: 900px) { .predict-grid { grid-template-columns: 1fr; } }
+
+  .form-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; box-shadow: var(--shadow);
+  }
+  .form-card-title {
+    font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-secondary); margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 10px;
+  }
+
+  .form-row { margin-bottom: 16px; }
+  label {
+    display: block; font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;
+  }
+  input, select {
+    width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; font-size: 0.88rem; color: var(--text-primary);
+    outline: none; transition: border-color 0.2s; font-family: inherit;
+  }
+  input:focus, select:focus { border-color: var(--accent-blue); }
+
+  /* Human-friendly datetime row */
+  .datetime-controls-row {
+    display: flex; gap: 8px; align-items: center; margin-bottom: 6px; flex-wrap: wrap;
+  }
+  .quick-time-chip {
+    background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-secondary);
+    padding: 3px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .quick-time-chip:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+  .datetime-preview {
+    font-size: 0.76rem; color: var(--accent-blue); font-weight: 600; margin-top: 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .submit-btn {
+    width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border: none; border-radius: 8px; color: #fff; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; margin-top: 10px;
+  }
+  .submit-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+
+  /* Results Panel */
+  .result-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; min-height: 440px;
+  }
+  .gauge-wrap { position: relative; width: 180px; height: 120px; margin: 10px 0 20px; }
+  .gauge-wrap svg { overflow: visible; }
+  .gauge-score {
+    position: absolute; bottom: 10px; left: 0; right: 0; text-align: center;
+    font-size: 1.6rem; font-weight: 800;
+  }
+
+  .verdict-badge {
+    padding: 6px 20px; border-radius: 99px; font-size: 1.1rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;
+  }
+  .verdict-fraud { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.4); }
+  .verdict-legit { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.4); }
+
+  .meta-chips-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 16px;
+  }
+  .meta-chip {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 12px; text-align: left;
+  }
+  .meta-chip-label { font-size: 0.68rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+  .meta-chip-val { font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-top: 2px; }
+
+  /* Non-Technical Explanation Box */
+  .plain-english-box {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px; margin-top: 14px;
+    text-align: left; width: 100%; box-sizing: border-box;
+    transition: all 0.2s ease-in-out;
+  }
+  .pe-header {
+    display: flex; align-items: center; gap: 8px; font-weight: 700;
+    font-size: 0.86rem; margin-bottom: 6px;
+  }
+  .pe-text {
+    font-size: 0.82rem; line-height: 1.55; color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .pe-action {
+    padding-top: 8px; border-top: 1px dashed var(--border);
+    font-size: 0.79rem; line-height: 1.5; color: var(--text-primary);
+  }
+
+  .icon-svg {
+    width: 18px; height: 18px; stroke: currentColor; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round; fill: none; display: inline-block;
+  }
+  .icon-svg.sm { width: 14px; height: 14px; }
+
+  /* Human-readable Alert Modal */
+  .alert-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px); z-index: 9999;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    animation: alertFadeIn 0.18s ease-out;
+  }
+  .alert-modal-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; width: 100%; max-width: 480px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5); overflow: hidden;
+    animation: alertScaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .alert-modal-header {
+    display: flex; align-items: center; gap: 14px; padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .alert-modal-icon-wrap {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .alert-modal-icon-wrap.error {
+    background: rgba(239, 68, 68, 0.16); color: var(--accent-red);
+  }
+  .alert-modal-icon-wrap.warning {
+    background: rgba(245, 158, 11, 0.16); color: #f59e0b;
+  }
+  .alert-modal-icon-wrap.info {
+    background: rgba(59, 130, 246, 0.16); color: var(--accent-blue);
+  }
+  .alert-modal-title {
+    font-size: 1.05rem; font-weight: 700; color: var(--text-primary); flex: 1;
+  }
+  .alert-modal-close {
+    background: transparent; border: none; font-size: 1.4rem;
+    color: var(--text-muted); cursor: pointer; line-height: 1; padding: 4px 8px;
+    border-radius: 6px; transition: color 0.15s, background 0.15s;
+  }
+  .alert-modal-close:hover {
+    color: var(--text-primary); background: var(--border-subtle);
+  }
+  .alert-modal-body {
+    padding: 22px; font-size: 0.92rem; line-height: 1.6; color: var(--text-secondary);
+    white-space: pre-line; word-break: break-word;
+  }
+  .alert-modal-footer {
+    display: flex; justify-content: flex-end; padding: 14px 22px 20px;
+    background: var(--bg-surface); border-top: 1px solid var(--border-subtle);
+  }
+  .alert-btn-ack {
+    padding: 8px 22px; border-radius: 8px; font-size: 0.88rem; font-weight: 600;
+    cursor: pointer; border: none; background: var(--accent-blue); color: #ffffff;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .alert-btn-ack:hover { opacity: 0.92; transform: translateY(-1px); }
+  @keyframes alertFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes alertScaleUp { from { transform: scale(0.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <nav aria-label="Main navigation">
-      <a href="/">Overview</a>
-      <a href="/dashboard">MLflow Dashboard</a>
-      <a class="active" href="/predict">Predict</a>
-      <a href="/docs">API Docs</a>
-    </nav>
-    <div class="eyebrow">ChurnOps / Customer Inference</div>
-    <h1>Predict Customer Churn.</h1>
-    <p class="subtitle">Fill in the customer profile and click Predict to get the churn probability from the selected model.</p>
-  </header>
-  <main>
-    <div class="layout">
-      <!-- Form panel -->
-      <section class="panel">
-        <h2>Customer Profile</h2>
-        <p class="note">All fields are required. Values must match the categories used during training.</p>
-        <form id="predict-form">
 
-          <div class="section-label">Demographics</div>
-          <div class="fields">
-            <div class="field">
-              <label for="Gender">Gender</label>
-              <select id="Gender" name="Gender"><option>Male</option><option>Female</option></select>
-            </div>
-            <div class="field">
-              <label for="Age">Age</label>
-              <input type="number" id="Age" name="Age" min="18" max="100" value="40">
-            </div>
-            <div class="field">
-              <label for="Married">Married</label>
-              <select id="Married" name="Married"><option>No</option><option>Yes</option></select>
-            </div>
-            <div class="field">
-              <label for="Number_of_Dependents">Number of Dependents</label>
-              <input type="number" id="Number_of_Dependents" name="Number of Dependents" min="0" max="10" value="0">
-            </div>
-            <div class="field">
-              <label for="Satisfaction_Score">Satisfaction Score (1-5)</label>
-              <input type="number" id="Satisfaction_Score" name="Satisfaction Score" min="1" max="5" value="3">
-            </div>
-          </div>
+<div class="notice-bar">
+  <div style="display:flex;align-items:center;">
+    <span class="notice-tag">Notice</span>
+    <span>SIMULATED DATA: Trained and scored using Sparkov-generated synthetic credit card transactions. No real cardholder records.</span>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-muted);">
+    Endpoint: POST /predict
+  </div>
+</div>
 
-          <div class="section-label">Services &amp; Contract</div>
-          <div class="fields">
-            <div class="field">
-              <label for="Tenure_in_Months">Tenure (months)</label>
-              <input type="number" id="Tenure_in_Months" name="Tenure in Months" min="0" max="120" value="24">
-            </div>
-            <div class="field">
-              <label for="Contract">Contract Type</label>
-              <select id="Contract" name="Contract">
-                <option>Month-to-Month</option><option>One Year</option><option>Two Year</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="Offer">Offer</label>
-              <select id="Offer" name="Offer">
-                <option>No Offer</option><option>Offer A</option><option>Offer B</option>
-                <option>Offer C</option><option>Offer D</option><option>Offer E</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="Paperless_Billing">Paperless Billing</label>
-              <select id="Paperless_Billing" name="Paperless Billing"><option>Yes</option><option>No</option></select>
-            </div>
-            <div class="field">
-              <label for="Payment_Method">Payment Method</label>
-              <select id="Payment_Method" name="Payment Method">
-                <option>Bank Withdrawal</option><option>Credit Card</option><option>Mailed Check</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="Referred_a_Friend">Referred a Friend</label>
-              <select id="Referred_a_Friend" name="Referred a Friend"><option>No</option><option>Yes</option></select>
-            </div>
-            <div class="field">
-              <label for="Number_of_Referrals">Number of Referrals</label>
-              <input type="number" id="Number_of_Referrals" name="Number of Referrals" min="0" max="20" value="0">
-            </div>
-          </div>
+<header>
+  <div class="header-left">
+    <a href="/" class="brand-logo">
+      <div class="logo-icon">C</div>
+      <div>
+        <span class="brand-title">CreditOps</span>
+        <span class="brand-sub">Console</span>
+      </div>
+    </a>
+  </div>
 
-          <div class="section-label">Phone &amp; Internet</div>
-          <div class="fields">
-            <div class="field">
-              <label for="Phone_Service">Phone Service</label>
-              <select id="Phone_Service" name="Phone Service"><option>Yes</option><option>No</option></select>
-            </div>
-            <div class="field">
-              <label for="Multiple_Lines">Multiple Lines</label>
-              <select id="Multiple_Lines" name="Multiple Lines"><option>No</option><option>Yes</option></select>
-            </div>
-            <div class="field">
-              <label for="Internet_Service">Internet Service</label>
-              <select id="Internet_Service" name="Internet Service"><option>Yes</option><option>No</option></select>
-            </div>
-            <div class="field">
-              <label for="Internet_Type">Internet Type</label>
-              <select id="Internet_Type" name="Internet Type">
-                <option>Fiber Optic</option><option>DSL</option><option>Cable</option><option>None</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="Online_Security">Online Security</label>
-              <select id="Online_Security" name="Online Security"><option>No</option><option>Yes</option></select>
-            </div>
-            <div class="field">
-              <label for="Online_Backup">Online Backup</label>
-              <select id="Online_Backup" name="Online Backup"><option>No</option><option>Yes</option></select>
-            </div>
-            <div class="field">
-              <label for="Device_Protection_Plan">Device Protection Plan</label>
-              <select id="Device_Protection_Plan" name="Device Protection Plan"><option>No</option><option>Yes</option></select>
-            </div>
-            <div class="field">
-              <label for="Premium_Tech_Support">Premium Tech Support</label>
-              <select id="Premium_Tech_Support" name="Premium Tech Support"><option>No</option><option>Yes</option></select>
-            </div>
-            <div class="field">
-              <label for="Unlimited_Data">Unlimited Data</label>
-              <select id="Unlimited_Data" name="Unlimited Data"><option>Yes</option><option>No</option></select>
-            </div>
-            <div class="field">
-              <label for="Avg_Monthly_GB_Download">Avg Monthly GB Download</label>
-              <input type="number" id="Avg_Monthly_GB_Download" name="Avg Monthly GB Download" min="0" max="200" value="15">
-            </div>
-          </div>
-
-          <div class="section-label">Streaming</div>
-          <div class="fields">
-            <div class="field">
-              <label for="Streaming_TV">Streaming TV</label>
-              <select id="Streaming_TV" name="Streaming TV"><option>No</option><option>Yes</option></select>
-            </div>
-            <div class="field">
-              <label for="Streaming_Movies">Streaming Movies</label>
-              <select id="Streaming_Movies" name="Streaming Movies"><option>No</option><option>Yes</option></select>
-            </div>
-            <div class="field">
-              <label for="Streaming_Music">Streaming Music</label>
-              <select id="Streaming_Music" name="Streaming Music"><option>No</option><option>Yes</option></select>
-            </div>
-          </div>
-
-          <div class="section-label">Billing &amp; Revenue</div>
-          <div class="fields">
-            <div class="field">
-              <label for="Monthly_Charge">Monthly Charge ($)</label>
-              <input type="number" id="Monthly_Charge" name="Monthly Charge" min="0" step="0.01" value="65.00">
-            </div>
-            <div class="field">
-              <label for="Total_Charges">Total Charges ($)</label>
-              <input type="number" id="Total_Charges" name="Total Charges" min="0" step="0.01" value="1500.00">
-            </div>
-            <div class="field">
-              <label for="Total_Revenue">Total Revenue ($)</label>
-              <input type="number" id="Total_Revenue" name="Total Revenue" min="0" step="0.01" value="1500.00">
-            </div>
-            <div class="field">
-              <label for="Total_Refunds">Total Refunds ($)</label>
-              <input type="number" id="Total_Refunds" name="Total Refunds" min="0" step="0.01" value="0.00">
-            </div>
-            <div class="field">
-              <label for="Total_Extra_Data_Charges">Extra Data Charges ($)</label>
-              <input type="number" id="Total_Extra_Data_Charges" name="Total Extra Data Charges" min="0" step="0.01" value="0.00">
-            </div>
-            <div class="field">
-              <label for="Avg_Monthly_Long_Distance_Charges">Avg Long Distance ($/mo)</label>
-              <input type="number" id="Avg_Monthly_Long_Distance_Charges" name="Avg Monthly Long Distance Charges" min="0" step="0.01" value="20.00">
-            </div>
-            <div class="field">
-              <label for="Total_Long_Distance_Charges">Total Long Distance ($)</label>
-              <input type="number" id="Total_Long_Distance_Charges" name="Total Long Distance Charges" min="0" step="0.01" value="480.00">
-            </div>
-          </div>
-
-          <div class="submit-row">
-            <button type="submit" id="submit-btn">Predict Churn</button>
-          </div>
-        </form>
-      </section>
-
-      <!-- Result panel -->
-      <aside class="panel result" id="result-panel" aria-live="polite">
-        <div class="eyebrow">Prediction Result</div>
-        <div class="result-idle" id="result-idle">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 8v4l3 3"/>
-          </svg>
-          <p>Fill in the customer profile<br>and click <strong>Predict Churn</strong>.</p>
-        </div>
-        <div id="result-content" style="display:none"></div>
-      </aside>
+  <div class="header-right">
+    <div class="status-pill">
+      <span class="pulse-dot"></span>
+      <span>Model Ready</span>
     </div>
-    <footer>API contract: <a href="/docs">/docs</a>. Return to the <a href="/">project overview</a>.</footer>
-  </main>
-  <script>
-    const form    = document.getElementById('predict-form');
-    const idle    = document.getElementById('result-idle');
-    const content = document.getElementById('result-content');
-    const panel   = document.getElementById('result-panel');
-    const btn     = document.getElementById('submit-btn');
 
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      btn.disabled    = true;
-      btn.textContent = 'Predicting...';
+    <div class="theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+      <span class="theme-toggle-icon" id="themeIcon">
+        <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </span>
+      <span style="font-size:0.72rem;font-weight:600;text-transform:uppercase;" id="themeLabel">Dark</span>
+    </div>
 
-      // Build payload from form -- use the label names as keys
-      const raw = new FormData(form);
-      const payload = {};
-      for (const [k, v] of raw.entries()) {
-        // Numeric fields
-        const num = Number(v);
-        payload[k] = isNaN(num) || v === '' ? v : num;
-      }
+    <a href="/docs" class="header-btn" title="FastAPI Swagger Documentation" target="_blank">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    </a>
 
-      // Integer-only fields
-      const intFields = ['Age','Number of Dependents','Satisfaction Score',
-                         'Number of Referrals','Tenure in Months','Avg Monthly GB Download'];
-      intFields.forEach(f => { if (payload[f] !== undefined) payload[f] = parseInt(payload[f]); });
+    <a href="https://github.com/myself-moons/CreditOps" class="header-btn" title="GitHub Repository" target="_blank">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+    </a>
+  </div>
+</header>
 
-      idle.style.display    = 'none';
-      content.style.display = 'block';
-      content.innerHTML     = '<p style="color:var(--muted)">Running model...</p>';
-      panel.className       = 'panel result';
+<div class="layout-container">
+  <!-- Unified Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-nav-wrap">
 
-      try {
-        const res  = await fetch('/predict', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.detail || JSON.stringify(data));
-
-        const prob    = data.churn_probability;
-        const pct     = (prob * 100).toFixed(1);
-        const isChurn = data.churn;
-        panel.className = `panel result ${isChurn ? 'result-churn' : 'result-stay'}`;
-
-        content.innerHTML = `
-          <div class="verdict ${isChurn ? 'churn':'stay'}">
-            ${isChurn ? '&#9888; Likely to Churn' : '&#10003; Likely to Stay'}
+      <!-- Group 1: System Overview (Top) -->
+      <div class="nav-group">
+        <div class="nav-group-title">System Overview</div>
+        <a href="/" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>System Overview</span>
           </div>
-          <div class="prob-bar-wrap ${isChurn ? 'churn-high':'churn-low'}">
-            <div class="prob-label">
-              <span>Churn probability</span><span><strong>${pct}%</strong></span>
+        </a>
+      </div>
+      <!-- Ops & Monitor (Commented out per user request) -->
+
+      <!-- Group 2: Intelligence -->
+      <div class="nav-group">
+        <div class="nav-group-title">Intelligence</div>
+        <a href="/predict" class="nav-item active">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>Live Inference</span>
+          </div>
+          <span class="item-badge green">active</span>
+        </a>
+        <a href="/dataset" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            <span>Dataset Profile</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Group 3: MLOps & Pipeline -->
+      <div class="nav-group">
+        <div class="nav-group-title">MLOps &amp; Pipeline</div>
+        <a href="/dashboard" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>Pipelines &amp; Runs</span>
+          </div>
+          <span class="item-badge">6 stages</span>
+        </a>
+        <a href="/logs" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            <span>Transaction Logs</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Permanent Services Footer -->
+    <div class="sidebar-footer">
+      <div class="nav-group-title" style="padding:0 4px 6px;">Services</div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;margin-bottom:4px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">FastAPI Serving</span>
+        <span class="item-badge green">healthy</span>
+      </div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">Model Registry</span>
+        <span class="item-badge">loaded</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="workspace">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <h1 style="font-size:1.5rem;font-weight:800;">Real-Time Transaction Scoring</h1>
+        <p style="color:var(--text-secondary);font-size:0.86rem;margin-top:2px;">
+          Submit transaction parameters to evaluate against champion fraud model and tuned decision threshold.
+        </p>
+      </div>
+    </div>
+
+    <!-- Quick Presets -->
+    <div class="preset-bar">
+      <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Quick Presets:</span>
+      <button class="preset-btn" onclick="applyPreset('fraud')">High-Risk Suspicious Travel ($1,250)</button>
+      <button class="preset-btn" onclick="applyPreset('legit')">Normal Daytime Grocery ($28.50)</button>
+      <button class="preset-btn" onclick="applyPreset('night')">Late Night Online Shopping ($380)</button>
+    </div>
+
+    <div class="predict-grid">
+      <!-- Input Form -->
+      <div class="form-card">
+        <div class="form-card-title">Transaction Parameters</div>
+        <form id="predictionForm">
+          <!-- Human-friendly Date & Time Controls -->
+          <div class="form-row">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
+              <label style="margin-bottom:0;">Transaction Date &amp; Time</label>
+              <div class="datetime-controls-row">
+                <button type="button" class="quick-time-chip" onclick="setQuickDate('today')">Today</button>
+                <button type="button" class="quick-time-chip" onclick="setQuickDate('dataset')">Dataset (Jun 15, 2020)</button>
+              </div>
             </div>
-            <div class="prob-bar"><span style="width:${pct}%"></span></div>
+
+            <div class="two-col" style="margin-bottom:8px;">
+              <div>
+                <label for="txn_date" style="font-size:0.72rem;margin-bottom:4px;color:var(--text-secondary);">Date</label>
+                <input type="date" id="txn_date" value="2020-06-15" min="2000-01-01" max="2035-12-31" required onchange="updateDatetimePreview(); updateAge();">
+              </div>
+              <div>
+                <label for="txn_time" style="font-size:0.72rem;margin-bottom:4px;color:var(--text-secondary);">Time</label>
+                <input type="time" id="txn_time" step="1" value="02:45:00" required onchange="updateDatetimePreview();">
+              </div>
+            </div>
+
+            <div class="datetime-controls-row" style="margin-bottom:8px;">
+              <span style="font-size:0.72rem;font-weight:600;color:var(--text-muted);margin-right:4px;">Quick Time Presets:</span>
+              <button type="button" class="quick-time-chip" onclick="setTimePreset('now')">Current Time</button>
+              <button type="button" class="quick-time-chip" onclick="setTimePreset('night')">02:45 AM (Night Peak Risk)</button>
+              <button type="button" class="quick-time-chip" onclick="setTimePreset('midday')">01:15 PM (Midday Normal)</button>
+              <button type="button" class="quick-time-chip" onclick="setTimePreset('evening')">08:30 PM (Evening)</button>
+            </div>
+
+            <div class="datetime-preview" id="datetimePreview">
+              <svg class="icon-svg sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span id="datetimePreviewText">Monday, June 15, 2020 at 02:45:00 AM</span>
+              <span id="timeRiskBadge" class="item-badge" style="margin-left:auto;">Night Fraud Window</span>
+            </div>
           </div>
-          <div class="meta">
-            <p>Model: <strong>${data.model}</strong></p>
-            <p>Latency: ${data.latency_ms} ms</p>
-            <p style="margin-top:10px;font-size:12px;color:var(--muted)">
-              Probability reflects the model's confidence that this customer churns.
-              Threshold: 0.5 (adjustable for business use cases).
-            </p>
-          </div>`;
-      } catch(err) {
-        panel.className = 'panel result';
-        content.innerHTML = `<div class="error-box"><strong>Error:</strong> ${err.message}</div>`;
-      } finally {
-        btn.disabled    = false;
-        btn.textContent = 'Predict Churn';
-      }
+
+          <div class="two-col">
+            <div class="form-row">
+              <label for="category">Merchant Category</label>
+              <select id="category">
+                <option value="travel" selected>travel</option>
+                <option value="shopping_net">shopping_net</option>
+                <option value="grocery_pos">grocery_pos</option>
+                <option value="misc_net">misc_net</option>
+                <option value="gas_transport">gas_transport</option>
+                <option value="food_dining">food_dining</option>
+                <option value="entertainment">entertainment</option>
+                <option value="personal_care">personal_care</option>
+                <option value="kids_pets">kids_pets</option>
+                <option value="home">home</option>
+                <option value="health_fitness">health_fitness</option>
+                <option value="misc_pos">misc_pos</option>
+                <option value="grocery_net">grocery_net</option>
+                <option value="shopping_pos">shopping_pos</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="amt">Amount (USD)</label>
+              <input type="number" id="amt" value="1250.00" step="0.01" min="0" required>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div class="form-row">
+              <label for="gender">Gender</label>
+              <select id="gender">
+                <option value="M" selected>M (Male)</option>
+                <option value="F">F (Female)</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <label for="dob" style="margin-bottom:0;">Date of Birth</label>
+                <span id="ageBadge" style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">Age: 58</span>
+              </div>
+              <input type="date" id="dob" value="1962-04-18" min="1920-01-01" max="2015-12-31" required onchange="updateAge()">
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div class="form-row">
+              <label for="lat">Cardholder Latitude</label>
+              <input type="number" id="lat" value="36.1699" step="0.0001" required>
+            </div>
+            <div class="form-row">
+              <label for="long">Cardholder Longitude</label>
+              <input type="number" id="long" value="-115.1398" step="0.0001" required>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div class="form-row">
+              <label for="merch_lat">Merchant Latitude</label>
+              <input type="number" id="merch_lat" value="34.0522" step="0.0001" required>
+            </div>
+            <div class="form-row">
+              <label for="merch_long">Merchant Longitude</label>
+              <input type="number" id="merch_long" value="-118.2437" step="0.0001" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="city_pop">City Population</label>
+            <input type="number" id="city_pop" value="641676" required>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">Score Transaction</button>
+        </form>
+      </div>
+
+      <!-- Real-Time Evaluation Result Panel -->
+      <div class="result-card" id="resultCard">
+        <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Scoring Result</span>
+
+        <div class="gauge-wrap">
+          <svg width="180" height="110" viewBox="0 0 180 110">
+            <path d="M 20 95 A 70 70 0 0 1 160 95" fill="none" stroke="var(--gauge-bg)" stroke-width="12" stroke-linecap="round" />
+            <path d="M 20 95 A 70 70 0 0 1 160 95" fill="none" stroke="var(--accent-red)" stroke-width="12" stroke-linecap="round"
+                  stroke-dasharray="219.9" stroke-dashoffset="219.9" id="resultArc" />
+          </svg>
+          <div class="gauge-score" id="resultScore">--%</div>
+        </div>
+        <div style="font-size:0.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;margin-top:-8px;margin-bottom:12px;">Fraud Likelihood Score</div>
+
+        <div class="verdict-badge" id="verdictBadge" style="display:none;">--</div>
+
+        <p style="font-size:0.84rem;color:var(--text-secondary);max-width:320px;" id="verdictText">
+          Select or adjust the transaction parameters, then click Score Transaction.
+        </p>
+
+        <!-- Plain English Explanation for Non-Technical Users -->
+        <div class="plain-english-box" id="plainEnglishBox" style="display:none;">
+          <div class="pe-header">
+            <svg class="icon-svg sm" id="peIcon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <span id="peTitle">What this means</span>
+          </div>
+          <div class="pe-text" id="peText"></div>
+          <div class="pe-action" id="peAction"></div>
+        </div>
+
+        <div class="meta-chips-grid" id="metaChips" style="display:none;">
+          <div class="meta-chip">
+            <div class="meta-chip-label">Decision Boundary</div>
+            <div class="meta-chip-val" id="metaThreshold">--</div>
+          </div>
+          <div class="meta-chip">
+            <div class="meta-chip-label">Latency</div>
+            <div class="meta-chip-val" id="metaLatency">-- ms</div>
+          </div>
+          <div class="meta-chip">
+            <div class="meta-chip-label">Model Champion</div>
+            <div class="meta-chip-val" id="metaModel">--</div>
+          </div>
+          <div class="meta-chip">
+            <div class="meta-chip-label">Distance to Merch</div>
+            <div class="meta-chip-val" id="metaDist">-- km</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Dark / Light Mode Handling (Default: Dark)
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+const themeIcon = document.getElementById('themeIcon');
+const themeLabel = document.getElementById('themeLabel');
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('creditops-theme', theme);
+  if (theme === 'dark') {
+    themeIcon.innerHTML = '<svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    themeLabel.textContent = 'Dark';
+  } else {
+    themeIcon.innerHTML = '<svg class="icon-svg sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+    themeLabel.textContent = 'Light';
+  }
+}
+applyTheme(localStorage.getItem('creditops-theme') || 'dark');
+themeToggleBtn.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+// Human-friendly Date & Time helpers
+const dateInput = document.getElementById('txn_date');
+const timeInput = document.getElementById('txn_time');
+const dtPreview = document.getElementById('datetimePreviewText');
+const riskBadge = document.getElementById('timeRiskBadge');
+
+function updateDatetimePreview() {
+  const dVal = dateInput.value;
+  let tVal = timeInput.value || '00:00:00';
+  if (tVal.length === 5) tVal += ':00';
+
+  if (!dVal) {
+    dtPreview.textContent = 'Please choose a date';
+    return;
+  }
+
+  // Parse Date parts safely
+  const [yr, mo, da] = dVal.split('-').map(Number);
+  const [hr, mi, sc] = tVal.split(':').map(Number);
+  const dObj = new Date(yr, mo - 1, da, hr, mi, sc || 0);
+
+  const options = {
+    weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+  };
+  dtPreview.textContent = dObj.toLocaleString('en-US', options);
+
+  // Derive peak risk window based on model feature engineering (fraud spikes at night 23:00 - 05:00)
+  if (hr >= 23 || hr < 6) {
+    riskBadge.textContent = 'Night Peak (High Fraud Risk)';
+    riskBadge.className = 'item-badge';
+    riskBadge.style.background = 'rgba(239, 68, 68, 0.15)';
+    riskBadge.style.color = 'var(--accent-red)';
+  } else if (hr >= 11 && hr <= 15) {
+    riskBadge.textContent = 'Midday Window (Normal Risk)';
+    riskBadge.className = 'item-badge green';
+    riskBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+    riskBadge.style.color = 'var(--accent-green)';
+  } else {
+    riskBadge.textContent = 'Daytime Hours (Moderate Risk)';
+    riskBadge.className = 'item-badge';
+    riskBadge.style.background = 'rgba(59, 130, 246, 0.15)';
+    riskBadge.style.color = 'var(--accent-blue)';
+  }
+}
+
+function setQuickDate(type) {
+  if (type === 'today') {
+    const today = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    dateInput.value = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+  } else if (type === 'dataset') {
+    dateInput.value = '2020-06-15';
+  }
+  updateDatetimePreview();
+  updateAge();
+}
+
+function setTimePreset(type) {
+  const pad = (n) => String(n).padStart(2, '0');
+  if (type === 'now') {
+    const now = new Date();
+    dateInput.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    timeInput.value = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  } else if (type === 'night') {
+    timeInput.value = '02:45:00';
+  } else if (type === 'midday') {
+    timeInput.value = '13:15:00';
+  } else if (type === 'evening') {
+    timeInput.value = '20:30:00';
+  }
+  updateDatetimePreview();
+  updateAge();
+}
+
+function updateAge() {
+  const dobVal = document.getElementById('dob').value;
+  if (!dobVal || !dateInput.value) return;
+  const birth = new Date(dobVal);
+  const txnDate = new Date(dateInput.value);
+  let age = txnDate.getFullYear() - birth.getFullYear();
+  const m = txnDate.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && txnDate.getDate() < birth.getDate())) age--;
+  document.getElementById('ageBadge').textContent = `Age: ${Math.max(0, age)} yrs`;
+}
+
+// Initialise
+updateDatetimePreview();
+updateAge();
+
+// Presets
+const PRESETS = {
+  fraud: {
+    date: "2020-06-15",
+    time: "02:45:00",
+    category: "travel",
+    amt: 1250.00,
+    gender: "M",
+    dob: "1962-04-18",
+    lat: 36.1699,
+    long: -115.1398,
+    merch_lat: 34.0522,
+    merch_long: -118.2437,
+    city_pop: 641676
+  },
+  legit: {
+    date: "2020-06-15",
+    time: "13:15:00",
+    category: "grocery_pos",
+    amt: 28.50,
+    gender: "F",
+    dob: "1988-09-12",
+    lat: 40.7128,
+    long: -74.0060,
+    merch_lat: 40.7180,
+    merch_long: -74.0020,
+    city_pop: 8336817
+  },
+  night: {
+    date: "2020-06-15",
+    time: "23:55:00",
+    category: "shopping_net",
+    amt: 380.00,
+    gender: "M",
+    dob: "1994-01-22",
+    lat: 29.7604,
+    long: -95.3698,
+    merch_lat: 32.7767,
+    merch_long: -96.7970,
+    city_pop: 2320268
+  }
+};
+
+function applyPreset(name) {
+  const p = PRESETS[name];
+  if (!p) return;
+  dateInput.value = p.date;
+  timeInput.value = p.time;
+  updateDatetimePreview();
+  document.getElementById('category').value = p.category;
+  document.getElementById('amt').value = p.amt;
+  document.getElementById('gender').value = p.gender;
+  document.getElementById('dob').value = p.dob;
+  updateAge();
+  document.getElementById('lat').value = p.lat;
+  document.getElementById('long').value = p.long;
+  document.getElementById('merch_lat').value = p.merch_lat;
+  document.getElementById('merch_long').value = p.merch_long;
+  document.getElementById('city_pop').value = p.city_pop;
+}
+
+// Human-Readable Alert Modal System
+function showHumanAlert(title, message, type = 'error') {
+  const modal = document.getElementById('alertModal');
+  const titleEl = document.getElementById('alertModalTitle');
+  const msgEl = document.getElementById('alertModalMessage');
+  const iconWrap = document.getElementById('alertModalIcon');
+
+  titleEl.textContent = title;
+  msgEl.textContent = message;
+
+  iconWrap.className = 'alert-modal-icon-wrap ' + type;
+  if (type === 'error') {
+    iconWrap.innerHTML = '<svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+  } else if (type === 'warning') {
+    iconWrap.innerHTML = '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+  } else {
+    iconWrap.innerHTML = '<svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeAlertModal() {
+  const modal = document.getElementById('alertModal');
+  if (modal) modal.style.display = 'none';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeAlertModal();
+});
+
+document.getElementById('predictionForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+
+  // Build backend timestamp format: YYYY-MM-DD HH:MM:SS
+  const dVal = dateInput.value;
+  let tVal = timeInput.value || '00:00:00';
+  if (tVal.length === 5) tVal += ':00';
+
+  if (!dVal) {
+    showHumanAlert('Missing Date', 'Please select a valid transaction date.', 'warning');
+    return;
+  }
+
+  const yr = parseInt(dVal.split('-')[0], 10);
+  if (isNaN(yr) || yr < 1970 || yr > 2050) {
+    showHumanAlert(
+      'Invalid Transaction Date',
+      `The entered transaction year (${yr || dVal}) is outside the supported bounds (1970 to 2050).\n\nPlease choose a realistic date (e.g. within 2000–2035) so the feature engineering pipeline can compute accurate age and velocity metrics.`,
+      'warning'
+    );
+    return;
+  }
+
+  btn.textContent = 'Evaluating Model...';
+  btn.disabled = true;
+
+  const rawDt = `${dVal} ${tVal}`;
+  const payload = {
+    trans_date_trans_time: rawDt,
+    category: document.getElementById('category').value,
+    amt: parseFloat(document.getElementById('amt').value),
+    gender: document.getElementById('gender').value,
+    dob: document.getElementById('dob').value,
+    lat: parseFloat(document.getElementById('lat').value),
+    long: parseFloat(document.getElementById('long').value),
+    merch_lat: parseFloat(document.getElementById('merch_lat').value),
+    merch_long: parseFloat(document.getElementById('merch_long').value),
+    city_pop: parseInt(document.getElementById('city_pop').value)
+  };
+
+  try {
+    const res = await fetch('/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
-  </script>
+
+    let data = {};
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      data = await res.json();
+    } else {
+      const rawText = await res.text();
+      data = { detail: rawText };
+    }
+
+    btn.textContent = 'Score Transaction';
+    btn.disabled = false;
+
+    if (!res.ok) {
+      let friendlyMsg = 'The model scoring service could not process this transaction.';
+      if (data && data.detail) {
+        if (Array.isArray(data.detail)) {
+          // Format Pydantic validation errors nicely
+          friendlyMsg = data.detail.map(d => {
+            const loc = Array.isArray(d.loc) ? d.loc.filter(x => x !== 'body').join('.') : '';
+            const prefix = loc ? `[${loc}]: ` : '';
+            return `${prefix}${d.msg || JSON.stringify(d)}`;
+          }).join('\n');
+        } else if (typeof data.detail === 'string') {
+          friendlyMsg = data.detail;
+        } else {
+          friendlyMsg = JSON.stringify(data.detail);
+        }
+      }
+      showHumanAlert('Validation Notice', friendlyMsg, 'error');
+      return;
+    }
+
+    const prob = data.fraud_probability;
+    const isFraud = data.fraud === true || data.prediction === 1;
+
+    document.getElementById('resultScore').textContent = (prob * 100).toFixed(1) + '%';
+    const arc = document.getElementById('resultArc');
+    const offset = Math.max(0, 219.9 - (prob * 219.9));
+    arc.style.strokeDashoffset = offset;
+    arc.style.stroke = isFraud ? 'var(--accent-red)' : 'var(--accent-green)';
+
+    const badge = document.getElementById('verdictBadge');
+    badge.style.display = 'inline-block';
+    badge.className = 'verdict-badge ' + (isFraud ? 'verdict-fraud' : 'verdict-legit');
+    badge.textContent = isFraud ? 'FRAUD SUSPECTED' : 'LEGITIMATE TRANSACTION';
+
+    document.getElementById('verdictText').textContent = isFraud ?
+      `Confidence ${(prob * 100).toFixed(1)}% exceeds tuned threshold (${data.threshold}). Transaction flagged for review.` :
+      `Confidence ${(prob * 100).toFixed(1)}% is below decision threshold (${data.threshold}). Transaction cleared.`;
+
+    // Non-Technical Plain English Explanation
+    const peBox = document.getElementById('plainEnglishBox');
+    const peTitle = document.getElementById('peTitle');
+    const peText = document.getElementById('peText');
+    const peAction = document.getElementById('peAction');
+
+    peBox.style.display = 'block';
+
+    const thresholdPercent = (data.threshold * 100).toFixed(1);
+    const scorePercent = (prob * 100).toFixed(1);
+
+    if (isFraud) {
+      peTitle.textContent = 'High Risk of Fraud Detected';
+      peTitle.style.color = 'var(--accent-red)';
+      peBox.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+      peBox.style.background = 'rgba(239, 68, 68, 0.05)';
+      peText.innerHTML = `<strong>In plain terms:</strong> The AI model identified purchase patterns strongly characteristic of unauthorized or stolen card usage (estimated risk score: <strong>${scorePercent}%</strong>, exceeding the bank's security cutoff of <strong>${thresholdPercent}%</strong>). Attributes such as merchant distance, time of day, or transaction dollar size deviate significantly from standard cardholder activity.`;
+      peAction.innerHTML = `<span style="color:var(--accent-red);font-weight:700;">Action for Cardholder / Ops:</span> <strong>Decline or Hold Payment</strong>. Prompt cardholder for immediate two-factor approval (SMS / Banking App) before releasing funds.`;
+    } else if (prob >= 0.70) {
+      peTitle.textContent = 'Borderline / Watchlist Alert';
+      peTitle.style.color = '#f59e0b';
+      peBox.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+      peBox.style.background = 'rgba(245, 158, 11, 0.05)';
+      peText.innerHTML = `<strong>In plain terms:</strong> This purchase was allowed to clear because its risk score (<strong>${scorePercent}%</strong>) sits slightly under the strict rejection cutoff (<strong>${thresholdPercent}%</strong>). However, it exhibits noticeably elevated risk factors compared to routine day-to-day purchases.`;
+      peAction.innerHTML = `<span style="color:#f59e0b;font-weight:700;">Action for Cardholder / Ops:</span> <strong>Approved with Passive Monitoring</strong>. Transaction clears instantly to avoid embarrassing the customer at checkout, but is logged for automated post-clearing dispute tracking.`;
+    } else {
+      peTitle.textContent = 'Safe Day-to-Day Purchase';
+      peTitle.style.color = 'var(--accent-green)';
+      peBox.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+      peBox.style.background = 'rgba(16, 185, 129, 0.05)';
+      peText.innerHTML = `<strong>In plain terms:</strong> This payment appears completely ordinary. The estimated fraud likelihood is minimal (<strong>${scorePercent}%</strong>), safely beneath the security cutoff (<strong>${thresholdPercent}%</strong>). Location, spending category, and time fit routine cardholder habits.`;
+      peAction.innerHTML = `<span style="color:var(--accent-green);font-weight:700;">Action for Cardholder / Ops:</span> <strong>Instant Seamless Approval</strong>. No human intervention or secondary security prompts necessary.`;
+    }
+
+    document.getElementById('metaThreshold').textContent = data.threshold;
+    document.getElementById('metaLatency').textContent = data.latency_ms + ' ms';
+    const modelShortNames = {
+      'LogisticRegression': 'Logistic Reg',
+      'RandomForestClassifier': 'Random Forest',
+      'GradientBoostingClassifier': 'Gradient Boost',
+      'DecisionTreeClassifier': 'Decision Tree',
+      'LightGBMClassifier': 'LightGBM',
+      'XGBClassifier': 'XGBoost'
+    };
+    document.getElementById('metaModel').textContent = modelShortNames[data.model] || data.model;
+    document.getElementById('metaModel').title = data.model;
+
+    const dLat = (payload.merch_lat - payload.lat) * 111;
+    const dLon = (payload.merch_long - payload.long) * 85;
+    const dist = Math.sqrt(dLat * dLat + dLon * dLon).toFixed(1);
+    document.getElementById('metaDist').textContent = dist + ' km';
+
+    document.getElementById('metaChips').style.display = 'grid';
+
+  } catch (err) {
+    btn.textContent = 'Score Transaction';
+    btn.disabled = false;
+    showHumanAlert(
+      'Service Unavailable',
+      `Could not establish a connection with the scoring service at /predict.\n\nDetails: ${err.message || 'Network unreachable'}. Please confirm that the FastAPI backend server is active.`,
+      'error'
+    );
+  }
+});
+</script>
+
+<!-- Human-Readable Alert Modal -->
+<div id="alertModal" class="alert-modal-overlay" style="display:none;" onclick="if(event.target===this) closeAlertModal()">
+  <div class="alert-modal-card" role="dialog" aria-modal="true" aria-labelledby="alertModalTitle">
+    <div class="alert-modal-header">
+      <div class="alert-modal-icon-wrap error" id="alertModalIcon">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+      </div>
+      <div class="alert-modal-title" id="alertModalTitle">Validation Notice</div>
+      <button type="button" class="alert-modal-close" onclick="closeAlertModal()" aria-label="Close modal">&times;</button>
+    </div>
+    <div class="alert-modal-body" id="alertModalMessage">
+      Message details will appear here.
+    </div>
+    <div class="alert-modal-footer">
+      <button type="button" class="alert-btn-ack" onclick="closeAlertModal()">Acknowledge</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

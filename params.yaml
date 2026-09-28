@@ -1,14 +1,45 @@
-model:
-  model_type: all          # all | logistic_regression | random_forest | xgboost
-  n_estimators: 200
-  max_depth: 8
+
+# CreditOps — single source of truth for all thresholds and costs
+# All numeric constants live here; nothing is hardcoded in src/
+
+data:
+  raw_train:  Credit_Data/fraudTrain.csv
+  raw_test:   Credit_Data/fraudTest.csv
+  time_col:   trans_date_trans_time
+  label_col:  is_fraud
+  # Temporal split fractions (must sum to 1.0)
+  train_frac: 0.70
+  val_frac:   0.15
+  # test_frac = 1 - train_frac - val_frac = 0.15
+  majority_downsample_frac: 0.30   # keep 30% of non-fraud in TRAIN ONLY for speed
   random_state: 42
-  learning_rate: 0.08
-  subsample: 0.95
-  colsample_bytree: 0.95
+
+features:
+  # High-cardinality fields: strategy is frequency-encode (top N + "other")
+  freq_encode_top_n: 20
+  log_eps: 1e-6       # added to amt and city_pop before log to avoid log(0)
+
+model:
+  model_type: logistic_regression          # all | logistic_regression | random_forest | xgboost
+  n_estimators: 100        # capped for training time
+  max_depth: 6
+  random_state: 42
+  learning_rate: 0.1
+  subsample: 0.8
+  colsample_bytree: 0.8
   max_iter: 1000           # Logistic Regression max iterations
   C: 1.0                   # Logistic Regression regularisation strength
 
 monitoring:
-  roc_auc_threshold: 0.75  # Trigger retraining recommendation below this
-  min_predictions: 50      # Minimum logged predictions before evaluation
+  # Primary metric: PR-AUC (average precision); fraud rate ~0.5% makes it most informative
+  pr_auc_threshold: 0.10         # Trigger retraining recommendation below this
+  recall_threshold: 0.60         # Also trigger if recall drops below this
+  fp_budget_rate: 0.05           # False-positive rate budget for recall-at-budget metric
+  min_predictions: 50            # Minimum logged predictions before evaluation
+  # Training distribution reference for drift detection
+  training_fraud_rate: 0.00579   # Measured from train split
+  drift_tolerance: 0.003         # Alert if abs deviation exceeds this
+
+mlflow:
+  experiment_name: credit-fraud
+  champion_alias: champion

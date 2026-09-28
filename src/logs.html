@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CreditOps Real-Time Transaction Prediction Logs & Audit Console">
+<title>CreditOps — Transaction Logs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root[data-theme="dark"] {
+    --bg-base: #0f1219;
+    --bg-surface: #151924;
+    --bg-card: #1c2230;
+    --bg-card-hover: #222a3c;
+    --bg-sidebar: #11141c;
+    --bg-sidebar-hover: #191f2d;
+    --bg-sidebar-active: #22293b;
+    --sidebar-text: #e2e8f0;
+    --sidebar-muted: #64748b;
+    --sidebar-border: #283246;
+    --bg-sidebar-footer: rgba(0, 0, 0, 0.25);
+    --bg-input: #111520;
+    --border: #283246;
+    --border-subtle: #1e2638;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --notice-bg: #171a22;
+    --notice-border: #283246;
+    --notice-text: #cbd5e1;
+    --notice-tag-bg: rgba(245, 158, 11, 0.15);
+    --notice-tag-color: #fbbf24;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-green: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-red: #ef4444;
+    --accent-purple: #8b5cf6;
+    --gauge-bg: #222b3d;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  :root[data-theme="light"] {
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-sidebar: #ffffff;
+    --bg-sidebar-hover: #f1f5f9;
+    --bg-sidebar-active: #eff6ff;
+    --sidebar-text: #1e293b;
+    --sidebar-muted: #64748b;
+    --sidebar-border: #e2e8f0;
+    --bg-sidebar-footer: #f8fafc;
+    --bg-input: #ffffff;
+    --border: #e2e8f0;
+    --border-subtle: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --notice-bg: #f1f5f9;
+    --notice-border: #e2e8f0;
+    --notice-text: #475569;
+    --notice-tag-bg: rgba(245, 158, 11, 0.15);
+    --notice-tag-color: #b45309;
+    --accent-blue: #2563eb;
+    --accent-cyan: #0891b2;
+    --accent-green: #059669;
+    --accent-amber: #d97706;
+    --accent-red: #dc2626;
+    --accent-purple: #7c3aed;
+    --gauge-bg: #e2e8f0;
+    --shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    line-height: 1.5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .notice-bar {
+    background: var(--notice-bg);
+    color: var(--notice-text);
+    border-bottom: 1px solid var(--notice-border);
+    padding: 6px 20px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: 0.02em;
+    z-index: 110;
+  }
+  .notice-tag {
+    background: var(--notice-tag-bg);
+    color: var(--notice-tag-color);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-right: 8px;
+  }
+
+  header {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .brand-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-primary); }
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 800; font-size: 0.85rem;
+  }
+  .brand-title { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; }
+  .brand-sub { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin-left: 6px; border-left: 1px solid var(--border); padding-left: 10px; }
+
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-btn {
+    background: none; border: 1px solid transparent; color: var(--text-secondary);
+    padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; text-decoration: none; transition: all 0.15s;
+  }
+  .header-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--border); }
+  .status-pill {
+    display: flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3); color: var(--accent-green);
+    padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+  }
+  .pulse-dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; }
+
+  .theme-toggle {
+    display: flex; align-items: center; gap: 8px; background: var(--bg-input);
+    border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; cursor: pointer;
+    user-select: none;
+  }
+  .theme-toggle-icon { color: var(--text-secondary); display: flex; align-items: center; }
+
+  .layout-container { display: flex; flex: 1; overflow: hidden; }
+
+  /* Sidebar */
+  aside.sidebar {
+    width: 240px; background: var(--bg-sidebar); color: var(--sidebar-text);
+    border-right: 1px solid var(--sidebar-border); display: flex; flex-direction: column;
+    flex-shrink: 0; user-select: none; transition: background-color 0.25s, border-color 0.25s;
+  }
+  .sidebar-nav-wrap {
+    flex: 1; overflow-y: auto; padding: 12px 10px 8px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .nav-group-title {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--sidebar-muted); padding: 4px 10px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-item {
+    display: flex; align-items: center; justify-content: space-between; padding: 8px 12px;
+    border-radius: 6px; color: var(--sidebar-text); text-decoration: none; font-size: 0.84rem;
+    font-weight: 500; transition: all 0.15s ease; margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--bg-sidebar-hover); color: var(--text-primary); }
+  .nav-item.active { background: var(--bg-sidebar-active); color: var(--accent-blue); font-weight: 600; border-left: 3px solid var(--accent-blue); }
+  .nav-item-left { display: flex; align-items: center; gap: 10px; }
+  .item-badge {
+    font-size: 0.68rem; padding: 2px 7px; border-radius: 99px;
+    background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); font-weight: 700;
+  }
+  .item-badge.green { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+
+  .sidebar-footer {
+    padding: 12px 10px; border-top: 1px solid var(--sidebar-border);
+    background: var(--bg-sidebar-footer);
+  }
+
+  main.workspace {
+    flex: 1; overflow-y: auto; padding: 24px 32px 60px;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+
+  .kpi-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;
+  }
+  .kpi-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px; text-align: center; box-shadow: var(--shadow);
+  }
+  .kpi-val { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+  .kpi-val.blue { color: var(--accent-blue); }
+  .kpi-val.green { color: var(--accent-green); }
+  .kpi-val.red { color: var(--accent-red); }
+  .kpi-val.cyan { color: var(--accent-cyan); }
+  .kpi-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-top: 6px; }
+
+  .panel-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; box-shadow: var(--shadow);
+  }
+  .panel-header-row {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+  }
+  .panel-title {
+    font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-primary); display: flex; align-items: center; gap: 8px;
+  }
+
+  .filter-bar {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    background: var(--bg-input); border: 1px solid var(--border); color: var(--text-secondary);
+    padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--bg-card-hover); color: var(--accent-blue); border-color: var(--accent-blue);
+  }
+
+  table.live-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left; }
+  table.live-table th { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.72rem; }
+  table.live-table td { padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
+  table.live-table tr:hover td { background: var(--bg-card-hover); }
+
+  .badge-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; }
+  .badge-fraud { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.3); }
+  .badge-legit { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+  .icon-svg {
+    width: 18px; height: 18px; stroke: currentColor; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round; fill: none; display: inline-block;
+  }
+  .icon-svg.sm { width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+
+<div class="notice-bar">
+  <div>
+    <span class="notice-tag">NOTICE</span>
+    <span>SIMULATED DATA: Trained and scored using Sparkov-generated synthetic credit card transactions. No real cardholder records.</span>
+  </div>
+  <div style="color:var(--text-muted);font-family:'JetBrains Mono',monospace;">Audit: predictions.jsonl</div>
+</div>
+
+<header>
+  <div class="header-left">
+    <a href="/" class="brand-logo">
+      <div class="logo-icon">C</div>
+      <span class="brand-title">CreditOps</span>
+      <span class="brand-sub">Console</span>
+    </a>
+  </div>
+
+  <div class="header-right">
+    <div class="status-pill">
+      <div class="pulse-dot"></div>
+      <span>Audit Logging Active</span>
+    </div>
+
+    <div class="theme-toggle" id="themeToggleBtn" title="Toggle Light/Dark Theme">
+      <span class="theme-toggle-icon" id="themeIcon">
+        <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </span>
+      <span style="font-size:0.72rem;font-weight:600;text-transform:uppercase;" id="themeLabel">Dark</span>
+    </div>
+
+    <a href="/docs" class="header-btn" title="FastAPI Swagger Documentation" target="_blank">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    </a>
+
+    <a href="https://github.com/myself-moons/CreditOps" class="header-btn" title="GitHub Repository" target="_blank">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+    </a>
+  </div>
+</header>
+
+<div class="layout-container">
+  <!-- Unified Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-nav-wrap">
+
+      <!-- Group 1: System Overview (Top) -->
+      <div class="nav-group">
+        <div class="nav-group-title">System Overview</div>
+        <a href="/" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>System Overview</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Group 2: Intelligence -->
+      <div class="nav-group">
+        <div class="nav-group-title">Intelligence</div>
+        <a href="/predict" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>Live Inference</span>
+          </div>
+        </a>
+        <a href="/dataset" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            <span>Dataset Profile</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Group 3: MLOps & Pipeline -->
+      <div class="nav-group">
+        <div class="nav-group-title">MLOps &amp; Pipeline</div>
+        <a href="/dashboard" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>Pipelines &amp; Runs</span>
+          </div>
+          <span class="item-badge">6 stages</span>
+        </a>
+        <a href="/logs" class="nav-item active">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            <span>Transaction Logs</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Permanent Services Footer -->
+    <div class="sidebar-footer">
+      <div class="nav-group-title" style="padding:0 4px 6px;">Services</div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;margin-bottom:4px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">FastAPI Serving</span>
+        <span class="item-badge green">healthy</span>
+      </div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">Model Registry</span>
+        <span class="item-badge">loaded</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Workspace -->
+  <main class="workspace">
+    <div>
+      <h1 style="font-size:1.5rem;font-weight:800;">Transaction Logs &amp; Audit Trail</h1>
+      <p style="color:var(--text-secondary);font-size:0.86rem;margin-top:2px;">
+        Real-time telemetry stream recorded to <code style="color:var(--accent-blue);">predictions.jsonl</code>. Tracks model decisions, probability scores, inference latencies, and derived feature vectors.
+      </p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-val blue" id="stat-total">--</div>
+        <div class="kpi-label">Total Predictions</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val green" id="stat-legit">--</div>
+        <div class="kpi-label">Legitimate Count</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val red" id="stat-fraud">--</div>
+        <div class="kpi-label">Fraudulent Count</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val cyan" id="stat-latency">--</div>
+        <div class="kpi-label">Mean Latency</div>
+      </div>
+    </div>
+
+    <!-- Log Table Panel -->
+    <div class="panel-card">
+      <div class="panel-header-row">
+        <div class="panel-title">
+          <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          <span>Real-Time Transaction Stream</span>
+          <span style="font-size:0.75rem;color:var(--text-muted);font-weight:500;" id="recordCount">Loading records...</span>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="filter-bar">
+            <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+            <button class="filter-btn" onclick="setFilter('fraud', this)">Fraud Only</button>
+            <button class="filter-btn" onclick="setFilter('legit', this)">Legit Only</button>
+          </div>
+
+          <button class="header-btn" style="border:1px solid var(--border);padding:5px 12px;font-size:0.75rem;font-weight:600;" onclick="loadRecentPredictions()">
+            Refresh Feed
+          </button>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="live-table">
+          <thead>
+            <tr>
+              <th>Timestamp (UTC)</th>
+              <th>Decision</th>
+              <th>Probability Score</th>
+              <th>Model Version</th>
+              <th>Latency</th>
+              <th>Derived Features Preview</th>
+            </tr>
+          </thead>
+          <tbody id="predictionRows">
+            <tr>
+              <td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px;">Fetching live inference logs...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Theme Handling
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+const themeIcon = document.getElementById('themeIcon');
+const themeLabel = document.getElementById('themeLabel');
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('creditops-theme', theme);
+  if (theme === 'dark') {
+    themeIcon.innerHTML = '<svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    themeLabel.textContent = 'Dark';
+  } else {
+    themeIcon.innerHTML = '<svg class="icon-svg sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+    themeLabel.textContent = 'Light';
+  }
+}
+applyTheme(localStorage.getItem('creditops-theme') || 'dark');
+themeToggleBtn.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+// Logs Handling
+let allRecords = [];
+let currentFilter = 'all';
+
+function setFilter(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderRows();
+}
+
+async function loadRecentPredictions() {
+  try {
+    const res = await fetch('/api/predictions/recent?limit=50');
+    if (!res.ok) return;
+    const data = await res.json();
+    allRecords = data.records || [];
+    const countElem = document.getElementById('recordCount');
+    if (countElem) countElem.textContent = `(${data.total || 0} total records recorded)`;
+
+    // Calculate quick stats
+    let total = allRecords.length;
+    let fraudCount = 0;
+    let totalLat = 0;
+    allRecords.forEach(r => {
+      if (r.prediction === 1 || r.decision === 'fraud') fraudCount++;
+      totalLat += (r.latency_ms || 0);
+    });
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-fraud').textContent = fraudCount;
+    document.getElementById('stat-legit').textContent = total - fraudCount;
+    document.getElementById('stat-latency').textContent = total ? `${(totalLat / total).toFixed(1)}ms` : '--';
+
+    renderRows();
+  } catch (e) {
+    console.error('Failed to load predictions', e);
+  }
+}
+
+function renderRows() {
+  const tbody = document.getElementById('predictionRows');
+  if (!tbody) return;
+
+  let records = allRecords;
+  if (currentFilter === 'fraud') {
+    records = allRecords.filter(r => r.prediction === 1 || r.decision === 'fraud');
+  } else if (currentFilter === 'legit') {
+    records = allRecords.filter(r => r.prediction !== 1 && r.decision !== 'fraud');
+  }
+
+  if (!records.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px;">No transactions matching this filter.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = records.map(r => {
+    const isFraud = r.prediction === 1 || r.decision === 'fraud';
+    const badge = isFraud
+      ? '<span class="badge-tag badge-fraud">Fraud</span>'
+      : '<span class="badge-tag badge-legit">Legitimate</span>';
+    const prob = (r.probability !== undefined) ? (r.probability * 100).toFixed(2) + '%' : '--';
+    const lat = (r.latency_ms !== undefined) ? `${Number(r.latency_ms).toFixed(1)} ms` : '--';
+    const df = r.derived_features || {};
+
+    // 1. Resolve Amount (direct 'amt' or recovered from 'log_amt')
+    let amtDisplay = '--';
+    if (df.amt !== undefined && df.amt !== null) {
+      amtDisplay = `$${Number(df.amt).toFixed(2)}`;
+    } else if (df.log_amt !== undefined && df.log_amt !== null) {
+      const recoveredAmt = Math.max(0, Math.exp(df.log_amt) - 1e-6);
+      amtDisplay = `$${recoveredAmt.toFixed(2)}`;
+    }
+
+    // 2. Resolve Category (direct 'category' or active 'cat_*' one-hot column)
+    let catDisplay = '--';
+    if (df.category) {
+      catDisplay = df.category;
+    } else {
+      const catKey = Object.keys(df).find(k => k.startsWith('cat_') && df[k] === 1);
+      if (catKey) {
+        catDisplay = catKey.replace('cat_', '');
+      }
+    }
+
+    const ageDisplay = df.age_at_txn !== undefined ? `${df.age_at_txn}` : '--';
+    const distDisplay = df.haversine_km !== undefined ? `${Number(df.haversine_km).toFixed(1)}km` : '--';
+    const hrDisplay = df.hour !== undefined ? `${df.hour}` : '--';
+
+    const featSnippet = `amt=${amtDisplay}, cat=${catDisplay}, age=${ageDisplay}, dist=${distDisplay}, hr=${hrDisplay}`;
+
+    return `<tr>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text-secondary);">${r.timestamp || '--'}</td>
+      <td>${badge}</td>
+      <td style="font-weight:700;color:${isFraud ? 'var(--accent-red)' : 'var(--text-primary)'};">${prob}</td>
+      <td><span style="font-size:0.75rem;background:var(--border-subtle);padding:2px 6px;border-radius:4px;">${r.model_version || 'Champion'}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;">${lat}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:var(--text-secondary);">${featSnippet}</td>
+    </tr>`;
+  }).join('');
+}
+
+loadRecentPredictions();
+setInterval(loadRecentPredictions, 5000);
+</script>
+</body>
+</html>

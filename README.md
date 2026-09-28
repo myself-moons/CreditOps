@@ -1,84 +1,96 @@
-# ChurnOps
+# CreditOps
 
-## Customer Churn Prediction MLOps System
+## Credit Card Fraud Detection MLOps System
 
-A reproducible, end-to-end MLOps pipeline that trains and serves a customer churn classifier.
+A reproducible, end-to-end MLOps pipeline that trains and serves a credit card fraud classifier.
 
-**Maintainer:** Priti Yadav
+**Maintainer:** myself-moons
 
-You can access the live, deployed model here: **[ChurnOps Web App](https://churnops-9np9.onrender.com)**
+> ⚠️ **SIMULATED DATA** — This project uses the Sparkov-generated Credit Card Transactions Fraud
+> Detection Dataset (Kaggle: kartik2112/fraud-detection, License: CC0 1.0).
+> No real cardholders, card numbers, or merchants are involved.
+> See [docs/data_disclosure.md](docs/data_disclosure.md) for the full disclosure.
 
 ```
-Churn_Data Excel files
+Credit_Data/ (fraudTrain.csv + fraudTest.csv)
         ↓  DVC
-Data Collection (merge + split)
+Data Collection (concat + temporal 70/15/15 split)
         ↓
-Data Preprocessing (encode + scale → preprocessor.pkl)
+features.py (single source of truth for train + API)
         ↓
-Model Training (LR / RF / XGBoost → model.pkl)
-        ↓  MLflow
-Experiment Tracking (customer-churn experiment)
+Data Preprocessing (sklearn ColumnTransformer → preprocessor.pkl)
         ↓
-Model Evaluation (ROC-AUC, F1, Precision, Recall, Confusion Matrix)
+Model Training (LR / RF / XGBoost → CV selection by PR-AUC → model.pkl)
+        ↓  MLflow (experiment: credit-fraud)
+Model Evaluation (PR-AUC · Subgroup metrics → metrics.json)
         ↓
-Best Model (selected by ROC-AUC)
+Dataset Profile (dataset_profile.json)
         ↓
-FastAPI Serving (POST /predict)
+Stationarity Check (PSI / KS / monthly PR-AUC → stationarity_report.json)
         ↓
-Prediction UI + MLflow Dashboard
+FastAPI Serving (POST /predict · GET /dataset · GET /api/monitor)
         ↓
-Prediction Logging (predictions.jsonl)
+Prediction Logging (predictions.jsonl — derived features only, no PII)
         ↓
 Operational Monitoring (/api/monitor)
         ↓
-Retraining Trigger (threshold-based, ground-truth-aware)
+Retraining Trigger (PR-AUC + recall thresholds in params.yaml)
 ```
+
+---
+
+## Metrics (measured from real simulated data)
+
+> All numbers below come from an actual training run. Fill in after `dvc repro` completes.
+
+| Model | Test PR-AUC | Test ROC-AUC | Test Recall | Test F1 | Recall@5%FPR |
+|---|---|---|---|---|---|
+| *(run dvc repro to populate)* | — | — | — | — | — |
+
+**Primary metric: PR-AUC** — at ~0.5% fraud rate, accuracy and ROC-AUC are misleading.
+PR-AUC measures performance on the minority (fraud) class across all thresholds.
 
 ---
 
 ## Problem Statement
 
-Customer churn — the loss of subscribers to a competitor or cancellation — is one of the most costly problems for subscription-based businesses. This project builds a complete MLOps pipeline that:
+Credit card fraud detection is a highly imbalanced classification problem (~0.5% fraud rate).
+This project builds a complete MLOps pipeline that:
 
-- Trains multiple classification models on real telecom customer data
-- Selects the best model by ROC-AUC (not accuracy — see [Evaluation Metrics](#evaluation-metrics))
-- Exposes a REST API for real-time churn predictions
-- Logs predictions for operational monitoring
-- Provides a clear architecture for performance-based retraining
+- Trains multiple classifiers on **simulated** Sparkov transaction data
+- Selects the best model by **PR-AUC** (not accuracy or ROC-AUC)
+- Performs **temporal splitting** to prevent temporal leakage
+- Exposes a **REST API** for real-time fraud scoring
+- Logs predictions (derived features only, no PII) for operational monitoring
+- Measures data **stationarity** and reports it honestly
 
 ---
 
 ## Dataset
 
-**Source:** 5 Excel files in `Churn_Data/`
+**Source:** Kaggle "Credit Card Transactions Fraud Detection Dataset" (kartik2112/fraud-detection)  
+**Generator:** Sparkov (namebrandon/Sparkov_Data_Generation)  
+**License:** CC0 1.0 Universal (Public Domain Dedication)  
+**⚠️ This is simulated data. No real cardholders or transactions are involved.**
 
-| File | Rows | Content |
+| File | Rows | Date Range |
 |---|---|---|
-| `Demographics.xlsx` | 7,043 | Age, gender, dependents |
-| `Location.xlsx` | 7,043 | City, zip, lat/lon |
-| `Population.xlsx` | 1,671 | Zip-code population lookup |
-| `Services.xlsx` | 7,043 | Subscriptions, contract, charges, tenure |
-| `Status.xlsx` | 7,043 | Churn label, satisfaction, CLTV |
+| `fraudTrain.csv` | 1,296,675 | Jan 2019 – Jun 2020 |
+| `fraudTest.csv` | 555,719 | Jun 2020 – Dec 2020 |
+| **Total** | **1,852,394** | **Jan 2019 – Dec 2020** |
 
-**Join key:** `Customer ID` (all files). Population joined via `Zip Code`.
+Overall fraud rate: ~0.5% (highly imbalanced).  
+Raw data is tracked with DVC (`Credit_Data/` is in `.gitignore`).
 
-**Merged shape:** 7,043 rows × 47 columns before cleaning.
+### Temporal Split
 
-**Target:** `Churn Value` — binary (0 = retained, 1 = churned)
+| Split | Fraction | Period |
+|---|---|---|
+| Train | 70% | Jan 2019 → ~Apr 2020 |
+| Validation | 15% | ~Apr 2020 → ~Sep 2020 |
+| Test | 15% | ~Sep 2020 → Dec 2020 |
 
-**Class distribution:** 73.5% retained / 26.5% churned (imbalance ratio ~2.77:1)
-
-### Feature Decisions
-
-See `docs/CHURNOPS_MIGRATION_PLAN.md` for the full decision rationale.
-
-**Dropped columns (leakage / identifiers / geographic):**
-- Identifiers: `Customer ID`, `Count`, `Location ID`, `Service ID`, `Status ID`
-- Leakage: `Churn Label` (duplicate of target), `Churn Score` (post-hoc propensity), `CLTV` (computed after churn)
-- Geographic: `City`, `Zip Code`, `Latitude`, `Longitude`, `Population`
-- Redundant: `Under 30`, `Senior Citizen`, `Dependents`, `Quarter`
-
-**Final feature set:** 12 numerical + 19 categorical = ~30 encoded features
+Random splitting is not used — see [Why Temporal Split](#why-temporal-split).
 
 ---
 
@@ -86,419 +98,225 @@ See `docs/CHURNOPS_MIGRATION_PLAN.md` for the full decision rationale.
 
 ```
 src/
-  data_collection.py      Merge Excel files → stratified train/test split
-  data_preprocessing.py   sklearn ColumnTransformer → preprocessor.pkl
-  model_training.py       LR + RF + XGBoost, ROC-AUC selection → model.pkl
-  model_evaluation.py     Full metrics → metrics.json
-  data_model.py           Customer Pydantic model (API validation)
-  main.py                 FastAPI application
-  prediction_logger.py    Append predictions to predictions.jsonl
+  dataset_adapter.py      DatasetAdapter class (single data access point)
+  features.py             Single source of truth for feature engineering
+  data_collection.py      Load + temporal split → data/raw/
+  data_preprocessing.py   ColumnTransformer → preprocessor.pkl
+  model_training.py       CV selection by PR-AUC → model.pkl + .decision_threshold
+  model_evaluation.py     Full metrics + subgroup tables → metrics.json
+  dataset_profile.py      Dataset statistics → dataset_profile.json
+  stationarity_check.py   PSI/KS + monthly PR-AUC → stationarity_report.json
+  data_model.py           Transaction Pydantic model (API validation)
+  main.py                 FastAPI application (/, /predict, /dataset, /api/*)
+  prediction_logger.py    Append predictions to predictions.jsonl (no PII)
   monitor.py              Operational + performance monitoring
-  retrain_trigger.py      ROC-AUC threshold-based retraining decision
+  retrain_trigger.py      PR-AUC + recall threshold-based retraining decision
   landing.html            Project overview page
   dashboard.html          MLflow run comparison dashboard
-  predict.html            Customer churn prediction form
+  predict.html            Transaction fraud prediction form
+  dataset.html            Dataset overview with charts and data dictionary
 tests/
-  test_api.py             24 tests covering API, validation, structure
+  test_api.py             Full test suite (API, validation, temporal split, features)
 docs/
-  CHURNOPS_MIGRATION_PLAN.md  Full migration analysis and decision log
-  CHURNOPS_RUNBOOK.md         Operational setup and runbook
+  data_disclosure.md      Full synthetic data statement and license
+  limitations.md          Honest limitations and injected-drift rules
+  known_issues.md         Stubbed or deferred features
 ```
+
+---
+
+## Feature Engineering (`src/features.py`)
+
+All feature derivation lives in a single function `build_features()`, called by both
+training and the API to guarantee identical transformations:
+
+| Feature | Derivation |
+|---|---|
+| `hour` | Hour of transaction (0–23) |
+| `day_of_week` | 0 = Monday, 6 = Sunday |
+| `is_weekend` | 1 if Saturday or Sunday |
+| `log_amt` | log(amt + ε) — right-skewed distribution |
+| `cat_*` (14) | One-hot of 14 transaction categories |
+| `gender_M` | 1 if Male, 0 if Female |
+| `age_at_txn` | (transaction date − DOB) in years |
+| `haversine_km` | Great-circle distance cardholder ↔ merchant |
+| `log_city_pop` | log(city_pop + ε) |
+
+**Dropped (privacy / leakage / cardinality):** `cc_num`, `first`, `last`, `street`, `trans_num`, `zip`, `dob` (after age), `merchant`, `city`, `state`, `job`, `unix_time`, raw lat/long (after haversine).
 
 ---
 
 ## ML Pipeline
 
-### 1. Data Collection (`src/data_collection.py`)
+### 1. Data Collection
+- Concatenates train + test CSVs, parses timestamps, drops duplicates
+- Validates schema against expected columns
+- Temporal split: 70% train / 15% val / 15% test (by time order, no randomness)
+- Outputs `data/raw/{train,val,test}.csv` and `split_info.json`
 
-- Reads 5 Excel files from `Churn_Data/`
-- Merges on `Customer ID` (and `Zip Code` for population)
-- Drops leakage, identifier, and geographic columns
-- Clips `Number of Dependents` negative values to 0
-- Stratified 80/20 train/test split (preserves churn class ratio)
-- Outputs: `data/raw/train.csv`, `data/raw/test.csv`
+### 2. Preprocessing
+- `features.py` converts raw rows to feature vectors
+- `sklearn ColumnTransformer`: StandardScaler on continuous features, passthrough on binary/one-hot
+- **Fitted on training data only** — no val/test data touches the fit step
+- Saves `preprocessor.pkl`
 
-### 2. Data Preprocessing (`src/data_preprocessing.py`)
+### 3. Model Training
+- Candidates: Logistic Regression, Random Forest, XGBoost (+ LightGBM if installed)
+- **Imbalance handling:** `class_weight="balanced"` (LR/RF), `scale_pos_weight` (XGBoost)
+- **Majority downsampling** for training speed (30% of non-fraud kept; configurable in `params.yaml`)
+- **CV selection** on training data by 3-fold cross-val PR-AUC (not ROC-AUC)
+- Winner retrained on full training split
+- **Threshold tuning** on validation set (max F1), saved to `.decision_threshold`
+- Final eval on untouched test split
+- All runs logged to MLflow experiment `credit-fraud`; champion registered in Model Registry
 
-Built as a fitted **sklearn `ColumnTransformer` pipeline**:
-
-| Transformer | Applied to |
-|---|---|
-| `StandardScaler` | 12 numerical features |
-| `OrdinalEncoder` | `Contract` (ordered: Month-to-Month < One Year < Two Year) |
-| `OneHotEncoder` | `Offer`, `Internet Type`, `Payment Method` |
-| Binary mapping | Yes/No, Male/Female columns |
-
-**Fitted on training data only.** Saved as `preprocessor.pkl` and loaded by the API at inference time — no preprocessing logic is duplicated.
-
-### 3. Model Training (`src/model_training.py`)
-
-Three classifiers trained and tracked in parallel:
-
-| Model | Class Balancing |
-|---|---|
-| Logistic Regression | `class_weight='balanced'` |
-| Random Forest | `class_weight='balanced'` |
-| XGBoost | `scale_pos_weight` (ratio of negatives/positives) |
-
-The best model (by mean CV ROC-AUC across 5 stratified folds on training data) is retrained on the complete training split and saved as `model.pkl`.
+### 4. Evaluation
+- Overall: PR-AUC, ROC-AUC, precision, recall, F1, recall@5%FPR
+- Subgroup: by category, amount bucket, age band, distance bucket, hour of day
+- Outputs `metrics.json` and `subgroup_metrics.csv`
 
 ---
 
-## Models Evaluated
+## Why Temporal Split?
 
-| Model | Test ROC-AUC | F1 | Precision | Recall | Accuracy |
-|---|---|---|---|---|---|
-| Logistic Regression ★ | **0.9914** | 0.9028 | 0.8652 | 0.9439 | 0.9461 |
-| Random Forest | 0.9844 | 0.9040 | — | — | 0.9489 |
-| XGBoost | 0.9912 | 0.9285 | — | — | 0.9624 |
+A random split allows the model to train on future transactions — for example, new merchants that
+appear later in time could leak temporal patterns. Fraud behaviour is also time-dependent
+(seasonality, new fraud patterns emerge over time). Temporal splitting preserves natural
+temporal ordering and matches real deployment conditions where the model is always predicting
+on future data.
 
-**Selected model: Logistic Regression** (highest ROC-AUC)
+## Why PR-AUC?
 
----
-
-## Evaluation Metrics
-
-**Primary metric: ROC-AUC**
-
-The class distribution (73.5% / 26.5%) makes accuracy a poor selection criterion — a classifier that predicts "not churned" for every customer achieves 73.5% accuracy but ROC-AUC of only ~0.5.
-
-ROC-AUC measures the model's discriminative ability across all classification thresholds, independent of class distribution. It is the industry standard for churn and fraud classification.
-
-**All tracked metrics:**
-- ROC-AUC (primary / model selection)
-- Accuracy
-- Precision
-- Recall
-- F1-score
-- Confusion matrix (TN, FP, FN, TP)
+At ~0.5% fraud rate:
+- A model predicting "legitimate" for every transaction achieves 99.5% accuracy
+- ROC-AUC can be inflated even for poor models because true negatives (legitimate transactions) dominate
+- PR-AUC focuses on how well the model ranks the rare positives (fraud) relative to negatives
+- It is the correct metric when the cost of missing a fraud (false negative) is high
 
 ---
 
-## MLflow Usage
-
-Experiment name: `customer-churn`
-
-Every training run logs:
-- Model type and hyperparameters
-- Train and test metrics for all 5 metrics
-- Model artifact (`mlflow.sklearn.log_model`)
-
-View run history locally:
+## DVC Pipeline
 
 ```bash
-mlflow ui --backend-store-uri ./mlruns --host 0.0.0.0 --port 5000
-```
-
-Or browse the built-in dashboard at `http://localhost:8000/dashboard` after starting the API.
-
----
-
-## DVC Usage
-
-The pipeline is fully reproducible through DVC:
-
-```bash
+# Reproduce the full pipeline from raw data
 dvc repro
+
+# Run specific stage only
+dvc repro Data_Collection
+dvc repro Model_Training
 ```
 
-Pipeline stages:
-
-| Stage | Inputs | Outputs |
-|---|---|---|
-| `Data_Collection` | 5 Excel files | `data/raw/train.csv`, `data/raw/test.csv` |
-| `Data_Preprocessing` | Raw CSVs | Processed CSVs, `preprocessor.pkl` |
-| `Model_Training` | Processed CSVs | `model.pkl`, `.mlflow_run_id` |
-| `Evaluation` | model.pkl, preprocessor.pkl | `metrics.json` |
-
-Visualise the DAG:
-
-```bash
-dvc dag
-```
+Stages: `Data_Collection → Data_Preprocessing → Model_Training → Evaluation → Dataset_Profile → Stationarity_Check`
 
 ---
 
-## FastAPI
-
-Start the server:
+## Running the API
 
 ```bash
-source .venv/bin/activate  # Linux/Mac
-# or
-.venv\Scripts\activate     # Windows
+# After dvc repro completes:
+uvicorn src.main:app --host 0.0.0.0 --port 8000
 
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+# Or with venv:
+.venv/Scripts/uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
 
-| URL | Purpose |
-|---|---|
-| `http://localhost:8000/` | Project overview |
-| `http://localhost:8000/dashboard` | MLflow run comparison |
-| `http://localhost:8000/predict` | Customer churn prediction form |
-| `http://localhost:8000/docs` | Interactive API documentation |
-| `http://localhost:8000/api/dashboard` | Dashboard data as JSON |
-| `http://localhost:8000/api/runs` | MLflow run history as JSON |
-| `http://localhost:8000/api/monitor` | Operational monitoring stats |
+Pages: `/` (landing) · `/predict` · `/dashboard` · `/dataset` · `/docs` (Swagger)
 
-### Prediction API
+API endpoints:
+- `GET  /health`         — model status
+- `POST /predict`        — fraud prediction
+- `GET  /api/monitor`    — operational monitoring stats
+- `GET  /api/dataset`    — dataset profile JSON
+- `GET  /api/dashboard`  — MLflow run history + metrics
+- `GET  /api/runs`       — MLflow runs only
+
+### Example prediction
 
 ```bash
-curl -X POST "http://localhost:8000/predict" \
+curl -X POST http://localhost:8000/predict \
   -H "Content-Type: application/json" \
   -d '{
-    "Gender": "Male",
-    "Age": 55,
-    "Married": "No",
-    "Number of Dependents": 0,
-    "Satisfaction Score": 1,
-    "Referred a Friend": "No",
-    "Number of Referrals": 0,
-    "Tenure in Months": 2,
-    "Offer": "No Offer",
-    "Phone Service": "Yes",
-    "Multiple Lines": "No",
-    "Internet Service": "Yes",
-    "Internet Type": "Fiber Optic",
-    "Online Security": "No",
-    "Online Backup": "No",
-    "Device Protection Plan": "No",
-    "Premium Tech Support": "No",
-    "Streaming TV": "No",
-    "Streaming Movies": "No",
-    "Streaming Music": "No",
-    "Unlimited Data": "No",
-    "Contract": "Month-to-Month",
-    "Paperless Billing": "Yes",
-    "Payment Method": "Bank Withdrawal",
-    "Avg Monthly Long Distance Charges": 0.0,
-    "Avg Monthly GB Download": 5,
-    "Monthly Charge": 95.0,
-    "Total Charges": 190.0,
-    "Total Refunds": 0.0,
-    "Total Extra Data Charges": 0.0,
-    "Total Long Distance Charges": 0.0,
-    "Total Revenue": 190.0
+    "trans_date_trans_time": "2020-06-15 14:32:00",
+    "category": "travel",
+    "amt": 850.00,
+    "gender": "M",
+    "dob": "1970-05-15",
+    "lat": 36.1,
+    "long": -115.2,
+    "city_pop": 50000,
+    "merch_lat": 34.1,
+    "merch_long": -118.3
   }'
 ```
 
-**Response:**
-
-```json
-{
-  "prediction": 1,
-  "churn": true,
-  "prediction_label": "Likely to Churn",
-  "churn_probability": 0.9823,
-  "model": "LogisticRegression",
-  "latency_ms": 4.2
-}
-```
-
 ---
 
-## UI
+## Tests
 
-The prediction form at `/predict` accepts the full customer profile through grouped dropdown and numeric input fields. No manual preprocessing is required — the API applies `preprocessor.pkl` automatically.
+```bash
+pytest -q tests/
+```
 
-The dashboard at `/dashboard` displays:
-- ROC-AUC as the primary comparison metric
-- All tracked metrics for every MLflow run
-- Model type color coding (LR / RF / XGBoost)
-- Confusion matrix from `metrics.json`
+Tests cover: API routes (200/422), prediction structure, temporal split leakage,
+preprocessor fit-on-train-only, features.py consistency (batch = API path),
+synthetic data notice in all pages and JSON endpoints.
 
 ---
 
 ## Monitoring
 
-Every prediction is logged to `predictions.jsonl`:
+The system provides two monitoring layers:
 
-```json
-{
-  "timestamp": "2026-09-24T09:00:00+00:00",
-  "prediction": 1,
-  "probability": 0.9823,
-  "model_version": "LogisticRegression",
-  "latency_ms": 4.2
-}
-```
+**Layer A (no ground truth needed):** Prediction count, fraud detection rate, probability distribution, latency, model version.
 
-The `/api/monitor` endpoint returns:
+**Layer B (requires ground truth):** PR-AUC, recall, precision, F1 against actual fraud outcomes. In real deployment, fraud labels become available days/weeks after the transaction.
 
-**Layer A — Operational (immediate, no labels required):**
-- Total prediction count
-- Churn prediction rate
-- Probability distribution (mean, min, max, std)
-- Latency (mean and P95)
-- Model version usage
-
-**Layer B — Performance (requires ground-truth labels):**
-
-> Real model performance metrics (ROC-AUC, Precision, Recall, F1) require actual churn outcomes. In a telecom context, these are only known 30–90 days after prediction. The `monitor.py:evaluate_with_ground_truth()` function accepts labeled outcomes and computes real metrics when available.
+Distribution drift is detected by comparing the recent fraud detection rate against the training baseline (configurable in `params.yaml`).
 
 ---
 
-## Retraining Strategy
+## V2-Readiness
 
-The retraining trigger compares measured ROC-AUC against the threshold in `params.yaml`:
+The following design patterns are in place for the capstone extension:
 
-```yaml
-monitoring:
-  roc_auc_threshold: 0.75
-  min_predictions: 50
-```
+- `DatasetAdapter` class (single point of data access — swap dataset by changing one class)
+- `time_windows()` method for windowed monitoring/stationarity
+- All thresholds in `params.yaml`, none hardcoded
+- `src/` modular: each concern is a separate module
+- MLflow Model Registry with `champion` alias
 
-**Workflow:**
-
-1. Predictions are logged to `predictions.jsonl` (timestamp + probability)
-2. After 30–90 days, actual churn outcomes become available from CRM/billing
-3. Match outcomes to prediction logs by timestamp
-4. Call `retrain_trigger.evaluate_with_labels(labeled_outcomes)`
-5. If ROC-AUC < threshold → `retrain_recommended: true`
-6. Re-run `dvc repro` to retrain with updated data
-
-An early-warning signal (without labels) is available via `check_distribution_drift()`, which flags significant shifts in the predicted churn rate distribution.
+**Any capstone drift scenarios must be:** injected, seeded, config-driven, and labelled "injected"
+with a known onset window. See [docs/limitations.md](docs/limitations.md).
 
 ---
 
-## Testing
+## Stationarity
 
-```bash
-pytest -v
-```
-
-**24 tests** covering:
-- HTML page routes (ChurnOps content verification)
-- Prediction response structure and types
-- Binary prediction / churn flag consistency
-- Probability range [0.0, 1.0]
-- Prediction label enumeration
-- High-risk vs low-risk profile ordering
-- Missing field → HTTP 422
-- Invalid categorical value → HTTP 422
-- Out-of-range score → HTTP 422
-- Dashboard API structure and experiment name
-- ROC-AUC in results
-- Monitoring endpoint structure and notes
+The Sparkov simulation is nearly stationary (expected: mean PSI < 0.10 across features and months).
+This is measured and reported honestly in `stationarity_report.json` after `dvc repro Stationarity_Check`.
+Any variation reported is simulation-internal, not real-world concept drift.
 
 ---
 
-## Docker
-
-Build:
+## Quick Start
 
 ```bash
-docker build -t churnops .
-```
+git clone https://github.com/myself-moons/CreditOps.git
+cd CreditOps
 
-Run:
-
-```bash
-docker run -p 8000:8000 churnops
-```
-
-Open `http://localhost:8000`.
-
-The image is self-contained — `model.pkl`, `preprocessor.pkl`, `metrics.json`, and `mlruns/` are bundled so the dashboard has full run history without re-training.
-
----
-
-## How to Run Locally
-
-```bash
-# Clone and navigate
-cd ChurnOps
-
-# Create virtual environment
+# Create venv and install
 python -m venv .venv
-source .venv/bin/activate   # Linux/Mac
-.venv\Scripts\activate      # Windows
+.venv\Scripts\pip install -r requirements.txt
 
-pip install --upgrade pip
-pip install -r requirements.txt
+# Data files must be placed in Credit_Data/
+# (fraudTrain.csv and fraudTest.csv from Kaggle kartik2112/fraud-detection)
 
-# Run the full pipeline
-dvc repro
+# Run full pipeline
+.venv\Scripts\python -m dvc repro
 
 # Run tests
-pytest -v
+.venv\Scripts\pytest -q
 
-# Start the API
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+# Start API
+.venv\Scripts\uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
-
----
-
-## How to Reproduce the Pipeline
-
-```bash
-# Reproduce all stages
-dvc repro
-
-# View pipeline graph
-dvc dag
-
-# Check pipeline status
-dvc status
-
-# Run MLflow UI separately
-mlflow ui --backend-store-uri ./mlruns --host 0.0.0.0 --port 5000
-```
-
-Changing `params.yaml` and re-running `dvc repro` creates new MLflow runs while preserving previous runs for comparison.
-
----
-
-## Project Structure
-
-```
-ChurnOps/
-├── Churn_Data/             Raw Excel source files (unchanged)
-├── data/
-│   ├── raw/                DVC output — train/test splits
-│   └── processed/          DVC output — encoded features
-├── src/
-│   ├── data_collection.py  Data merge and split
-│   ├── data_preprocessing.py  sklearn pipeline + preprocessor.pkl
-│   ├── model_training.py   LR + RF + XGBoost, MLflow tracking
-│   ├── model_evaluation.py Full metrics + metrics.json
-│   ├── data_model.py       Customer Pydantic model
-│   ├── prediction_logger.py  Prediction logging
-│   ├── monitor.py          Two-layer monitoring
-│   ├── retrain_trigger.py  Retraining decision
-│   ├── main.py             FastAPI application
-│   ├── landing.html        Overview page
-│   ├── dashboard.html      MLflow dashboard
-│   └── predict.html        Prediction form
-├── tests/
-│   └── test_api.py         24-test suite
-├── docs/
-│   ├── CHURNOPS_MIGRATION_PLAN.md
-│   └── CHURNOPS_RUNBOOK.md
-├── dvc.yaml                Pipeline definition
-├── dvc.lock                Reproducibility lock
-├── params.yaml             Model + monitoring config
-├── metrics.json            Latest evaluation results
-├── model.pkl               Best trained model
-├── preprocessor.pkl        Fitted sklearn pipeline
-├── predictions.jsonl       Prediction log
-├── conftest.py             Pytest path configuration
-├── requirements.txt        Python dependencies
-├── Dockerfile              Container build
-├── JenkinsFile             CI pipeline
-└── render.yaml             Render deployment
-```
-
----
-
-## CI / Jenkins
-
-The `JenkinsFile` runs:
-1. Checkout
-2. Create Python 3.12 virtual environment
-3. Install `requirements.txt`
-4. `dvc repro` (full pipeline)
-5. `pytest -q` (all tests)
-6. Archive `metrics.json`, `model.pkl`, `preprocessor.pkl`
-
-Configure a Pipeline job pointing to `JenkinsFile` with Python 3.12 available on the agent.

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CreditOps Dataset Profile & Feature Engineering Specification">
+<title>CreditOps — Dataset Profile & Schema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root[data-theme="dark"] {
+    --bg-base: #0f1219;
+    --bg-surface: #151924;
+    --bg-card: #1c2230;
+    --bg-card-hover: #222a3c;
+    --bg-sidebar: #11141c;
+    --bg-sidebar-hover: #191f2d;
+    --bg-sidebar-active: #22293b;
+    --sidebar-text: #e2e8f0;
+    --sidebar-muted: #64748b;
+    --sidebar-border: #283246;
+    --bg-sidebar-footer: rgba(0, 0, 0, 0.25);
+    --bg-input: #111520;
+    --border: #283246;
+    --border-subtle: #1e2638;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --notice-bg: #171a22;
+    --notice-border: #283246;
+    --notice-text: #cbd5e1;
+    --notice-tag-bg: rgba(245, 158, 11, 0.15);
+    --notice-tag-color: #fbbf24;
+    --hero-bg: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    --hero-border: #334155;
+    --hero-title-color: #ffffff;
+    --hero-text-color: #cbd5e1;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-green: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-red: #ef4444;
+    --accent-purple: #8b5cf6;
+    --gauge-bg: #222b3d;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  :root[data-theme="light"] {
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-sidebar: #ffffff;
+    --bg-sidebar-hover: #f1f5f9;
+    --bg-sidebar-active: #eff6ff;
+    --sidebar-text: #1e293b;
+    --sidebar-muted: #64748b;
+    --sidebar-border: #e2e8f0;
+    --bg-sidebar-footer: #f8fafc;
+    --bg-input: #ffffff;
+    --border: #e2e8f0;
+    --border-subtle: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --notice-bg: #f1f5f9;
+    --notice-border: #e2e8f0;
+    --notice-text: #475569;
+    --notice-tag-bg: rgba(245, 158, 11, 0.15);
+    --notice-tag-color: #b45309;
+    --hero-bg: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    --hero-border: #cbd5e1;
+    --hero-title-color: #0f172a;
+    --hero-text-color: #334155;
+    --accent-blue: #2563eb;
+    --accent-cyan: #0891b2;
+    --accent-green: #059669;
+    --accent-amber: #d97706;
+    --accent-red: #dc2626;
+    --accent-purple: #7c3aed;
+    --gauge-bg: #e2e8f0;
+    --shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    line-height: 1.5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .notice-bar {
+    background: var(--notice-bg);
+    color: var(--notice-text);
+    border-bottom: 1px solid var(--notice-border);
+    padding: 6px 20px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: 0.02em;
+    z-index: 110;
+  }
+  .notice-tag {
+    background: var(--notice-tag-bg);
+    color: var(--notice-tag-color);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-right: 8px;
+  }
+
+  header {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .brand-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-primary); }
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 800; font-size: 0.85rem;
+  }
+  .brand-title { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; }
+  .brand-sub { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin-left: 6px; border-left: 1px solid var(--border); padding-left: 10px; }
+
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-btn {
+    background: none; border: 1px solid transparent; color: var(--text-secondary);
+    padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; text-decoration: none; transition: all 0.15s;
+  }
+  .header-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--border); }
+  .status-pill {
+    display: flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3); color: var(--accent-green);
+    padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+  }
+  .pulse-dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; }
+
+  .theme-toggle {
+    display: flex; align-items: center; gap: 8px; background: var(--bg-input);
+    border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; cursor: pointer;
+    user-select: none;
+  }
+
+  .layout-container { display: flex; flex: 1; overflow: hidden; }
+
+  /* Unified Sidebar */
+  aside.sidebar {
+    width: 240px; background: var(--bg-sidebar); color: var(--sidebar-text);
+    border-right: 1px solid var(--sidebar-border); display: flex; flex-direction: column;
+    flex-shrink: 0; user-select: none; transition: background-color 0.25s, border-color 0.25s;
+  }
+  .sidebar-nav-wrap {
+    flex: 1; overflow-y: auto; padding: 12px 10px 8px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .nav-group-title {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--sidebar-muted); padding: 4px 10px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-item {
+    display: flex; align-items: center; justify-content: space-between; padding: 8px 12px;
+    border-radius: 6px; color: var(--sidebar-text); text-decoration: none; font-size: 0.84rem;
+    font-weight: 500; transition: all 0.15s ease; margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--bg-sidebar-hover); color: var(--text-primary); }
+  .nav-item.active { background: var(--bg-sidebar-active); color: var(--accent-blue); font-weight: 600; border-left: 3px solid var(--accent-blue); }
+  .nav-item-left { display: flex; align-items: center; gap: 10px; }
+  .item-badge {
+    font-size: 0.68rem; padding: 2px 7px; border-radius: 99px;
+    background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); font-weight: 700;
+  }
+  .item-badge.green { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+
+  .sidebar-footer {
+    padding: 12px 10px; border-top: 1px solid var(--sidebar-border);
+    background: var(--bg-sidebar-footer);
+  }
+
+  main.workspace {
+    flex: 1; overflow-y: auto; padding: 24px 32px 60px;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+
+  .statement-box {
+    background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 10px; padding: 18px 22px;
+  }
+  .statement-title {
+    font-size: 0.86rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: #fbbf24; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+  }
+  .statement-body { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
+
+  .kpi-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;
+  }
+  .kpi-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px; text-align: center; box-shadow: var(--shadow);
+  }
+  .kpi-val { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; }
+  .kpi-val.blue { color: var(--accent-blue); }
+  .kpi-val.green { color: var(--accent-green); }
+  .kpi-val.red { color: var(--accent-red); }
+  .kpi-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-top: 6px; }
+
+  .splits-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 800px) { .splits-row { grid-template-columns: 1fr; } }
+  .split-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; box-shadow: var(--shadow);
+  }
+  .split-tag { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .split-tag.train { color: var(--accent-blue); }
+  .split-tag.val { color: var(--accent-amber); }
+  .split-tag.test { color: var(--accent-green); }
+  .split-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; }
+
+  .panel-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; box-shadow: var(--shadow);
+  }
+  .panel-title {
+    font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th {
+    text-align: left; padding: 10px 12px; color: var(--text-muted); border-bottom: 1px solid var(--border);
+    font-weight: 600; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
+  tr:hover td { background: var(--bg-card-hover); }
+
+  .badge-use { padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+  .badge-derived { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+  .badge-dropped { background: rgba(100, 116, 139, 0.12); color: var(--text-muted); }
+  .badge-target { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+
+  .icon-svg {
+    width: 18px; height: 18px; stroke: currentColor; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round; fill: none; display: inline-block;
+  }
+  .icon-svg.sm { width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+
+<div class="notice-bar">
+  <div style="display:flex;align-items:center;">
+    <span class="notice-tag">Notice</span>
+    <span>SIMULATED DATA: Sparkov synthetic generator modeling 1,000 cardholders and 800 merchants. Public Domain CC0 1.0.</span>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-muted);">
+    Dataset: Sparkov Fraud Detection
+  </div>
+</div>
+
+<header>
+  <div class="header-left">
+    <a href="/" class="brand-logo">
+      <div class="logo-icon">C</div>
+      <div>
+        <span class="brand-title">CreditOps</span>
+        <span class="brand-sub">Console</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="header-right">
+    <div class="status-pill">
+      <span class="pulse-dot"></span>
+      <span>Profile Synced</span>
+    </div>
+
+    <div class="theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+      <span class="theme-toggle-icon" id="themeIcon">
+        <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </span>
+      <span style="font-size:0.72rem;font-weight:600;text-transform:uppercase;" id="themeLabel">Dark</span>
+    </div>
+
+    <a href="/docs" class="header-btn" title="FastAPI Swagger Documentation" target="_blank">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    </a>
+
+    <a href="https://github.com/myself-moons/CreditOps" class="header-btn" title="GitHub Repository" target="_blank">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+    </a>
+  </div>
+</header>
+
+<div class="layout-container">
+  <!-- Unified Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-nav-wrap">
+
+      <!-- Group 1: System Overview (Top) -->
+      <div class="nav-group">
+        <div class="nav-group-title">System Overview</div>
+        <a href="/" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>System Overview</span>
+          </div>
+        </a>
+      </div>
+      <!-- Ops & Monitor (Commented out per user request) -->
+
+      <!-- Group 2: Intelligence -->
+      <div class="nav-group">
+        <div class="nav-group-title">Intelligence</div>
+        <a href="/predict" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>Live Inference</span>
+          </div>
+        </a>
+        <a href="/dataset" class="nav-item active">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            <span>Dataset Profile</span>
+          </div>
+          <span class="item-badge green">synced</span>
+        </a>
+      </div>
+
+      <!-- Group 3: MLOps & Pipeline -->
+      <div class="nav-group">
+        <div class="nav-group-title">MLOps &amp; Pipeline</div>
+        <a href="/dashboard" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>Pipelines &amp; Runs</span>
+          </div>
+          <span class="item-badge">6 stages</span>
+        </a>
+        <a href="/logs" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            <span>Transaction Logs</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Permanent Services Footer -->
+    <div class="sidebar-footer">
+      <div class="nav-group-title" style="padding:0 4px 6px;">Services</div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;margin-bottom:4px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">FastAPI Serving</span>
+        <span class="item-badge green">healthy</span>
+      </div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">Model Registry</span>
+        <span class="item-badge">loaded</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="workspace">
+    <div>
+      <h1 style="font-size:1.5rem;font-weight:800;">Dataset Profile &amp; Governance</h1>
+      <p style="color:var(--text-secondary);font-size:0.86rem;margin-top:2px;">
+        Provenance: Sparkov simulated transactions (1,852,394 total records). Evaluated for temporal stationarity.
+      </p>
+    </div>
+
+    <div class="statement-box">
+      <div class="statement-title">
+        <svg class="icon-svg sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>Synthetic Data Disclosure</span>
+      </div>
+      <div class="statement-body">
+        This dataset was procedurally generated using the Sparkov synthetic transaction engine. It simulates 1,000 synthetic cardholders and 800 merchants across the United States between Jan 2019 and Dec 2020. <strong>No real cardholder identities or card numbers exist</strong>. Real-world drift experiments must be injected and documented with known onset parameters.
+      </div>
+    </div>
+
+    <!-- Aggregate KPIs -->
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-val blue" id="kpi-rows">1,852,394</div><div class="kpi-label">Total Volume</div></div>
+      <div class="kpi-card"><div class="kpi-val red" id="kpi-fraud">9,651</div><div class="kpi-label">Fraud Incidents</div></div>
+      <div class="kpi-card"><div class="kpi-val red" id="kpi-rate">0.52%</div><div class="kpi-label">Global Fraud Rate</div></div>
+      <div class="kpi-card"><div class="kpi-val blue" id="kpi-span">2019-01-01</div><div class="kpi-label">Simulation Start</div></div>
+      <div class="kpi-card"><div class="kpi-val blue" id="kpi-end">2020-12-31</div><div class="kpi-label">Simulation End</div></div>
+    </div>
+
+    <!-- Temporal Splits -->
+    <div>
+      <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;">Temporal Partitioning Strategy</h2>
+      <div class="splits-row">
+        <div class="split-card">
+          <div class="split-tag train">Training Split (70%)</div>
+          <div class="split-desc" id="split-train">
+            1,296,675 rows &bull; Fraud Rate: 0.58%<br>
+            Span: 2019-01-01 to 2020-06-21<br>
+            Majority downsampled to 30% for efficient training.
+          </div>
+        </div>
+        <div class="split-card">
+          <div class="split-tag val">Validation Split (15%)</div>
+          <div class="split-desc" id="split-val">
+            277,859 rows &bull; Fraud Rate: 0.44%<br>
+            Span: 2020-06-21 to 2020-10-03<br>
+            Used exclusively for tuning decision boundary.
+          </div>
+        </div>
+        <div class="split-card">
+          <div class="split-tag test">Test Holdout Split (15%)</div>
+          <div class="split-desc" id="split-test">
+            277,860 rows &bull; Fraud Rate: 0.33%<br>
+            Span: 2020-10-03 to 2020-12-31<br>
+            Untouched until final champion evaluation.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schema & Feature Decisions -->
+    <div class="panel-card">
+      <div class="panel-title">
+        <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        <span>Feature Schema &amp; Handling</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Field Name</th><th>Raw Type</th><th>ML Treatment</th><th>Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>trans_date_trans_time</code></td>
+              <td>String timestamp</td>
+              <td><span class="badge-use badge-derived">Derived</span></td>
+              <td>Extracted cyclical features: hour, day_of_week, is_weekend</td>
+            </tr>
+            <tr>
+              <td><code>amt</code></td>
+              <td>Float (USD)</td>
+              <td><span class="badge-use badge-derived">Log Transformed</span></td>
+              <td>Highly right-skewed; transformed via log(amt + 1e-6)</td>
+            </tr>
+            <tr>
+              <td><code>lat, long, merch_lat, merch_long</code></td>
+              <td>Coordinates</td>
+              <td><span class="badge-use badge-derived">Haversine Distance</span></td>
+              <td>Computes great-circle distance (km) between cardholder home &amp; merchant</td>
+            </tr>
+            <tr>
+              <td><code>dob</code></td>
+              <td>Date of birth</td>
+              <td><span class="badge-use badge-derived">Age Computed</span></td>
+              <td>Age at transaction time computed to capture risk profiles without storing PII</td>
+            </tr>
+            <tr>
+              <td><code>category</code></td>
+              <td>String</td>
+              <td><span class="badge-use badge-derived">One-Hot Encoded</span></td>
+              <td>14 transaction categories mapped to categorical features</td>
+            </tr>
+            <tr>
+              <td><code>cc_num, first, last, street</code></td>
+              <td>PII Strings</td>
+              <td><span class="badge-use badge-dropped">Dropped</span></td>
+              <td>Excluded entirely to prevent identity memorization &amp; privacy leakage</td>
+            </tr>
+            <tr>
+              <td><code>is_fraud</code></td>
+              <td>Integer (0/1)</td>
+              <td><span class="badge-use badge-target">Target Label</span></td>
+              <td>Binary label (~0.5% positive fraud rate)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Dark / Light Mode Handling (Default: Dark)
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+const themeIcon = document.getElementById('themeIcon');
+const themeLabel = document.getElementById('themeLabel');
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('creditops-theme', theme);
+  if (theme === 'dark') {
+    themeIcon.innerHTML = '<svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    themeLabel.textContent = 'Dark';
+  } else {
+    themeIcon.innerHTML = '<svg class="icon-svg sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+    themeLabel.textContent = 'Light';
+  }
+}
+applyTheme(localStorage.getItem('creditops-theme') || 'dark');
+themeToggleBtn.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+fetch('/api/dataset').then(r => r.json()).then(data => {
+  if (data.total_rows) {
+    document.getElementById('kpi-rows').textContent = data.total_rows.toLocaleString();
+  }
+  if (data.fraud_count) {
+    document.getElementById('kpi-fraud').textContent = data.fraud_count.toLocaleString();
+  }
+  if (data.fraud_rate) {
+    document.getElementById('kpi-rate').textContent = (data.fraud_rate * 100).toFixed(2) + '%';
+  }
+}).catch(err => {
+  console.warn('Dataset API load:', err);
+});
+</script>
+</body>
+</html>

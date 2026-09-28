@@ -1,36 +1,22 @@
 """
-monitor.py — ChurnOps
-
-Reads predictions.jsonl and computes operational monitoring statistics.
+monitor.py — CreditOps
 
 TWO-LAYER MONITORING ARCHITECTURE
 ----------------------------------
-
-Layer A — Operational monitoring (available immediately from prediction logs):
-  - Total prediction count
-  - Churn prediction rate (% of predictions that are churn)
-  - Probability distribution (mean, min, max, std)
-  - Average and P95 latency
-  - Model version breakdown
+Layer A — Operational monitoring (no ground truth required):
+  - prediction count, fraud detection rate, latency, model version
+  - probability distribution stats
+  - feature distribution vs training profile (check_distribution_drift)
 
 Layer B — Model performance monitoring (requires ground-truth labels):
-  - ROC-AUC, Precision, Recall, F1 against actual churn outcomes
-  - This layer is exposed via get_performance_metrics() which accepts
-    a list of (prediction_id, actual_label) tuples from a ground-truth feed.
+  - PR-AUC, recall, precision, F1
+  - Called when labelled outcomes are available (offline workflow)
 
-IMPORTANT LIMITATION
---------------------
-Without ground-truth labels, it is impossible to know whether the model
-is performing well. Probability distribution shifts can be early warning
-signals, but they are NOT a substitute for true performance evaluation.
+IMPORTANT: Without ground-truth labels, PR-AUC cannot be computed.
+Distribution shift is an early warning only.
 
-The typical telco churn cycle is 30–90 days — a customer's actual churn
-status is only known after that period. The recommended integration is:
-  1. Log predictions with a stable identifier (customer_id, request_id)
-  2. After 30-90 days, receive the actual outcomes from the CRM/billing system
-  3. Match outcomes to logged predictions using the identifier
-  4. Call evaluate_with_ground_truth() to compute real performance metrics
-  5. Compare against params.yaml threshold to decide on retraining
+⚠ SIMULATED DATA: All monitoring compares against a Sparkov-simulation baseline.
+  Any drift detected is simulation-internal variation, not real-world concept drift.
 """
 
 import json
@@ -45,7 +31,6 @@ LOG_PATH = ROOT_DIR / "predictions.jsonl"
 
 
 def _load_logs() -> list[dict]:
-    """Load all prediction log records."""
     if not LOG_PATH.exists():
         return []
     records = []
@@ -60,20 +45,28 @@ def _load_logs() -> list[dict]:
     return records
 
 
+def _load_monitoring_cfg() -> dict:
+    params_path = ROOT_DIR / "params.yaml"
+    if not params_path.exists():
+        return {}
+    with params_path.open() as f:
+        return yaml.safe_load(f).get("monitoring", {})
+
+
 def get_operational_stats(recent_n: int = 100) -> dict:
     """
-    Layer A: Operational statistics computed directly from the prediction log.
+    Layer A: Operational statistics from prediction log.
     No ground-truth labels required.
 
-    Args:
-        recent_n: Number of most-recent predictions to analyse. Use -1 for all.
+    Returns stats for the most recent recent_n predictions (or all if recent_n < 0).
     """
     records = _load_logs()
     if not records:
         return {
-            "status": "no_predictions",
-            "message": "No predictions have been logged yet.",
+            "status":            "no_predictions",
+            "message":           "No predictions have been logged yet.",
             "total_predictions": 0,
+            "data_provenance":   "synthetic/simulated (Sparkov)",
         }
 
     window = records[-recent_n:] if recent_n > 0 else records
@@ -81,29 +74,28 @@ def get_operational_stats(recent_n: int = 100) -> dict:
 
     predictions  = [r["prediction"] for r in window]
     probs        = [r["probability"] for r in window]
-    latencies    = [r["latency_ms"] for r in window if "latency_ms" in r]
+    latencies    = [r["latency_ms"]  for r in window if "latency_ms" in r]
     model_vers   = {}
     for r in window:
         mv = r.get("model_version", "unknown")
         model_vers[mv] = model_vers.get(mv, 0) + 1
 
-    churn_rate = sum(predictions) / len(predictions) if predictions else 0.0
-
-    # P95 latency
-    sorted_lat = sorted(latencies)
-    p95_latency = sorted_lat[int(len(sorted_lat) * 0.95)] if sorted_lat else None
+    fraud_rate   = sum(predictions) / len(predictions) if predictions else 0.0
+    sorted_lat   = sorted(latencies)
+    p95_latency  = sorted_lat[int(len(sorted_lat) * 0.95)] if sorted_lat else None
 
     return {
-        "status": "ok",
-        "total_predictions":  total,
-        "window_size":        len(window),
-        "churn_rate":         round(churn_rate, 4),
-        "churn_count":        sum(predictions),
-        "non_churn_count":    len(predictions) - sum(predictions),
+        "status":              "ok",
+        "data_provenance":     "synthetic/simulated (Sparkov)",
+        "total_predictions":   total,
+        "window_size":         len(window),
+        "fraud_detection_rate": round(fraud_rate, 4),
+        "fraud_count":         sum(predictions),
+        "legitimate_count":    len(predictions) - sum(predictions),
         "probability_stats": {
-            "mean": round(statistics.mean(probs), 4)  if probs else None,
-            "min":  round(min(probs), 4)              if probs else None,
-            "max":  round(max(probs), 4)              if probs else None,
+            "mean": round(statistics.mean(probs), 4) if probs else None,
+            "min":  round(min(probs), 4)             if probs else None,
+            "max":  round(max(probs), 4)             if probs else None,
             "std":  round(statistics.stdev(probs), 4) if len(probs) > 1 else 0.0,
         },
         "latency_ms": {
@@ -112,38 +104,30 @@ def get_operational_stats(recent_n: int = 100) -> dict:
         },
         "model_versions": model_vers,
         "layer_a_note": (
-            "Operational stats only. Model performance metrics (ROC-AUC, F1) "
-            "require ground-truth labels. See /api/monitor for the retraining trigger."
+            "Operational stats only. PR-AUC, recall, and F1 require ground-truth "
+            "fraud labels and cannot be computed from prediction logs alone."
         ),
     }
 
 
-def evaluate_with_ground_truth(
-    labeled_outcomes: list[dict],
-) -> Optional[dict]:
+def evaluate_with_ground_truth(labeled_outcomes: list[dict]) -> Optional[dict]:
     """
-    Layer B: Model performance evaluation.
+    Layer B: Performance evaluation using ground-truth labels.
 
     Args:
-        labeled_outcomes: List of dicts, each containing:
-            {
-                "timestamp": "<ISO timestamp matching a log record>",
-                "actual_label": 0 or 1
-            }
+        labeled_outcomes: List of dicts:
+            {"timestamp": "<ISO matching a log record>", "actual_label": 0|1}
 
     Returns:
         Performance metrics dict, or None if insufficient data.
     """
     try:
         from sklearn.metrics import (
-            accuracy_score,
-            f1_score,
-            precision_score,
-            recall_score,
-            roc_auc_score,
+            average_precision_score, f1_score,
+            precision_score, recall_score, roc_auc_score,
         )
     except ImportError:
-        return {"error": "sklearn not available for performance evaluation"}
+        return {"error": "sklearn not available"}
 
     logs    = _load_logs()
     log_map = {r["timestamp"]: r for r in logs}
@@ -166,9 +150,10 @@ def evaluate_with_ground_truth(
     return {
         "status":    "evaluated",
         "n_samples": len(y_true),
-        "roc_auc":   round(roc_auc_score(y_true, y_prob), 4),
-        "accuracy":  round(accuracy_score(y_true, y_pred), 4),
-        "precision": round(precision_score(y_true, y_pred, zero_division=0), 4),
-        "recall":    round(recall_score(y_true, y_pred, zero_division=0), 4),
-        "f1_score":  round(f1_score(y_true, y_pred, zero_division=0), 4),
+        "pr_auc":    round(float(average_precision_score(y_true, y_prob)), 6),
+        "roc_auc":   round(float(roc_auc_score(y_true, y_prob)), 6),
+        "precision": round(float(precision_score(y_true, y_pred, zero_division=0)), 6),
+        "recall":    round(float(recall_score(y_true, y_pred, zero_division=0)), 6),
+        "f1_score":  round(float(f1_score(y_true, y_pred, zero_division=0)), 6),
+        "data_provenance": "synthetic/simulated (Sparkov)",
     }

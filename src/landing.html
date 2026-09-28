@@ -1,131 +1,512 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ChurnOps | Overview</title>
-  <meta name="description" content="ChurnOps -- Customer Churn Prediction MLOps System. Pipeline overview, dataset stats, and experiment summary.">
-  <style>
-    :root {
-      --ink:#1a1f36; --muted:#6b7280; --line:#e5e7eb; --paper:#f8fafc;
-      --white:#fff; --indigo:#4f46e5; --amber:#f59e0b; --red:#dc2626;
-      --green:#16a34a; --shadow:0 16px 40px rgba(26,31,54,.08);
-    }
-    * { box-sizing:border-box; }
-    body { margin:0; color:var(--ink); background:var(--paper); font:15px/1.6 system-ui,sans-serif; }
-    .topbar { background:var(--ink); color:white; padding:22px clamp(20px,6vw,88px) 30px; border-bottom:4px solid var(--indigo); }
-    nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:36px; font:700 12px sans-serif; }
-    nav a { color:#9ca3af; text-decoration:none; padding:7px 12px; border:1px solid transparent; border-radius:6px; }
-    nav a:hover, nav a.active { color:white; border-color:#4f46e5; background:#312e81; }
-    .eyebrow { color:#818cf8; text-transform:uppercase; letter-spacing:.14em; font:700 11px sans-serif; margin-bottom:10px; }
-    h1 { font-size:clamp(34px,6vw,68px); line-height:1; margin:0 0 16px; font-weight:800; }
-    .lead { color:#93c5fd; max-width:720px; font-size:18px; margin:0; }
-    main { max-width:1320px; margin:0 auto; padding:36px clamp(20px,6vw,88px) 64px; }
-    .pipeline { display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:4px; }
-    .stage { background:var(--white); padding:20px; border:1px solid var(--line); box-shadow:var(--shadow); min-height:110px; }
-    .stage:first-child { border-radius:6px 0 0 6px; } .stage:last-child { border-radius:0 6px 6px 0; }
-    .stage + .stage { border-left:0; }
-    .stage small { color:var(--indigo); font:700 11px sans-serif; text-transform:uppercase; letter-spacing:.1em; }
-    .stage strong { display:block; font-size:17px; margin-top:8px; }
-    .stage span { color:var(--muted); display:block; margin-top:4px; font-size:13px; }
-    .section-head { display:flex; justify-content:space-between; align-items:end; gap:16px; margin:44px 0 16px; }
-    h2 { font-size:22px; margin:0; font-weight:700; }
-    .section-note { color:var(--muted); margin:0; font-size:14px; }
-    .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:18px; }
-    .card { background:var(--white); border:1px solid var(--line); box-shadow:var(--shadow); border-radius:8px; padding:22px; }
-    .datasets { grid-column:span 7; } .results { grid-column:span 5; } .runs { grid-column:span 12; }
-    .row { display:flex; justify-content:space-between; gap:15px; padding:12px 0; border-bottom:1px solid var(--line); }
-    .row:last-child { border-bottom:0; }
-    .label { font-weight:700; font-size:14px; }
-    .detail { color:var(--muted); text-align:right; font-size:13px; }
-    .metric { margin:14px 0; }
-    .metric-top { display:flex; justify-content:space-between; font:700 13px sans-serif; margin-bottom:6px; }
-    .bar { height:9px; background:#e0e7ff; border-radius:3px; overflow:hidden; }
-    .bar span { display:block; height:100%; background:var(--indigo); border-radius:3px; }
-    .run-meta { display:flex; gap:28px; flex-wrap:wrap; margin-top:16px; }
-    .run-meta strong { display:block; font-size:24px; font-weight:800; }
-    .run-meta span { color:var(--muted); font-size:13px; }
-    .pill { display:inline-block; background:#e0e7ff; color:var(--indigo); border-radius:12px; padding:3px 10px; font:700 11px sans-serif; }
-    .pill.churn { background:#fee2e2; color:var(--red); }
-    .pill.ok    { background:#dcfce7; color:var(--green); }
-    footer { color:var(--muted); margin-top:28px; font-size:13px; }
-    @media(max-width:800px) {
-      .pipeline { grid-template-columns:repeat(2,1fr); }
-      .stage:first-child, .stage:last-child { border-radius:0; }
-      .stage + .stage { border-left:1px solid var(--line); }
-      .datasets,.results { grid-column:span 12; }
-    }
-    @media(max-width:500px) {
-      .pipeline { grid-template-columns:1fr; }
-      .stage { border-radius:6px !important; border:1px solid var(--line) !important; margin-bottom:6px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CreditOps — End-to-End MLOps Pipeline for Credit Card Fraud Detection">
+<title>CreditOps — Operations Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root[data-theme="dark"] {
+    --bg-base: #0f1219;
+    --bg-surface: #151924;
+    --bg-card: #1c2230;
+    --bg-card-hover: #222a3c;
+    --bg-sidebar: #11141c;
+    --bg-sidebar-hover: #191f2d;
+    --bg-sidebar-active: #22293b;
+    --sidebar-text: #e2e8f0;
+    --sidebar-muted: #64748b;
+    --sidebar-border: #283246;
+    --bg-sidebar-footer: rgba(0, 0, 0, 0.25);
+    --bg-input: #111520;
+    --border: #283246;
+    --border-subtle: #1e2638;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --notice-bg: #171a22;
+    --notice-border: #283246;
+    --notice-text: #cbd5e1;
+    --notice-tag-bg: rgba(245, 158, 11, 0.15);
+    --notice-tag-color: #fbbf24;
+    --hero-bg: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    --hero-border: #334155;
+    --hero-title-color: #ffffff;
+    --hero-text-color: #cbd5e1;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-green: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-red: #ef4444;
+    --accent-purple: #8b5cf6;
+    --gauge-bg: #222b3d;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  :root[data-theme="light"] {
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-sidebar: #ffffff;
+    --bg-sidebar-hover: #f1f5f9;
+    --bg-sidebar-active: #eff6ff;
+    --sidebar-text: #1e293b;
+    --sidebar-muted: #64748b;
+    --sidebar-border: #e2e8f0;
+    --bg-sidebar-footer: #f8fafc;
+    --bg-input: #ffffff;
+    --border: #e2e8f0;
+    --border-subtle: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --notice-bg: #f1f5f9;
+    --notice-border: #e2e8f0;
+    --notice-text: #475569;
+    --notice-tag-bg: rgba(245, 158, 11, 0.15);
+    --notice-tag-color: #b45309;
+    --hero-bg: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    --hero-border: #cbd5e1;
+    --hero-title-color: #0f172a;
+    --hero-text-color: #334155;
+    --accent-blue: #2563eb;
+    --accent-cyan: #0891b2;
+    --accent-green: #059669;
+    --accent-amber: #d97706;
+    --accent-red: #dc2626;
+    --accent-purple: #7c3aed;
+    --gauge-bg: #e2e8f0;
+    --shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    line-height: 1.5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .notice-bar {
+    background: var(--notice-bg);
+    color: var(--notice-text);
+    border-bottom: 1px solid var(--notice-border);
+    padding: 6px 20px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: 0.02em;
+    z-index: 110;
+  }
+  .notice-tag {
+    background: var(--notice-tag-bg);
+    color: var(--notice-tag-color);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-right: 8px;
+  }
+
+  header {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .brand-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-primary); }
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 800; font-size: 0.85rem;
+  }
+  .brand-title { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; }
+  .brand-sub { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin-left: 6px; border-left: 1px solid var(--border); padding-left: 10px; }
+
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-btn {
+    background: none; border: 1px solid transparent; color: var(--text-secondary);
+    padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; text-decoration: none; transition: all 0.15s;
+  }
+  .header-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--border); }
+  .status-pill {
+    display: flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3); color: var(--accent-green);
+    padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+  }
+  .pulse-dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; }
+
+  .theme-toggle {
+    display: flex; align-items: center; gap: 8px; background: var(--bg-input);
+    border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; cursor: pointer;
+    user-select: none;
+  }
+
+  .layout-container { display: flex; flex: 1; overflow: hidden; }
+
+  /* Unified Sidebar */
+  aside.sidebar {
+    width: 240px; background: var(--bg-sidebar); color: var(--sidebar-text);
+    border-right: 1px solid var(--sidebar-border); display: flex; flex-direction: column;
+    flex-shrink: 0; user-select: none; transition: background-color 0.25s, border-color 0.25s;
+  }
+  .sidebar-nav-wrap {
+    flex: 1; overflow-y: auto; padding: 12px 10px 8px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .nav-group-title {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--sidebar-muted); padding: 4px 10px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-item {
+    display: flex; align-items: center; justify-content: space-between; padding: 8px 12px;
+    border-radius: 6px; color: var(--sidebar-text); text-decoration: none; font-size: 0.84rem;
+    font-weight: 500; transition: all 0.15s ease; margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--bg-sidebar-hover); color: var(--text-primary); }
+  .nav-item.active { background: var(--bg-sidebar-active); color: var(--accent-blue); font-weight: 600; border-left: 3px solid var(--accent-blue); }
+  .nav-item-left { display: flex; align-items: center; gap: 10px; }
+  .item-badge {
+    font-size: 0.68rem; padding: 2px 7px; border-radius: 99px;
+    background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); font-weight: 700;
+  }
+  .item-badge.green { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+
+  .sidebar-footer {
+    padding: 12px 10px; border-top: 1px solid var(--sidebar-border);
+    background: var(--bg-sidebar-footer);
+  }
+
+  /* Main Workspace */
+  main.workspace {
+    flex: 1; overflow-y: auto; padding: 24px 32px 60px;
+    display: flex; flex-direction: column; gap: 28px;
+  }
+
+  /* Hero Section (Fixed: Full Adaptive Theme & No Cut-off Elements) */
+  .hero-card {
+    background: var(--hero-bg);
+    border: 1px solid var(--hero-border);
+    border-radius: 14px;
+    padding: 36px 36px 40px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3);
+    color: var(--accent-blue); padding: 4px 12px; border-radius: 99px;
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 16px;
+    align-self: flex-start;
+  }
+  .hero-title {
+    font-size: 2.1rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px;
+    line-height: 1.25; color: var(--hero-title-color);
+  }
+  .hero-desc {
+    color: var(--hero-text-color); font-size: 0.98rem; max-width: 760px; line-height: 1.65;
+    margin-bottom: 28px;
+  }
+  .hero-btns {
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 4px;
+  }
+  .btn-solid {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    color: #ffffff; padding: 11px 22px; border-radius: 8px; font-weight: 700; font-size: 0.88rem;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+    border: none; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  }
+  .btn-solid:hover { opacity: 0.92; transform: translateY(-1px); }
+  .btn-outline {
+    background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);
+    padding: 11px 22px; border-radius: 8px; font-weight: 600; font-size: 0.88rem;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+  }
+  .btn-outline:hover { background: var(--bg-card-hover); border-color: var(--accent-blue); color: var(--accent-blue); }
+
+  /* DVC Pipeline Stages Flow */
+  .pipeline-flow {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px;
+  }
+  .stage-box {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px 16px; text-align: center; box-shadow: var(--shadow);
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .stage-box:hover { border-color: var(--accent-blue); transform: translateY(-2px); }
+  .stage-num { font-size: 0.7rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 6px; }
+  .stage-name { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
+  .stage-detail { font-size: 0.74rem; color: var(--text-muted); margin-top: 4px; }
+
+  /* Highlights Grid */
+  .features-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;
+  }
+  .feat-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 22px; box-shadow: var(--shadow); transition: transform 0.2s, border-color 0.2s;
+  }
+  .feat-card:hover { border-color: var(--accent-blue); transform: translateY(-2px); }
+  .feat-title { font-size: 0.96rem; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
+  .feat-desc { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.6; }
+
+  .icon-svg {
+    width: 18px; height: 18px; stroke: currentColor; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round; fill: none; display: inline-block;
+  }
+  .icon-svg.sm { width: 14px; height: 14px; }
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <nav aria-label="Main navigation">
-      <a class="active" href="/">Overview</a>
-      <a href="/dashboard">MLflow Dashboard</a>
-      <a href="/predict">Predict</a>
-      <a href="/docs">API Docs</a>
-    </nav>
-    <div class="eyebrow">ChurnOps / Project Overview</div>
-    <h1>Customer Churn<br>Prediction.</h1>
-    <p class="lead">From raw customer data to a reproducible, tracked model. Three classifiers. ROC-AUC selection. FastAPI serving.</p>
-  </header>
-  <main id="app"><p>Loading project overview...</p></main>
-  <script>
-    const app = document.getElementById('app');
-    const number  = v => new Intl.NumberFormat().format(v || 0);
-    const percent = v => `${(Number(v || 0) * 100).toFixed(1)}%`;
-    const dataset = (label, v) =>
-      `<div class="row"><span class="label">${label}</span><span class="detail">${number(v.rows)} rows / ${number(v.features)} features<br>${v.missing_values ? number(v.missing_values)+' missing' : 'complete'}</span></div>`;
-    const metric = (label, v) =>
-      `<div class="metric"><div class="metric-top"><span>${label}</span><span>${percent(v)}</span></div><div class="bar"><span style="width:${Math.min(100,Number(v||0)*100)}%"></span></div></div>`;
 
-    async function load() {
-      try {
-        const data = await fetch('/api/dashboard').then(r => r.json());
-        const latest = data.tracking.latest_run;
-        const best   = data.tracking.best_run;
-        const stageDesc = ['Merge 5 Excel source files','Encode & scale features','Compare LR, RF, XGBoost','Score best model'];
-        app.innerHTML = `
-          <section class="section-head"><div><h2>Pipeline at a glance</h2><p class="section-note">Every stage is reproducible through DVC.</p></div></section>
-          <section class="pipeline">${data.project.pipeline.map((s,i)=>`<div class="stage"><small>Stage ${i+1}</small><strong>${s}</strong><span>${stageDesc[i]}</span></div>`).join('')}</section>
-          <section class="section-head"><div><h2>What the model sees</h2><p class="section-note">Raw and processed dataset health.</p></div></section>
-          <section class="grid">
-            <div class="card datasets">
-              ${dataset('Training data', data.datasets.train)}
-              ${dataset('Test data', data.datasets.test)}
-              ${dataset('Processed train', data.datasets.processed_train)}
-              ${dataset('Processed test', data.datasets.processed_test)}
-            </div>
-            <div class="card results">
-              <h2>Best model results</h2>
-              <p class="section-note">Metrics from the selected model.</p>
-              ${metric('ROC-AUC',  data.results.roc_auc)}
-              ${metric('F1 Score', data.results.f1_score)}
-              ${metric('Precision',data.results.precision)}
-              ${metric('Recall',   data.results.recall)}
-              ${metric('Accuracy', data.results.accuracy)}
-              <p style="margin-top:12px;font-size:13px;color:var(--muted)">Model: <strong>${data.results.model||data.tracking.selected_model}</strong></p>
-            </div>
-            <div class="card runs">
-              <h2>Experiment progress</h2>
-              <p class="section-note">MLflow tracks every model family and parameter set for comparison.</p>
-              <div class="run-meta">
-                <div><strong>${number(data.tracking.run_count)}</strong><span>tracked runs</span></div>
-                <div><strong>${number(data.tracking.finished_count)}</strong><span>finished</span></div>
-                <div><strong>${best ? percent(best.test_roc_auc) : '-'}</strong><span>best ROC-AUC</span></div>
-                <div><strong>${best ? best.model_type : '-'}</strong><span>best model</span></div>
-                <div><strong>${data.tracking.selected_model}</strong><span>serving now</span></div>
-              </div>
-            </div>
-          </section>
-          <footer>Go to <a href="/dashboard">MLflow Dashboard</a> for full run history, or <a href="/predict">Predict</a> to test a customer.</footer>`;
-      } catch(e) { app.innerHTML = `<p>Unable to load overview: ${e.message}</p>`; }
-    }
-    load();
-  </script>
+<!-- Notice Bar -->
+<div class="notice-bar">
+  <div style="display:flex;align-items:center;">
+    <span class="notice-tag">Notice</span>
+    <span>SIMULATED DATA: Built on Sparkov credit card simulation dataset. CC0 1.0 Public Domain. No real cardholder PII used.</span>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-muted);">
+    CreditOps Enterprise Architecture
+  </div>
+</div>
+
+<!-- Header Bar -->
+<header>
+  <div class="header-left">
+    <a href="/" class="brand-logo">
+      <div class="logo-icon">C</div>
+      <div>
+        <span class="brand-title">CreditOps</span>
+        <span class="brand-sub">Console</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="header-right">
+    <div class="status-pill">
+      <span class="pulse-dot"></span>
+      <span>System Active</span>
+    </div>
+
+    <!-- Dark/Light Mode Switcher -->
+    <div class="theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+      <span class="theme-toggle-icon" id="themeIcon">
+        <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </span>
+      <span style="font-size:0.72rem;font-weight:600;text-transform:uppercase;" id="themeLabel">Dark</span>
+    </div>
+
+    <a href="/docs" class="header-btn" title="FastAPI Swagger Documentation" target="_blank">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    </a>
+
+    <a href="https://github.com/myself-moons/CreditOps" class="header-btn" title="GitHub Repository" target="_blank">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+    </a>
+  </div>
+</header>
+
+<div class="layout-container">
+  <!-- Unified Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-nav-wrap">
+
+      <!-- Group 1: System Overview (Top) -->
+      <div class="nav-group">
+        <div class="nav-group-title">System Overview</div>
+        <a href="/" class="nav-item active">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>System Overview</span>
+          </div>
+          <span class="item-badge green">active</span>
+        </a>
+      </div>
+      <!-- Ops & Monitor (Commented out per user request) -->
+
+      <!-- Group 2: Intelligence -->
+      <div class="nav-group">
+        <div class="nav-group-title">Intelligence</div>
+        <a href="/predict" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>Live Inference</span>
+          </div>
+        </a>
+        <a href="/dataset" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            <span>Dataset Profile</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Group 3: MLOps & Pipeline -->
+      <div class="nav-group">
+        <div class="nav-group-title">MLOps &amp; Pipeline</div>
+        <a href="/dashboard" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>Pipelines &amp; Runs</span>
+          </div>
+          <span class="item-badge">6 stages</span>
+        </a>
+        <a href="/logs" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            <span>Transaction Logs</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Permanent Services Footer -->
+    <div class="sidebar-footer">
+      <div class="nav-group-title" style="padding:0 4px 6px;">Services</div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;margin-bottom:4px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">FastAPI Serving</span>
+        <span class="item-badge green">healthy</span>
+      </div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">Model Registry</span>
+        <span class="item-badge">loaded</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Workspace -->
+  <main class="workspace">
+    <!-- Hero Banner with full theme adaptation & no cut-off elements -->
+    <div class="hero-card">
+      <div class="hero-tag">Enterprise MLOps &bull; Credit Card Fraud Detection</div>
+      <h1 class="hero-title">CreditOps Autonomous Production Platform</h1>
+      <p class="hero-desc">
+        A reproducible, end-to-end MLOps architecture featuring temporal 3-way dataset splits, PR-AUC model governance, FastAPI low-latency serving, two-layer operational drift telemetry, and automated retrain triggering.
+      </p>
+      <div class="hero-btns">
+        <a href="/dashboard" class="btn-solid">
+          <svg class="icon-svg sm" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          <span>Explore Pipelines &amp; Runs</span>
+        </a>
+        <a href="/predict" class="btn-outline">
+          <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Live Inference Console</span>
+        </a>
+        <a href="/logs" class="btn-outline">
+          <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          <span>Transaction Logs</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 6-Stage DVC Pipeline -->
+    <div>
+      <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;">DVC Pipeline Stages</h2>
+      <div class="pipeline-flow">
+        <div class="stage-box">
+          <div class="stage-num">Stage 1</div>
+          <div class="stage-name">Data Collection</div>
+          <div class="stage-detail">Temporal 70/15/15 Split</div>
+        </div>
+        <div class="stage-box">
+          <div class="stage-num">Stage 2</div>
+          <div class="stage-name">Preprocessing</div>
+          <div class="stage-detail">Feature Eng &amp; Scaler</div>
+        </div>
+        <div class="stage-box">
+          <div class="stage-num">Stage 3</div>
+          <div class="stage-name">Model Training</div>
+          <div class="stage-detail">3-Fold CV PR-AUC</div>
+        </div>
+        <div class="stage-box">
+          <div class="stage-num">Stage 4</div>
+          <div class="stage-name">Evaluation</div>
+          <div class="stage-detail">Subgroup &amp; FP Budget</div>
+        </div>
+        <div class="stage-box">
+          <div class="stage-num">Stage 5</div>
+          <div class="stage-name">Profile</div>
+          <div class="stage-detail">Schema Governance</div>
+        </div>
+        <div class="stage-box">
+          <div class="stage-num">Stage 6</div>
+          <div class="stage-name">Stationarity</div>
+          <div class="stage-detail">PSI &amp; KS Test Suite</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Architecture Highlights -->
+    <div>
+      <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;">Architectural Highlights</h2>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-title">PR-AUC Model Governance</div>
+          <div class="feat-desc">At ~0.5% fraud prevalence, ROC-AUC gives false confidence. PR-AUC directly isolates true positives vs false alerts.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-title">Two-Layer Telemetry</div>
+          <div class="feat-desc">Layer A tracks rolling drift without ground truth; Layer B evaluates delayed chargeback feedback against hard thresholds.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-title">Stationarity &amp; PSI</div>
+          <div class="feat-desc">Empirically tracks monthly Population Stability Index (&lt; 0.10) and KS test across features to ensure data continuity.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-title">Zero PII Leakage</div>
+          <div class="feat-desc">Customer credit card numbers, names, and street addresses are dropped prior to transformation.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Dark / Light Mode Handling (Default: Dark)
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+const themeIcon = document.getElementById('themeIcon');
+const themeLabel = document.getElementById('themeLabel');
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('creditops-theme', theme);
+  if (theme === 'dark') {
+    themeIcon.innerHTML = '<svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    themeLabel.textContent = 'Dark';
+  } else {
+    themeIcon.innerHTML = '<svg class="icon-svg sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+    themeLabel.textContent = 'Light';
+  }
+}
+
+applyTheme(localStorage.getItem('creditops-theme') || 'dark');
+
+themeToggleBtn.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+</script>
 </body>
 </html>

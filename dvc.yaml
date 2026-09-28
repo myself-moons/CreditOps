@@ -3,48 +3,101 @@ stages:
     cmd: python src/data_collection.py
     deps:
       - src/data_collection.py
-      - Churn_Data/Demographics.xlsx
-      - Churn_Data/Location.xlsx
-      - Churn_Data/Population.xlsx
-      - Churn_Data/Services.xlsx
-      - Churn_Data/Status.xlsx
+      - src/dataset_adapter.py
+      - Credit_Data/fraudTrain.csv
+      - Credit_Data/fraudTest.csv
+      - params.yaml
+    params:
+      - data
     outs:
       - data/raw/train.csv
+      - data/raw/val.csv
       - data/raw/test.csv
+      - split_info.json:
+          cache: false
 
   Data_Preprocessing:
     cmd: python src/data_preprocessing.py
     deps:
       - src/data_preprocessing.py
+      - src/features.py
       - data/raw/train.csv
+      - data/raw/val.csv
       - data/raw/test.csv
     outs:
       - data/processed/train_processed.csv
+      - data/processed/val_processed.csv
       - data/processed/test_processed.csv
       - preprocessor.pkl:
           cache: false
 
   Model_Training:
-    cmd: python src/model_training.py --model-type all
+    cmd: python src/model_training.py
     deps:
       - src/model_training.py
+      - src/features.py
       - data/processed/train_processed.csv
+      - data/processed/val_processed.csv
       - data/processed/test_processed.csv
+      - params.yaml
     params:
       - model
+      - data.majority_downsample_frac
+      - data.random_state
+      - mlflow
+      - monitoring.fp_budget_rate
     outs:
       - model.pkl:
           cache: false
       - .mlflow_run_id:
+          cache: false
+      - .decision_threshold:
           cache: false
 
   Evaluation:
     cmd: python src/model_evaluation.py
     deps:
       - src/model_evaluation.py
+      - src/features.py
       - model.pkl
       - preprocessor.pkl
-      - .mlflow_run_id
+      - .decision_threshold
+      - data/raw/test.csv
     outs:
       - metrics.json:
+          cache: false
+      - subgroup_metrics.csv:
+          cache: false
+
+  Dataset_Profile:
+    cmd: python src/dataset_profile.py
+    deps:
+      - src/dataset_profile.py
+      - src/dataset_adapter.py
+      - Credit_Data/fraudTrain.csv
+      - Credit_Data/fraudTest.csv
+      - data/raw/train.csv
+      - data/raw/val.csv
+      - data/raw/test.csv
+      - split_info.json
+    outs:
+      - dataset_profile.json:
+          cache: false
+
+  Stationarity_Check:
+    cmd: python src/stationarity_check.py
+    deps:
+      - src/stationarity_check.py
+      - src/features.py
+      - src/dataset_adapter.py
+      - model.pkl
+      - preprocessor.pkl
+      - .decision_threshold
+      - data/raw/train.csv
+      - data/raw/val.csv
+      - data/raw/test.csv
+    outs:
+      - stationarity_report.json:
+          cache: false
+      - stationarity_report.csv:
           cache: false

@@ -3,9 +3,7 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                checkout scm
-            }
+            steps { checkout scm }
         }
 
         stage('Install dependencies') {
@@ -20,19 +18,33 @@ pipeline {
 
         stage('Run DVC pipeline') {
             steps {
-                sh 'export PATH="$WORKSPACE/.venv/bin:$PATH"; .venv/bin/dvc repro'
+                sh '.venv/bin/python -m dvc repro'
             }
         }
 
         stage('Run tests') {
             steps {
-                sh '.venv/bin/pytest -q'
+                sh '.venv/bin/python -m pytest -q tests/'
             }
         }
 
         stage('Archive results') {
             steps {
-                archiveArtifacts artifacts: 'metrics.json,model.pkl,preprocessor.pkl', fingerprint: true
+                archiveArtifacts artifacts: 'metrics.json,subgroup_metrics.csv,model.pkl,preprocessor.pkl,stationarity_report.json', fingerprint: true
+            }
+        }
+
+        stage('Smoke test API') {
+            steps {
+                sh '''
+                    .venv/bin/uvicorn src.main:app --host 0.0.0.0 --port 8000 &
+                    sleep 4
+                    curl -sf http://localhost:8000/health
+                    curl -sf -X POST http://localhost:8000/predict \
+                      -H "Content-Type: application/json" \
+                      -d "{\\"trans_date_trans_time\\":\\"2020-06-15 14:32:00\\",\\"category\\":\\"travel\\",\\"amt\\":850,\\"gender\\":\\"M\\",\\"dob\\":\\"1970-05-15\\",\\"lat\\":36.1,\\"long\\":-115.2,\\"city_pop\\":50000,\\"merch_lat\\":34.1,\\"merch_long\\":-118.3}"
+                    kill %1
+                '''
             }
         }
     }

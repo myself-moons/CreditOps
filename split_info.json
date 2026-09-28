@@ -1,0 +1,28 @@
+{
+  "data_provenance": "synthetic/simulated (Sparkov)",
+  "note": "All numbers below are measured from the real (simulated) data.",
+  "total_rows": 1852394,
+  "splits": {
+    "train": {
+      "rows": 1296675,
+      "date_min": "2019-01-01 00:00:18",
+      "date_max": "2020-06-21 12:13:37",
+      "fraud_rate": 0.005789,
+      "fraud_count": 7506
+    },
+    "val": {
+      "rows": 277859,
+      "date_min": "2020-06-21 12:14:25",
+      "date_max": "2020-10-03 00:58:23",
+      "fraud_rate": 0.004394,
+      "fraud_count": 1221
+    },
+    "test": {
+      "rows": 277860,
+      "date_min": "2020-10-03 00:59:48",
+      "date_max": "2020-12-31 23:59:34",
+      "fraud_rate": 0.003325,
+      "fraud_count": 924
+    }
+  }
+}

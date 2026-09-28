@@ -1,178 +1,134 @@
 """
-data_preprocessing.py — ChurnOps
+data_preprocessing.py — CreditOps
 
-Builds a reproducible sklearn preprocessing pipeline:
-  - fills nulls in Offer / Internet Type
-  - binary-encodes Yes/No and Male/Female columns
-  - ordinal-encodes Contract (Month-to-Month < One Year < Two Year)
-  - one-hot-encodes Offer, Internet Type, Payment Method
-  - StandardScaler on all numeric features
+DVC Stage: Data_Preprocessing
+------------------------------
+Loads data/raw/{train,val,test}.csv, calls src/features.build_features()
+on each split, fits an sklearn ColumnTransformer on TRAIN ONLY,
+transforms all three splits, saves preprocessed CSVs and preprocessor.pkl.
 
-The pipeline is fitted on train data only (no leakage into test).
-Both transformed CSVs and the fitted preprocessor.pkl are written to disk.
+IMPORTANT: The preprocessor is fit on training data only.
+           No validation or test data touches the fitting step.
+
+SIMULATED DATA NOTICE: Source data is Sparkov simulation.
 """
 
+import logging
 import pickle
+import sys
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
+import numpy as np
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import FunctionTransformer, OrdinalEncoder, OneHotEncoder, StandardScaler
+from sklearn.preprocessing import StandardScaler
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT_DIR))
 
-# --------------------------------------------------------------------------- #
-# Column groups                                                                #
-# --------------------------------------------------------------------------- #
-TARGET = "Churn Value"
+from src.features import build_features, feature_names
 
-# Filled before the pipeline runs so encoders see consistent categories
-FILL_NULLS = {
-    "Offer":         "No Offer",
-    "Internet Type": "None",
-}
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
 
-# Yes/No binary columns (encoded as 1/0)
-YES_NO_COLS = [
-    "Referred a Friend", "Phone Service", "Multiple Lines",
-    "Internet Service", "Online Security", "Online Backup",
-    "Device Protection Plan", "Premium Tech Support",
-    "Streaming TV", "Streaming Movies", "Streaming Music",
-    "Unlimited Data", "Paperless Billing", "Married",
+TARGET = "is_fraud"
+
+# ── Column groups (aligned with feature_names() output) ──────────────────── #
+# All features from build_features() are either binary (0/1) or continuous.
+# Binary / one-hot features need no scaling; continuous features do.
+CONTINUOUS_FEATURES = [
+    "hour", "day_of_week",         # ordinal but treated as continuous
+    "log_amt", "age_at_txn",
+    "haversine_km", "log_city_pop",
 ]
-
-# Gender: Male -> 1, Female -> 0
-GENDER_COLS = ["Gender"]
-
-# Ordinal: month-to-month is shortest commitment, two-year is longest
-CONTRACT_CATS = [["Month-to-Month", "One Year", "Two Year"]]
-
-# One-hot encoded (drop first to avoid dummy trap)
-OHE_COLS = ["Offer", "Internet Type", "Payment Method"]
-
-# All numeric columns (determined at preprocessing time from what's left)
-# We define them explicitly so the API gets an identical list
-NUMERIC_COLS = [
-    "Age", "Number of Dependents", "Number of Referrals",
-    "Tenure in Months", "Avg Monthly Long Distance Charges",
-    "Avg Monthly GB Download", "Monthly Charge", "Total Charges",
-    "Total Refunds", "Total Extra Data Charges",
-    "Total Long Distance Charges", "Total Revenue",
-    "Satisfaction Score",
-]
-
-
-# --------------------------------------------------------------------------- #
-# Helpers                                                                      #
-# --------------------------------------------------------------------------- #
-def _fill_nulls(df: pd.DataFrame) -> pd.DataFrame:
-    """Fill known nullable columns before transformation."""
-    df = df.copy()
-    for col, fill_val in FILL_NULLS.items():
-        if col in df.columns:
-            df[col] = df[col].fillna(fill_val)
-    return df
-
-
-def _binary_encode(df: pd.DataFrame, columns: list) -> pd.DataFrame:
-    """Map Yes->1 / No->0 for listed columns."""
-    df = df.copy()
-    for col in columns:
-        if col in df.columns:
-            df[col] = df[col].map({"Yes": 1, "No": 0}).astype(float)
-    return df
-
-
-def _gender_encode(df: pd.DataFrame) -> pd.DataFrame:
-    """Map Male->1 / Female->0."""
-    df = df.copy()
-    if "Gender" in df.columns:
-        df["Gender"] = df["Gender"].map({"Male": 1, "Female": 0}).astype(float)
-    return df
+# Everything else (is_weekend, cat_*, gender_M) is already in {0, 1}
+# and passes through unchanged.
 
 
 def build_preprocessor() -> ColumnTransformer:
     """
-    Build a ColumnTransformer for the churn feature set.
-    All fitted state lives inside this object — no external state.
+    Build a ColumnTransformer that scales continuous features.
+    Binary/one-hot features pass through unchanged.
+    Fitted on training data only.
     """
-    ordinal = OrdinalEncoder(categories=CONTRACT_CATS, handle_unknown="use_encoded_value", unknown_value=-1)
-    ohe     = OneHotEncoder(drop="first", sparse_output=False, handle_unknown="ignore")
-    scaler  = StandardScaler()
+    all_features = feature_names()
+    passthrough   = [f for f in all_features if f not in CONTINUOUS_FEATURES]
 
     return ColumnTransformer(
         transformers=[
-            ("num",      scaler,  NUMERIC_COLS),
-            ("contract", ordinal, ["Contract"]),
-            ("ohe",      ohe,     OHE_COLS),
+            ("scale", StandardScaler(), CONTINUOUS_FEATURES),
+            ("passthrough", "passthrough", passthrough),
         ],
-        remainder="passthrough",   # binary-encoded columns pass through unchanged
+        remainder="drop",
     )
 
 
-def prepare_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Apply null-fills and manual encodings that happen before the sklearn pipeline."""
-    df = _fill_nulls(df)
-    df = _binary_encode(df, YES_NO_COLS)
-    df = _gender_encode(df)
-    return df
-
-
 def main() -> None:
-    train_path = ROOT_DIR / "data" / "raw" / "train.csv"
-    test_path  = ROOT_DIR / "data" / "raw" / "test.csv"
-
-    train = pd.read_csv(train_path)
-    test  = pd.read_csv(test_path)
-
-    # Separate target
-    y_train = train[TARGET]
-    y_test  = test[TARGET]
-    X_train = train.drop(columns=[TARGET])
-    X_test  = test.drop(columns=[TARGET])
-
-    # Pre-encoding steps (before the sklearn pipeline)
-    X_train = prepare_features(X_train)
-    X_test  = prepare_features(X_test)
-
-    # Build and fit the preprocessor on training data ONLY
-    preprocessor = build_preprocessor()
-    X_train_enc = preprocessor.fit_transform(X_train)
-    X_test_enc  = preprocessor.transform(X_test)
-
-    # Recover column names for the transformed output
-    num_names      = NUMERIC_COLS
-    contract_names = ["Contract_encoded"]
-    ohe_names      = list(preprocessor.named_transformers_["ohe"].get_feature_names_out(OHE_COLS))
-    passthrough_cols = [
-        c for c in X_train.columns
-        if c not in NUMERIC_COLS + ["Contract"] + OHE_COLS
-    ]
-    all_cols = num_names + contract_names + ohe_names + passthrough_cols
-
-    train_processed = pd.DataFrame(X_train_enc, columns=all_cols)
-    test_processed  = pd.DataFrame(X_test_enc,  columns=all_cols)
-
-    # Re-attach target
-    train_processed[TARGET] = y_train.values
-    test_processed[TARGET]  = y_test.values
-
+    raw_dir = ROOT_DIR / "data" / "raw"
     out_dir = ROOT_DIR / "data" / "processed"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    train_processed.to_csv(out_dir / "train_processed.csv", index=False)
-    test_processed.to_csv(out_dir  / "test_processed.csv",  index=False)
-    print(f"Processed shapes  train={train_processed.shape}  test={test_processed.shape}")
+    logger.info("=== CreditOps Data Preprocessing ===")
+    logger.info("NOTICE: Source data is simulated (Sparkov). No real cardholders involved.")
 
-    # Save the fitted preprocessor so the API can apply it at inference time
+    for split in ("train", "val", "test"):
+        path = raw_dir / f"{split}.csv"
+        if not path.exists():
+            raise FileNotFoundError(
+                f"Missing {path}. Run data_collection.py first (dvc repro Data_Collection)."
+            )
+
+    train = pd.read_csv(raw_dir / "train.csv", low_memory=False)
+    val   = pd.read_csv(raw_dir / "val.csv",   low_memory=False)
+    test  = pd.read_csv(raw_dir / "test.csv",  low_memory=False)
+
+    logger.info("Train %d rows | Val %d rows | Test %d rows",
+                len(train), len(val), len(test))
+
+    # Separate labels
+    y_train = train[TARGET].values
+    y_val   = val[TARGET].values
+    y_test  = test[TARGET].values
+
+    # Build feature matrices via the single source of truth
+    logger.info("Building features (src/features.py)...")
+    X_train = build_features(train)
+    X_val   = build_features(val)
+    X_test  = build_features(test)
+
+    logger.info("Feature shape: %s", X_train.shape)
+
+    # Fit preprocessor on TRAIN ONLY
+    logger.info("Fitting preprocessor on training data only...")
+    preprocessor = build_preprocessor()
+    X_train_enc = preprocessor.fit_transform(X_train)
+    X_val_enc   = preprocessor.transform(X_val)
+    X_test_enc  = preprocessor.transform(X_test)
+
+    # Recover column names
+    cont_names = CONTINUOUS_FEATURES
+    pass_names = [f for f in feature_names() if f not in CONTINUOUS_FEATURES]
+    col_names  = cont_names + pass_names
+
+    def save_split(X_enc, y, name: str) -> None:
+        df = pd.DataFrame(X_enc, columns=col_names)
+        df[TARGET] = y
+        path = out_dir / f"{name}_processed.csv"
+        df.to_csv(path, index=False)
+        logger.info("Saved %s (%d rows, %d features)", path.name, len(df), len(col_names))
+
+    save_split(X_train_enc, y_train, "train")
+    save_split(X_val_enc,   y_val,   "val")
+    save_split(X_test_enc,  y_test,  "test")
+
+    # Save fitted preprocessor
     preprocessor_path = ROOT_DIR / "preprocessor.pkl"
     with preprocessor_path.open("wb") as f:
         pickle.dump(preprocessor, f)
-    print(f"Preprocessor saved to {preprocessor_path}")
+    logger.info("preprocessor.pkl saved to %s", preprocessor_path)
 
-    print("Data preprocessing completed successfully.")
+    logger.info("Data preprocessing complete.")
 
 
 if __name__ == "__main__":

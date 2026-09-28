@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CreditOps Enterprise Operations & Fraud Drift Monitor Console">
+<title>CreditOps — Operations & Fraud Drift Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root[data-theme="dark"] {
+    --bg-base: #0f1219;
+    --bg-surface: #151924;
+    --bg-card: #1c2230;
+    --bg-card-hover: #222a3c;
+    --bg-sidebar: #11141c;
+    --bg-sidebar-hover: #191f2d;
+    --bg-sidebar-active: #22293b;
+    --sidebar-text: #e2e8f0;
+    --sidebar-muted: #64748b;
+    --sidebar-border: #283246;
+    --bg-sidebar-footer: rgba(0, 0, 0, 0.25);
+    --bg-input: #111520;
+    --border: #283246;
+    --border-subtle: #1e2638;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --notice-bg: #171a22;
+    --notice-border: #283246;
+    --notice-text: #cbd5e1;
+    --notice-tag-bg: rgba(245, 158, 11, 0.15);
+    --notice-tag-color: #fbbf24;
+    --hero-bg: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    --hero-border: #334155;
+    --hero-text: #f8fafc;
+    --hero-subtext: #cbd5e1;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-green: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-red: #ef4444;
+    --accent-purple: #8b5cf6;
+    --gauge-bg: #222b3d;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  :root[data-theme="light"] {
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-sidebar: #ffffff;
+    --bg-sidebar-hover: #f1f5f9;
+    --bg-sidebar-active: #eff6ff;
+    --sidebar-text: #1e293b;
+    --sidebar-muted: #64748b;
+    --sidebar-border: #e2e8f0;
+    --bg-sidebar-footer: #f8fafc;
+    --bg-input: #ffffff;
+    --border: #e2e8f0;
+    --border-subtle: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --notice-bg: #f1f5f9;
+    --notice-border: #e2e8f0;
+    --notice-text: #475569;
+    --notice-tag-bg: rgba(245, 158, 11, 0.15);
+    --notice-tag-color: #b45309;
+    --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    --hero-border: #cbd5e1;
+    --hero-text: #0f172a;
+    --hero-subtext: #475569;
+    --accent-blue: #2563eb;
+    --accent-cyan: #0891b2;
+    --accent-green: #059669;
+    --accent-amber: #d97706;
+    --accent-red: #dc2626;
+    --accent-purple: #7c3aed;
+    --gauge-bg: #e2e8f0;
+    --shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    line-height: 1.5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* Notice Bar */
+  .notice-bar {
+    background: var(--notice-bg);
+    color: var(--notice-text);
+    border-bottom: 1px solid var(--notice-border);
+    padding: 6px 20px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: 0.02em;
+    z-index: 110;
+  }
+  .notice-tag {
+    background: var(--notice-tag-bg);
+    color: var(--notice-tag-color);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-right: 8px;
+  }
+
+  /* Header Bar */
+  header {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .hamburger-btn {
+    background: none; border: none; color: var(--text-secondary);
+    cursor: pointer; display: flex; padding: 6px; border-radius: 6px;
+  }
+  .hamburger-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+  .brand-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-primary); }
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 800; font-size: 0.85rem;
+  }
+  .brand-title { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; }
+  .brand-sub { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin-left: 6px; border-left: 1px solid var(--border); padding-left: 10px; }
+
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-btn {
+    background: none; border: 1px solid transparent; color: var(--text-secondary);
+    padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; text-decoration: none; transition: all 0.15s;
+  }
+  .header-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--border); }
+  .status-pill {
+    display: flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3); color: var(--accent-green);
+    padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+  }
+  .pulse-dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; }
+
+  /* Dark/Light Mode Switch */
+  .theme-toggle {
+    display: flex; align-items: center; gap: 8px; background: var(--bg-input);
+    border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; cursor: pointer;
+    user-select: none;
+  }
+  .theme-toggle-icon { color: var(--text-secondary); display: flex; align-items: center; }
+
+  /* Layout Container */
+  .layout-container { display: flex; flex: 1; overflow: hidden; }
+
+  /* Sidebar */
+  aside.sidebar {
+    width: 240px; background: var(--bg-sidebar); color: var(--sidebar-text);
+    border-right: 1px solid var(--sidebar-border); display: flex; flex-direction: column;
+    flex-shrink: 0; user-select: none; transition: background-color 0.25s, border-color 0.25s;
+  }
+  .sidebar-nav-wrap {
+    flex: 1; overflow-y: auto; padding: 12px 10px 8px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .nav-group-title {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--sidebar-muted); padding: 4px 10px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-item {
+    display: flex; align-items: center; justify-content: space-between; padding: 8px 12px;
+    border-radius: 6px; color: var(--sidebar-text); text-decoration: none; font-size: 0.84rem;
+    font-weight: 500; transition: all 0.15s ease; margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--bg-sidebar-hover); color: var(--text-primary); }
+  .nav-item.active { background: var(--bg-sidebar-active); color: var(--accent-blue); font-weight: 600; border-left: 3px solid var(--accent-blue); }
+  .nav-item-left { display: flex; align-items: center; gap: 10px; }
+  .item-badge {
+    font-size: 0.68rem; padding: 2px 7px; border-radius: 99px;
+    background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); font-weight: 700;
+  }
+  .item-badge.green { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+
+  /* Services Permanent Footer */
+  .sidebar-footer {
+    padding: 12px 10px; border-top: 1px solid var(--sidebar-border);
+    background: var(--bg-sidebar-footer);
+  }
+
+  /* Main Workspace */
+  main.workspace {
+    flex: 1; overflow-y: auto; padding: 24px 32px 60px;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; }
+  .section-title-wrap { display: flex; align-items: center; gap: 10px; }
+  .section-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+  .info-icon-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; }
+  .info-icon-btn:hover { color: var(--accent-blue); }
+
+  .toggle-control { display: flex; align-items: center; gap: 10px; font-size: 0.84rem; font-weight: 500; color: var(--text-secondary); }
+  .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border); transition: 0.25s; border-radius: 34px;
+  }
+  .slider:before {
+    position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+    background-color: white; transition: 0.25s; border-radius: 50%;
+  }
+  input:checked + .slider { background-color: var(--accent-green); }
+  input:checked + .slider:before { transform: translateX(18px); }
+
+  /* 4 Gauges Grid */
+  .gauges-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  @media (max-width: 1100px) { .gauges-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .gauges-grid { grid-template-columns: 1fr; } }
+
+  .gauge-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .gauge-card:hover { border-color: rgba(59, 130, 246, 0.4); transform: translateY(-2px); }
+  .card-top-title { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; }
+  .gauge-body { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .circular-gauge-wrap { position: relative; width: 110px; height: 80px; display: flex; align-items: center; justify-content: center; }
+  .circular-gauge-wrap svg { overflow: visible; }
+  .gauge-center-text { position: absolute; bottom: 6px; text-align: center; font-size: 0.88rem; font-weight: 800; color: var(--text-primary); }
+  .gauge-stats-column { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+  .trend-badge { font-size: 1.15rem; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+  .trend-down { color: var(--accent-green); }
+  .sub-stat-pill { font-size: 0.72rem; font-weight: 600; padding: 2px 6px; border-radius: 4px; margin-top: 2px; }
+  .pill-green { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+  .pill-blue { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+
+  /* Dual Card */
+  .dual-kpi-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;
+    box-shadow: var(--shadow);
+  }
+  .dual-item { border-left: 3px solid var(--accent-amber); padding-left: 12px; }
+  .dual-item.green { border-color: var(--accent-green); }
+  .dual-label { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+  .dual-val { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin-top: 2px; }
+
+  /* 3 Trends Grid */
+  .trends-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 900px) { .trends-grid { grid-template-columns: 1fr; } }
+  .trend-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px;
+  }
+  .trend-header { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+  .trend-main { display: flex; align-items: baseline; justify-content: space-between; }
+  .trend-large { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); }
+  .trend-sub-row { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 10px; }
+
+  /* Lower Charts Row */
+  .charts-row { display: grid; grid-template-columns: 1fr 1.4fr; gap: 18px; }
+  @media (max-width: 960px) { .charts-row { grid-template-columns: 1fr; } }
+  .chart-panel {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+  }
+  .chart-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .chart-panel-title { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary); }
+  .concentric-body { display: flex; align-items: center; justify-content: space-around; padding: 10px 0; }
+  .pie-chart-wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .pie-legend { display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; }
+  .legend-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .legend-label-wrap { display: flex; align-items: center; gap: 8px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* Explainer Section */
+  .explainer-section {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; box-shadow: var(--shadow);
+  }
+  .explainer-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; }
+  .explainer-sub { color: var(--text-secondary); font-size: 0.86rem; margin-bottom: 20px; }
+  .layers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .layers-grid { grid-template-columns: 1fr; } }
+  .layer-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .layer-badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+  .layer-badge.blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+  .layer-badge.purple { background: rgba(139, 92, 246, 0.15); color: #c084fc; }
+  .layer-heading { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .layer-desc { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.6; }
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; }
+  .check-item { display: flex; align-items: flex-start; gap: 8px; color: var(--text-primary); }
+  .check-icon { color: var(--accent-green); flex-shrink: 0; margin-top: 2px; }
+
+  /* Prediction Stream Table */
+  .table-panel {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; box-shadow: var(--shadow);
+  }
+  .table-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .table-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+  .table-wrap { overflow-x: auto; }
+  table.live-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left; }
+  table.live-table th { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.72rem; }
+  table.live-table td { padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
+  table.live-table tr:hover td { background: var(--bg-card-hover); }
+  .badge-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; }
+  .badge-fraud { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.3); }
+  .badge-legit { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+  .icon-svg {
+    width: 18px; height: 18px; stroke: currentColor; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round; fill: none; display: inline-block;
+  }
+  .icon-svg.sm { width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+
+<!-- Notice Bar -->
+<div class="notice-bar">
+  <div style="display:flex;align-items:center;">
+    <span class="notice-tag">Notice</span>
+    <span>SIMULATED DATA: Trained and validated exclusively on Sparkov-generated synthetic transactions. No real cardholder records.</span>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-muted);">
+    Domain: CreditOps v1.0.0
+  </div>
+</div>
+
+<!-- Header Bar -->
+<header>
+  <div class="header-left">
+    <button class="hamburger-btn" title="Toggle Navigation">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <a href="/" class="brand-logo">
+      <div class="logo-icon">C</div>
+      <div>
+        <span class="brand-title">CreditOps</span>
+        <span class="brand-sub">Console</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="header-right">
+    <div class="status-pill">
+      <span class="pulse-dot"></span>
+      <span>System Active</span>
+    </div>
+
+    <!-- Dark/Light Mode Switcher -->
+    <div class="theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+      <span class="theme-toggle-icon" id="themeIcon">
+        <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </span>
+      <span style="font-size:0.72rem;font-weight:600;text-transform:uppercase;" id="themeLabel">Dark</span>
+    </div>
+
+    <a href="/docs" class="header-btn" title="FastAPI Swagger Documentation" target="_blank">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    </a>
+
+    <a href="https://github.com/myself-moons/CreditOps" class="header-btn" title="GitHub Repository" target="_blank">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+    </a>
+  </div>
+</header>
+
+<div class="layout-container">
+  <!-- Unified Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-nav-wrap">
+
+      <!-- Group 1: System Overview (Top) -->
+      <div class="nav-group">
+        <div class="nav-group-title">System Overview</div>
+        <a href="/" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>System Overview</span>
+          </div>
+        </a>
+      </div>
+      <!-- Ops & Monitor (Commented out per user request) -->
+
+      <!-- Group 2: Intelligence -->
+      <div class="nav-group">
+        <div class="nav-group-title">Intelligence</div>
+        <a href="/predict" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>Live Inference</span>
+          </div>
+        </a>
+        <a href="/dataset" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            <span>Dataset Profile</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Group 3: MLOps & Pipeline -->
+      <div class="nav-group">
+        <div class="nav-group-title">MLOps &amp; Pipeline</div>
+        <a href="/dashboard" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>Pipelines &amp; Runs</span>
+          </div>
+          <span class="item-badge">6 stages</span>
+        </a>
+        <a href="/logs" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            <span>Transaction Logs</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Permanent Services Footer -->
+    <div class="sidebar-footer">
+      <div class="nav-group-title" style="padding:0 4px 6px;">Services</div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;margin-bottom:4px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">FastAPI Serving</span>
+        <span class="item-badge green">healthy</span>
+      </div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">Model Registry</span>
+        <span class="item-badge">loaded</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Workspace -->
+  <main class="workspace">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:36px;text-align:center;max-width:640px;margin:40px auto;box-shadow:var(--shadow);">
+      <div style="font-size:1.15rem;font-weight:700;margin-bottom:8px;">Operations Summary (Offline)</div>
+      <p style="color:var(--text-secondary);font-size:0.88rem;margin-bottom:20px;line-height:1.6;">
+        The Operations Summary dashboard is currently offline and commented out per system configuration. Real-time inference activity and audit telemetry are tracked under Transaction Logs.
+      </p>
+      <a href="/logs" style="display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:var(--accent-blue);color:#ffffff;text-decoration:none;border-radius:6px;font-size:0.85rem;font-weight:600;">
+        <span>View Transaction Logs</span>
+        <svg class="icon-svg sm" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </a>
+    </div>
+
+    <!-- OPERATIONS SUMMARY COMMENTED OUT FOR NOW PER USER REQUEST
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <h1 class="section-title">Efficiency Summary</h1>
+        <button class="info-icon-btn" title="Telemetry &amp; Drift Architecture" onclick="document.getElementById('whatWeMonitor').scrollIntoView({behavior:'smooth'})">
+          <svg class="icon-svg sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        </button>
+      </div>
+
+      <div class="toggle-control">
+        <span>Auto-refresh Live Telemetry</span>
+        <label class="switch">
+          <input type="checkbox" id="autoRefreshToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 4 Circular Gauge Cards -->
+    <div class="gauges-grid">
+      <div class="gauge-card">
+        <div class="card-top-title">Avg. Fraud Detection Rate</div>
+        <div class="gauge-body">
+          <div class="circular-gauge-wrap">
+            <svg width="100" height="65" viewBox="0 0 100 65">
+              <path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="var(--gauge-bg)" stroke-width="8" stroke-linecap="round" />
+              <path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="var(--accent-green)" stroke-width="8" stroke-linecap="round"
+                    stroke-dasharray="125.6" stroke-dashoffset="54" id="gauge1Arc" />
+            </svg>
+            <div class="gauge-center-text" id="gauge1Val">0.33%</div>
+          </div>
+          <div class="gauge-stats-column">
+            <div class="trend-badge trend-down"><span>&darr; 43%</span></div>
+            <span class="sub-stat-pill pill-green">App 0.33%</span>
+            <span class="sub-stat-pill pill-blue">Baseline 0.58%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gauge-card">
+        <div class="card-top-title">Avg. Population Stability (PSI)</div>
+        <div class="gauge-body">
+          <div class="circular-gauge-wrap">
+            <svg width="100" height="65" viewBox="0 0 100 65">
+              <path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="var(--gauge-bg)" stroke-width="8" stroke-linecap="round" />
+              <path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="var(--accent-cyan)" stroke-width="8" stroke-linecap="round"
+                    stroke-dasharray="125.6" stroke-dashoffset="104" id="gauge2Arc" />
+            </svg>
+            <div class="gauge-center-text" id="gauge2Val">0.017</div>
+          </div>
+          <div class="gauge-stats-column">
+            <div class="trend-badge trend-down"><span>&darr; 83%</span></div>
+            <span class="sub-stat-pill pill-green">PSI 0.017</span>
+            <span class="sub-stat-pill pill-blue">Threshold 0.100</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gauge-card">
+        <div class="card-top-title">Avg. KS Divergence Stat</div>
+        <div class="gauge-body">
+          <div class="circular-gauge-wrap">
+            <svg width="100" height="65" viewBox="0 0 100 65">
+              <path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="var(--gauge-bg)" stroke-width="8" stroke-linecap="round" />
+              <path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="var(--accent-blue)" stroke-width="8" stroke-linecap="round"
+                    stroke-dasharray="125.6" stroke-dashoffset="82" id="gauge3Arc" />
+            </svg>
+            <div class="gauge-center-text" id="gauge3Val">0.028</div>
+          </div>
+          <div class="gauge-stats-column">
+            <div class="trend-badge trend-down"><span>&darr; 44%</span></div>
+            <span class="sub-stat-pill pill-green">KS 0.028</span>
+            <span class="sub-stat-pill pill-blue">Tolerance 0.050</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dual-kpi-card">
+        <div class="dual-item">
+          <div class="dual-label">Active Drift Warnings</div>
+          <div class="dual-val" id="pendingAlertsVal">0</div>
+        </div>
+        <div class="dual-item green">
+          <div class="dual-label">Potential Fraud Averted</div>
+          <div class="dual-val" id="savingsVal">USD 184,250</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Trend Cards -->
+    <div class="trends-grid">
+      <div class="trend-card">
+        <div class="trend-header">
+          <span>Inference Latency (SLA)</span>
+          <span style="color:var(--accent-green);font-weight:700;">&darr; 18%</span>
+        </div>
+        <div class="trend-main">
+          <div class="trend-large" id="latencyVal">12.4 ms</div>
+        </div>
+        <div class="trend-sub-row">
+          <span>App: <strong id="latencyApp">12.4 ms</strong></span>
+          <span>P95 SLA: <strong>24.1 ms</strong></span>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-header">
+          <span>Cost / 1K Inferences</span>
+          <span style="color:var(--accent-green);font-weight:700;">&darr; 33%</span>
+        </div>
+        <div class="trend-main">
+          <div class="trend-large">USD 0.002</div>
+        </div>
+        <div class="trend-sub-row">
+          <span>App: <strong>0.002</strong></span>
+          <span>Budget Benchmark: <strong>0.003</strong></span>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-header">
+          <span>Recall / FP Budget Ratio</span>
+          <span style="color:var(--accent-green);font-weight:700;">&uarr; 33%</span>
+        </div>
+        <div class="trend-main">
+          <div class="trend-large" id="recallVal">30.1%</div>
+        </div>
+        <div class="trend-sub-row">
+          <span>Recall: <strong>30.1%</strong></span>
+          <span>FP Rate: <strong>0.52% (Cap: 5%)</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lower Charts Row -->
+    <div class="charts-row">
+      <div class="chart-panel">
+        <div class="chart-panel-header">
+          <span class="chart-panel-title">Data Relationship Between Environments</span>
+        </div>
+        <div class="concentric-body">
+          <svg width="220" height="150" viewBox="0 0 220 150">
+            <path d="M 20 120 A 90 90 0 0 1 200 120" fill="none" stroke="var(--gauge-bg)" stroke-width="12" stroke-linecap="round" />
+            <path d="M 45 120 A 65 65 0 0 1 175 120" fill="none" stroke="var(--gauge-bg)" stroke-width="12" stroke-linecap="round" />
+            <path d="M 20 120 A 90 90 0 0 1 200 120" fill="none" stroke="var(--accent-green)" stroke-width="12" stroke-linecap="round"
+                  stroke-dasharray="282.7" stroke-dashoffset="84" />
+            <path d="M 45 120 A 65 65 0 0 1 175 120" fill="none" stroke="var(--accent-blue)" stroke-width="12" stroke-linecap="round"
+                  stroke-dasharray="204.2" stroke-dashoffset="142" />
+            <text x="110" y="115" text-anchor="middle" fill="var(--text-primary)" font-size="14" font-weight="700">70 / 30 Split</text>
+          </svg>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="width:12px;height:12px;background:var(--accent-green);border-radius:3px;"></span>
+              <span style="font-size:0.84rem;font-weight:600;">Productive / Train: <strong>0.70</strong></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="width:12px;height:12px;background:var(--accent-blue);border-radius:3px;"></span>
+              <span style="font-size:0.84rem;font-weight:600;">Val / Test Holdout: <strong>0.30</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-panel">
+        <div class="chart-panel-header">
+          <span class="chart-panel-title">Fraud Exposure Percentage Per Scope</span>
+          <span style="font-size:0.75rem;color:var(--text-muted);">Empirical Subgroups</span>
+        </div>
+        <div class="pie-chart-wrap">
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <path d="M 100 100 L 100 15 A 85 85 0 0 1 174 142 Z" fill="#f59e0b" />
+            <path d="M 100 100 L 174 142 A 85 85 0 0 1 31 150 Z" fill="#10b981" />
+            <path d="M 100 100 L 31 150 A 85 85 0 0 1 38 41 Z" fill="#3b82f6" />
+            <path d="M 100 100 L 38 41 A 85 85 0 0 1 100 15 Z" fill="#475569" />
+            <circle cx="100" cy="100" r="42" fill="var(--bg-card)" />
+            <text x="100" y="96" text-anchor="middle" fill="var(--text-muted)" font-size="9" font-weight="600">PRIMARY</text>
+            <text x="100" y="112" text-anchor="middle" fill="var(--text-primary)" font-size="12" font-weight="800">4 Scopes</text>
+          </svg>
+          <div class="pie-legend">
+            <div class="legend-row">
+              <div class="legend-label-wrap">
+                <span class="legend-dot" style="background:#f59e0b;"></span>
+                <span>shopping_net</span>
+              </div>
+              <strong>33.2%</strong>
+            </div>
+            <div class="legend-row">
+              <div class="legend-label-wrap">
+                <span class="legend-dot" style="background:#10b981;"></span>
+                <span>grocery_pos</span>
+              </div>
+              <strong>31.8%</strong>
+            </div>
+            <div class="legend-row">
+              <div class="legend-label-wrap">
+                <span class="legend-dot" style="background:#3b82f6;"></span>
+                <span>misc_net</span>
+              </div>
+              <strong>17.0%</strong>
+            </div>
+            <div class="legend-row">
+              <div class="legend-label-wrap">
+                <span class="legend-dot" style="background:#475569;"></span>
+                <span>gas_transport &amp; other</span>
+              </div>
+              <strong>18.0%</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Explainer Section -->
+    <section class="explainer-section" id="whatWeMonitor">
+      <h2 class="explainer-title">What CreditOps Monitors</h2>
+      <p class="explainer-sub">
+        Credit card fraud presents extreme class imbalance (~0.33% to 0.58%). Standard accuracy is misleading.
+        CreditOps employs a rigorous two-layer telemetry architecture to distinguish between operational drift and model degradation.
+      </p>
+
+      <div class="layers-grid">
+        <div class="layer-card">
+          <span class="layer-badge blue">Layer A &bull; Operational Telemetry</span>
+          <h3 class="layer-heading">Real-Time Zero Ground-Truth Monitoring</h3>
+          <p class="layer-desc">
+            Evaluated continuously at inference time directly from production logs (<code style="color:var(--accent-cyan);">predictions.jsonl</code>). No customer dispute outcomes are required.
+          </p>
+          <ul class="check-list">
+            <li class="check-item">
+              <svg class="icon-svg sm check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Rolling Fraud Detection Rate:</strong> Compares window rate vs 0.579% training baseline (tolerance: &plusmn;0.003).</span>
+            </li>
+            <li class="check-item">
+              <svg class="icon-svg sm check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Probability Distribution:</strong> Tracks mean score, spread, and standard deviation to detect model calibration drift.</span>
+            </li>
+            <li class="check-item">
+              <svg class="icon-svg sm check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Population Stability Index (PSI):</strong> Binned distribution drift for continuous features (log_amt, hour, dist_to_merch). Threshold: &lt; 0.10.</span>
+            </li>
+            <li class="check-item">
+              <svg class="icon-svg sm check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Inference Latency SLA:</strong> Tracks mean and 95th-percentile response times to detect system bottlenecks.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="layer-card">
+          <span class="layer-badge purple">Layer B &bull; Performance &amp; Retrain Governance</span>
+          <h3 class="layer-heading">Delayed Ground-Truth Evaluation</h3>
+          <p class="layer-desc">
+            Evaluated periodically when actual customer disputes and confirmed fraud chargebacks become available (typically 14&ndash;60 days post-transaction).
+          </p>
+          <ul class="check-list">
+            <li class="check-item">
+              <svg class="icon-svg sm check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Precision-Recall AUC (PR-AUC):</strong> Primary selection metric. Drops below <strong>0.10</strong> trigger an automated retraining alert.</span>
+            </li>
+            <li class="check-item">
+              <svg class="icon-svg sm check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Recall at 5% FP Budget:</strong> Measures fraud capture rate strictly bounded by a 5% false-positive customer friction budget. Drops below <strong>0.60</strong> flag degradation.</span>
+            </li>
+            <li class="check-item">
+              <svg class="icon-svg sm check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Subgroup Parity:</strong> Flags fairness or blind-spots across merchant categories, transaction buckets, and age bands.</span>
+            </li>
+            <li class="check-item">
+              <svg class="icon-svg sm check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Automated Retrain Trigger:</strong> Evaluated in <code style="color:var(--accent-purple);">retrain_trigger.py</code> to govern champion-challenger promotion.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prediction Stream Table -->
+    <div class="table-panel" id="predictionsTable">
+      <div class="table-header-row">
+        <div>
+          <span class="table-title">Real-Time Transaction Stream Log</span>
+          <span style="font-size:0.75rem;color:var(--text-muted);margin-left:8px;" id="recordCount">Loading records...</span>
+        </div>
+        <button class="header-btn" style="border:1px solid var(--border);padding:4px 10px;font-size:0.75rem;font-weight:600;" onclick="loadRecentPredictions()">
+          Refresh Feed
+        </button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="live-table">
+          <thead>
+            <tr>
+              <th>Timestamp (UTC)</th>
+              <th>Decision</th>
+              <th>Probability Score</th>
+              <th>Model Version</th>
+              <th>Latency (ms)</th>
+              <th>Derived Features</th>
+            </tr>
+          </thead>
+          <tbody id="predictionRows">
+            <tr>
+              <td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px;">Fetching live inference logs...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    -->
+  </main>
+</div>
+
+<script>
+// Dark / Light Mode Handling (Default: Dark)
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+const themeIcon = document.getElementById('themeIcon');
+const themeLabel = document.getElementById('themeLabel');
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('creditops-theme', theme);
+  if (theme === 'dark') {
+    themeIcon.innerHTML = '<svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    themeLabel.textContent = 'Dark';
+  } else {
+    themeIcon.innerHTML = '<svg class="icon-svg sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+    themeLabel.textContent = 'Light';
+  }
+}
+
+applyTheme(localStorage.getItem('creditops-theme') || 'dark');
+
+themeToggleBtn.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+async function fetchMonitoringData() {
+  const g1Val = document.getElementById('gauge1Val');
+  if (!g1Val) return; // Summary section is offline/commented out
+  try {
+    const res = await fetch('/api/monitor');
+    if (!res.ok) return;
+    const data = await res.json();
+    const op = data.operational || {};
+    const drift = data.drift_check || {};
+    const st = data.stationarity || {};
+
+    const fr = op.fraud_detection_rate !== undefined ? op.fraud_detection_rate : 0.0033;
+    g1Val.textContent = (fr * 100).toFixed(2) + '%';
+    const offset1 = Math.max(10, 125.6 - (fr / 0.01) * 125.6);
+    const g1Arc = document.getElementById('gauge1Arc');
+    if (g1Arc) g1Arc.style.strokeDashoffset = offset1;
+
+    const psiVal = st.mean_psi_all_features !== undefined ? st.mean_psi_all_features : 0.0173;
+    const g2Val = document.getElementById('gauge2Val');
+    if (g2Val) g2Val.textContent = psiVal.toFixed(3);
+    const offset2 = Math.max(10, 125.6 - (psiVal / 0.10) * 125.6);
+    const g2Arc = document.getElementById('gauge2Arc');
+    if (g2Arc) g2Arc.style.strokeDashoffset = offset2;
+
+    const hasDrift = drift.drift_detected === true;
+    const pendingVal = document.getElementById('pendingAlertsVal');
+    if (pendingVal) {
+      pendingVal.textContent = hasDrift ? '1' : '0';
+      if (hasDrift) pendingVal.style.color = 'var(--accent-red)';
+    }
+
+    if (op.latency_ms && op.latency_ms.mean) {
+      const lat = op.latency_ms.mean.toFixed(1) + ' ms';
+      const latVal = document.getElementById('latencyVal');
+      if (latVal) latVal.textContent = lat;
+      const latApp = document.getElementById('latencyApp');
+      if (latApp) latApp.textContent = lat;
+    }
+  } catch (err) {
+    console.warn('Telemetry poll error:', err);
+  }
+}
+
+async function loadRecentPredictions() {
+  const tbody = document.getElementById('predictionRows');
+  if (!tbody) return; // Table is commented out/offline
+  try {
+    const res = await fetch('/api/predictions/recent?limit=20');
+    if (!res.ok) return;
+    const data = await res.json();
+    const rows = data.records || [];
+    const rCount = document.getElementById('recordCount');
+    if (rCount) rCount.textContent = `Showing ${rows.length} of ${data.total} logged transactions`;
+
+    if (rows.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px;">No live transactions logged yet. Use the <a href="/predict" style="color:var(--accent-blue);">Prediction page</a> to submit sample transactions.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = rows.map(r => {
+      const isFraud = r.prediction === 1 || r.decision === 'fraud';
+      const badgeClass = isFraud ? 'badge-fraud' : 'badge-legit';
+      const timeStr = r.timestamp ? new Date(r.timestamp).toLocaleTimeString() : 'N/A';
+      const df = r.derived_features || {};
+      let amtDisplay = '-';
+      if (df.amt !== undefined && df.amt !== null) amtDisplay = `$${Number(df.amt).toFixed(2)}`;
+      else if (df.log_amt !== undefined && df.log_amt !== null) amtDisplay = `$${Math.max(0, Math.exp(df.log_amt) - 1e-6).toFixed(2)}`;
+
+      let catDisplay = '-';
+      if (df.category) catDisplay = df.category;
+      else {
+        const catKey = Object.keys(df).find(k => k.startsWith('cat_') && df[k] === 1);
+        if (catKey) catDisplay = catKey.replace('cat_', '');
+      }
+
+      const derivedSummary = r.derived_features ?
+        `amt: ${amtDisplay} | cat: ${catDisplay} | dist: ${(df.haversine_km || 0).toFixed(1)}km | hr: ${df.hour !== undefined ? df.hour : '-'}` :
+        'N/A';
+
+      return `
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;">${r.timestamp || timeStr}</td>
+          <td><span class="badge-tag ${badgeClass}">${r.decision || (isFraud ? 'fraud' : 'legitimate')}</span></td>
+          <td style="font-weight:700;color:${isFraud ? 'var(--accent-red)' : 'var(--text-primary)'};">${(r.probability * 100).toFixed(2)}%</td>
+          <td><span style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text-secondary);">${r.model_version || 'Champion'}</span></td>
+          <td>${r.latency_ms ? r.latency_ms.toFixed(1) : '-'}</td>
+          <td style="font-size:0.75rem;color:var(--text-secondary);">${derivedSummary}</td>
+        </tr>
+      `;
+    }).join('');
+  } catch (err) {
+    console.warn('Predictions fetch error:', err);
+  }
+}
+
+fetchMonitoringData();
+loadRecentPredictions();
+
+const refreshToggle = document.getElementById('autoRefreshToggle');
+if (refreshToggle) {
+  setInterval(() => {
+    if (refreshToggle.checked) {
+      fetchMonitoringData();
+      loadRecentPredictions();
+    }
+  }, 8000);
+
+  refreshToggle.addEventListener('change', (e) => {
+    if (e.target.checked) {
+      fetchMonitoringData();
+      loadRecentPredictions();
+    }
+  });
+}
+</script>
+</body>
+</html>

@@ -1,16 +1,53 @@
 {
-    "model": "XGBClassifier",
-    "accuracy": 0.9623846699787083,
-    "precision": 0.9373297002724795,
-    "recall": 0.9197860962566845,
-    "f1_score": 0.9284750337381916,
-    "roc_auc": 0.9912190963341858,
-    "cv_mean_roc_auc": 0.9928889319870227,
-    "cv_std_roc_auc": 0.002160359396001788,
-    "confusion_matrix": {
-        "tn": 1012,
-        "fp": 23,
-        "fn": 30,
-        "tp": 344
+  "pr_auc": 0.118985,
+  "roc_auc": 0.850232,
+  "accuracy": 0.994551,
+  "precision": 0.242583,
+  "recall": 0.300866,
+  "f1_score": 0.268599,
+  "recall_at_fp_budget": 0.0,
+  "fp_budget_rate": 0.05,
+  "threshold": 0.91,
+  "n_samples": 277860,
+  "n_fraud": 924,
+  "fraud_rate": 0.003325,
+  "weakest_subgroups": [
+    {
+      "group_dimension": "amt_bucket",
+      "group_value": "$50-100",
+      "n_samples": 83508,
+      "pr_auc": 0.000177,
+      "recall": 0.0
+    },
+    {
+      "group_dimension": "category",
+      "group_value": "health_fitness",
+      "n_samples": 18296,
+      "pr_auc": 0.000804,
+      "recall": 0.0
+    },
+    {
+      "group_dimension": "category",
+      "group_value": "kids_pets",
+      "n_samples": 24195,
+      "pr_auc": 0.000821,
+      "recall": 0.0
+    },
+    {
+      "group_dimension": "category",
+      "group_value": "grocery_net",
+      "n_samples": 9851,
+      "pr_auc": 0.001026,
+      "recall": 0.0
+    },
+    {
+      "group_dimension": "category",
+      "group_value": "personal_care",
+      "n_samples": 19733,
+      "pr_auc": 0.001439,
+      "recall": 0.0
     }
+  ],
+  "data_provenance": "synthetic/simulated (Sparkov)",
+  "model_type": "LogisticRegression"
 }

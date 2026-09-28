@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1790606662500
+current_stage: None
+description: null
+last_updated_timestamp: 1790606662500
+name: credit-fraud-classifier
+run_id: d0eb6387423840bd890fbe6bb7e8f054
+run_link: null
+source: file:C:\Github_Repositories\CreditOps\mlruns/951803475629456168/d0eb6387423840bd890fbe6bb7e8f054/artifacts/model
+status: READY
+status_message: null
+storage_location: file:C:\Github_Repositories\CreditOps\mlruns/951803475629456168/d0eb6387423840bd890fbe6bb7e8f054/artifacts/model
+user_id: null
+version: 1

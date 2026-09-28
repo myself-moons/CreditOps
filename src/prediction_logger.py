@@ -1,35 +1,19 @@
 """
-prediction_logger.py — ChurnOps
+prediction_logger.py — CreditOps
 
 Appends one JSON record per prediction to predictions.jsonl.
-This file accumulates operational prediction data that can later
-be combined with ground-truth labels for model performance evaluation.
 
-IMPORTANT DESIGN NOTE
----------------------
-Prediction logs alone cannot provide true model performance metrics
-(ROC-AUC, precision, recall, F1) because they contain predicted labels
-and probabilities but NOT actual ground-truth outcomes.
+⚠ PII note: raw transaction PII (card number, name, street) is NOT logged.
+  Only derived feature values and prediction results are stored.
 
-True performance monitoring requires a separate feedback loop where
-ground-truth churn labels (e.g., from CRM systems after 30-90 days)
-are matched against these logged predictions.
-
-This module handles Layer A — Operational monitoring only:
-  - prediction count
-  - prediction distribution (churn vs not-churn)
-  - probability distribution
-  - request latency
-  - model version usage
-
-Layer B (Model Performance) is enabled by the separate
-retrain_trigger.py module, which accepts ground-truth data.
+⚠ SIMULATED DATA: This logger supports a model trained on Sparkov simulation data.
 """
 
 import json
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Optional
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 LOG_PATH = ROOT_DIR / "predictions.jsonl"
@@ -39,30 +23,35 @@ def log_prediction(
     *,
     prediction: int,
     probability: float,
+    decision: str,
     model_version: str,
     latency_ms: float,
-    input_features: dict | None = None,
+    derived_features: Optional[dict] = None,
 ) -> None:
     """
     Append a single prediction record to predictions.jsonl.
 
     Args:
-        prediction:     0 (not churn) or 1 (churn)
-        probability:    Model confidence score for the churn class (0.0–1.0)
-        model_version:  Model class name, e.g. 'XGBClassifier'
-        latency_ms:     End-to-end prediction latency in milliseconds
-        input_features: Optional dict of raw input features (for auditability)
+        prediction:       0 (legitimate) or 1 (fraud)
+        probability:      Model fraud score (0.0–1.0)
+        decision:         Human-readable decision ("fraud" or "legitimate")
+        model_version:    Model class name, e.g. 'XGBClassifier'
+        latency_ms:       End-to-end latency in milliseconds
+        derived_features: Feature values computed by features.py (no PII)
     """
-    record = {
+    record: dict = {
         "timestamp":     datetime.now(timezone.utc).isoformat(),
         "prediction":    int(prediction),
         "probability":   round(float(probability), 6),
+        "decision":      decision,
         "model_version": model_version,
         "latency_ms":    round(float(latency_ms), 3),
     }
-    # Store input features if provided (useful for drift detection later)
-    if input_features is not None:
-        record["input_features"] = input_features
+    if derived_features is not None:
+        record["derived_features"] = {
+            k: (round(v, 6) if isinstance(v, float) else int(v) if isinstance(v, (int, bool)) else v)
+            for k, v in derived_features.items()
+        }
 
     with LOG_PATH.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record) + "\n")

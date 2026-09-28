@@ -1,33 +1,16 @@
 """
-retrain_trigger.py — ChurnOps
+retrain_trigger.py — CreditOps
 
 Evaluates whether model retraining should be recommended.
 
-DESIGN INTENT
--------------
-Retraining is triggered when measured model performance drops below
-a configured threshold. However, measuring performance in production
-requires ground-truth labels — which are only available after a delay
-(typically 30-90 days in a telecom churn context).
+Primary trigger: PR-AUC < params.yaml monitoring.pr_auc_threshold
+Secondary trigger: recall < params.yaml monitoring.recall_threshold
 
-This module implements two trigger modes:
+Distribution drift check compares recent fraud prediction rate against
+the training distribution recorded in params.yaml.
 
-1. evaluate_with_labels(labeled_outcomes)
-   Computes actual ROC-AUC from provided ground-truth labels,
-   compares against params.yaml threshold, and recommends retraining.
-
-2. check_distribution_drift(recent_predictions)
-   A weaker signal — checks whether the recent churn prediction rate
-   has shifted significantly from the training distribution.
-   Can be used as an early warning WITHOUT ground-truth labels.
-   NOTE: distribution shift alone does not prove performance degradation.
-
-The typical workflow is:
-  Production predictions
-  + Later ground-truth outcomes (from CRM/billing after 30-90 days)
-  → evaluate_with_labels()
-  → compare against threshold
-  → retraining recommendation
+⚠ SIMULATED DATA: Any detected drift is simulation-internal variation.
+  Real-world drift experiments must be explicitly injected.
 """
 
 from pathlib import Path
@@ -38,113 +21,110 @@ import yaml
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
 
-def _load_threshold() -> dict:
-    """Load monitoring configuration from params.yaml."""
+def _load_monitoring_cfg() -> dict:
     params_path = ROOT_DIR / "params.yaml"
     if not params_path.exists():
-        return {"roc_auc_threshold": 0.75, "min_predictions": 50}
+        return {}
     with params_path.open() as f:
-        config = yaml.safe_load(f)
-    return config.get("monitoring", {"roc_auc_threshold": 0.75, "min_predictions": 50})
+        return yaml.safe_load(f).get("monitoring", {})
 
 
-def evaluate_with_labels(
-    labeled_outcomes: list[dict],
-) -> dict:
+def evaluate_with_labels(labeled_outcomes: list[dict]) -> dict:
     """
-    Layer B trigger: Compute ROC-AUC from ground-truth labels and decide
+    Layer B trigger: Compute PR-AUC from ground-truth labels and decide
     whether retraining is needed.
 
-    Args:
-        labeled_outcomes: List of dicts:
-            {"timestamp": "<matches a prediction log entry>", "actual_label": 0|1}
-
-    Returns:
-        dict with keys:
-            retrain_recommended: bool
-            reason: str
-            roc_auc: float (if computable)
-            threshold: float
+    Returns dict with retrain_recommended, reason, pr_auc, recall, threshold.
     """
-    from src.monitor import evaluate_with_ground_truth
+    try:
+        from src.monitor import evaluate_with_ground_truth
+    except ImportError:
+        from monitor import evaluate_with_ground_truth
 
-    config    = _load_threshold()
-    threshold = config.get("roc_auc_threshold", 0.75)
-    min_preds = config.get("min_predictions", 50)
+    cfg       = _load_monitoring_cfg()
+    pr_thresh = float(cfg.get("pr_auc_threshold",  0.10))
+    re_thresh = float(cfg.get("recall_threshold",  0.60))
+    min_preds = int(cfg.get("min_predictions",     50))
 
     result = evaluate_with_ground_truth(labeled_outcomes)
     if result is None or result.get("status") != "evaluated":
         return {
             "retrain_recommended": False,
-            "reason": result.get("message", "Insufficient ground-truth data for evaluation."),
-            "threshold": threshold,
+            "reason": result.get("message", "Insufficient ground-truth data.") if result else "No data.",
+            "pr_auc_threshold":  pr_thresh,
+            "recall_threshold":  re_thresh,
+            "data_provenance":   "synthetic/simulated (Sparkov)",
         }
 
-    roc_auc = result["roc_auc"]
-    retrain  = roc_auc < threshold
+    pr_auc  = result["pr_auc"]
+    recall  = result["recall"]
+    retrain = (pr_auc < pr_thresh) or (recall < re_thresh)
+
+    reasons = []
+    if pr_auc < pr_thresh:
+        reasons.append(f"PR-AUC {pr_auc:.4f} < threshold {pr_thresh:.4f}")
+    if recall < re_thresh:
+        reasons.append(f"recall {recall:.4f} < threshold {re_thresh:.4f}")
 
     return {
         "retrain_recommended": retrain,
-        "reason": (
-            f"ROC-AUC {roc_auc:.4f} is below threshold {threshold:.4f}. "
-            f"Retraining is recommended."
-            if retrain else
-            f"ROC-AUC {roc_auc:.4f} is above threshold {threshold:.4f}. "
-            f"Model performance is acceptable."
-        ),
-        "roc_auc":   roc_auc,
-        "threshold": threshold,
-        "n_samples": result.get("n_samples"),
-        "performance": result,
+        "reason":              "; ".join(reasons) if reasons else "Metrics above thresholds — no action needed.",
+        "pr_auc":              pr_auc,
+        "recall":              recall,
+        "pr_auc_threshold":    pr_thresh,
+        "recall_threshold":    re_thresh,
+        "n_samples":           result.get("n_samples"),
+        "performance":         result,
+        "data_provenance":     "synthetic/simulated (Sparkov)",
     }
 
 
-def check_distribution_drift(
-    training_churn_rate: float = 0.265,
-    drift_tolerance: float = 0.10,
-) -> dict:
+def check_distribution_drift(recent_n: int = 100) -> dict:
     """
-    Layer A weak signal: Compare recent prediction distribution against
-    the training distribution to detect potential drift.
+    Layer A weak signal: Compare recent fraud prediction rate against
+    the training distribution baseline stored in params.yaml.
 
-    This is an early warning only. It does NOT measure model performance.
-    A shift in predicted churn rate may indicate concept drift, data
-    pipeline issues, or genuine business changes — but cannot distinguish
-    between them without ground-truth labels.
+    This is an early-warning signal only.
+    It does NOT measure model performance without ground-truth labels.
 
-    Args:
-        training_churn_rate: Churn rate in the training data (0.265 = 26.5%)
-        drift_tolerance:     Alert if absolute deviation exceeds this value
-
-    Returns:
-        dict with drift assessment
+    ⚠ NOTE: The training distribution is from Sparkov-simulated data.
+             Any shift detected is simulation-internal variation.
     """
-    from src.monitor import get_operational_stats
+    try:
+        from src.monitor import get_operational_stats
+    except ImportError:
+        from monitor import get_operational_stats
 
-    stats = get_operational_stats()
+    cfg              = _load_monitoring_cfg()
+    training_fr      = float(cfg.get("training_fraud_rate", 0.00579))
+    drift_tolerance  = float(cfg.get("drift_tolerance",     0.003))
+
+    stats = get_operational_stats(recent_n=recent_n)
     if stats.get("status") != "ok":
         return {
-            "drift_detected": False,
-            "reason": "No prediction data available.",
+            "drift_detected":  False,
+            "reason":          "No prediction data available.",
+            "data_provenance": "synthetic/simulated (Sparkov)",
         }
 
-    recent_rate = stats["churn_rate"]
-    deviation   = abs(recent_rate - training_churn_rate)
-    drift       = deviation > drift_tolerance
+    recent_fr = stats["fraud_detection_rate"]
+    deviation = abs(recent_fr - training_fr)
+    drift     = deviation > drift_tolerance
 
     return {
-        "drift_detected":           drift,
-        "training_churn_rate":      training_churn_rate,
-        "recent_churn_rate":        recent_rate,
-        "absolute_deviation":       round(deviation, 4),
-        "tolerance":                drift_tolerance,
-        "total_predictions":        stats["total_predictions"],
+        "drift_detected":            drift,
+        "training_fraud_rate":       training_fr,
+        "recent_fraud_detection_rate": recent_fr,
+        "absolute_deviation":        round(deviation, 6),
+        "tolerance":                 drift_tolerance,
+        "total_predictions":         stats["total_predictions"],
+        "data_provenance":           "synthetic/simulated (Sparkov)",
         "warning": (
-            "Prediction distribution has shifted significantly. "
-            "This is an early warning signal — ground-truth evaluation is needed "
-            "to confirm whether model performance has degraded."
-            if drift else None
-        ),
+            "Prediction distribution has shifted vs training baseline. "
+            "This is a weak signal — ground-truth evaluation needed to confirm "
+            "whether model performance has degraded. "
+            "Note: baseline is from simulated data; any shift is simulation-internal."
+        ) if drift else None,
         "note": (
             "Distribution drift is a weak signal only. "
             "True performance monitoring requires ground-truth labels."

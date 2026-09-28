@@ -1,24 +1,21 @@
 """
-main.py — ChurnOps FastAPI application
+main.py — CreditOps FastAPI application
+
+⚠ SIMULATED DATA NOTICE: This API serves a model trained on Sparkov-simulated
+credit-card transactions. No real cardholder data is used or stored.
 
 Routes:
-  GET  /               Landing / overview page
+  GET  /               Landing page
   GET  /dashboard      MLflow experiment dashboard
   GET  /predict        Prediction UI
-  GET  /docs           Swagger API docs (built-in)
+  GET  /dataset        Dataset overview page
+  GET  /docs           Swagger API docs
   GET  /api/dashboard  JSON dashboard data
   GET  /api/runs       JSON MLflow run history
   GET  /api/monitor    JSON operational monitoring stats
-  POST /predict        Churn prediction endpoint
-
-Prediction flow:
-  Request (Customer fields)
-  → Pydantic validation
-  → prepare_features() (null fills + manual encoding)
-  → preprocessor.transform() (fitted sklearn ColumnTransformer)
-  → model.predict() + predict_proba()
-  → prediction_logger.log_prediction()
-  → JSON response
+  GET  /api/dataset    JSON dataset profile
+  GET  /health         Health check
+  POST /predict        Fraud prediction endpoint
 """
 
 import json
@@ -30,25 +27,28 @@ from pathlib import Path
 import mlflow
 import pandas as pd
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 
 try:
-    from src.data_model import Customer
-    from src.data_preprocessing import prepare_features
+    from src.data_model import Transaction
+    from src.features import build_features, feature_names
     from src.monitor import get_operational_stats
     from src.prediction_logger import log_prediction
-except ImportError:  # pragma: no cover — supports running the module directly
-    from data_model import Customer
-    from data_preprocessing import prepare_features
+    from src.retrain_trigger import check_distribution_drift
+except ImportError:
+    from data_model import Transaction
+    from features import build_features, feature_names
     from monitor import get_operational_stats
     from prediction_logger import log_prediction
+    from retrain_trigger import check_distribution_drift
 
 app = FastAPI(
-    title="ChurnOps — Customer Churn Prediction",
+    title="CreditOps — Credit Card Fraud Detection",
     description=(
-        "Customer churn classification API. Predicts whether a customer "
-        "is likely to churn based on their demographics, service usage, "
-        "and billing information."
+        "⚠ SIMULATED DATA: This API serves a model trained on Sparkov-simulated "
+        "credit-card transactions (kartik2112/fraud-detection on Kaggle). "
+        "No real cardholders are involved. "
+        "Fraud prediction API with MLflow tracking, DVC pipeline, and operational monitoring."
     ),
     version="1.0.0",
 )
@@ -56,11 +56,11 @@ app = FastAPI(
 BASE_DIR          = Path(__file__).resolve().parent.parent
 MODEL_PATH        = BASE_DIR / "model.pkl"
 PREPROCESSOR_PATH = BASE_DIR / "preprocessor.pkl"
-METRICS_PATH         = BASE_DIR / "metrics.json"
-DATASET_SUMMARY_PATH = BASE_DIR / "dataset_summary.json"
-DASHBOARD_PATH       = BASE_DIR / "src" / "dashboard.html"
-LANDING_PATH         = BASE_DIR / "src" / "landing.html"
-PREDICT_PATH         = BASE_DIR / "src" / "predict.html"
+METRICS_PATH      = BASE_DIR / "metrics.json"
+PROFILE_PATH      = BASE_DIR / "dataset_profile.json"
+SPLIT_INFO_PATH   = BASE_DIR / "split_info.json"
+SUBGROUP_PATH     = BASE_DIR / "subgroup_metrics.csv"
+THRESHOLD_PATH    = BASE_DIR / ".decision_threshold"
 TRACKING_URI      = os.getenv("MLFLOW_TRACKING_URI", f"file:{BASE_DIR / 'mlruns'}")
 
 # Load model and preprocessor at startup
@@ -70,6 +70,18 @@ with MODEL_PATH.open("rb") as f:
 with PREPROCESSOR_PATH.open("rb") as f:
     preprocessor = pickle.load(f)
 
+threshold = 0.5
+if THRESHOLD_PATH.exists():
+    try:
+        threshold = float(THRESHOLD_PATH.read_text().strip())
+    except Exception:
+        pass
+if threshold == 0.5 and METRICS_PATH.exists():
+    try:
+        m = json.loads(METRICS_PATH.read_text(encoding="utf-8"))
+        threshold = float(m.get("threshold", 0.5))
+    except Exception:
+        pass
 SELECTED_MODEL = type(model).__name__
 
 
@@ -78,158 +90,85 @@ SELECTED_MODEL = type(model).__name__
 # ============================================================================ #
 @app.get("/", response_class=HTMLResponse)
 def index():
-    return LANDING_PATH.read_text(encoding="utf-8")
+    return (BASE_DIR / "src" / "landing.html").read_text(encoding="utf-8")
 
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard():
-    return DASHBOARD_PATH.read_text(encoding="utf-8")
+    return (BASE_DIR / "src" / "dashboard.html").read_text(encoding="utf-8")
 
 
 @app.get("/predict", response_class=HTMLResponse)
 def prediction_page():
-    return PREDICT_PATH.read_text(encoding="utf-8")
+    return (BASE_DIR / "src" / "predict.html").read_text(encoding="utf-8")
+
+
+@app.get("/dataset", response_class=HTMLResponse)
+def dataset_page():
+    return (BASE_DIR / "src" / "dataset.html").read_text(encoding="utf-8")
+
+
+@app.get("/monitor", response_class=HTMLResponse)
+def monitor_page():
+    return (BASE_DIR / "src" / "monitor.html").read_text(encoding="utf-8")
+
+
+@app.get("/logs", response_class=HTMLResponse)
+def logs_page():
+    return (BASE_DIR / "src" / "logs.html").read_text(encoding="utf-8")
+
+
+# ============================================================================ #
+# Health                                                                        #
+# ============================================================================ #
+@app.get("/health")
+def health():
+    return {
+        "status":        "ok",
+        "model":         SELECTED_MODEL,
+        "threshold":     threshold,
+        "data_provenance": "synthetic/simulated (Sparkov)",
+    }
 
 
 # ============================================================================ #
 # Internal helpers                                                              #
 # ============================================================================ #
-DEFAULT_DATASET_SUMMARY = {
-    "train": {
-        "available": True,
-        "rows": 5634,
-        "features": 32,
-        "missing_values": 4323,
-        "class_distribution": {"0": 4139, "1": 1495},
-    },
-    "test": {
-        "available": True,
-        "rows": 1409,
-        "features": 32,
-        "missing_values": 1080,
-        "class_distribution": {"0": 1035, "1": 374},
-    },
-    "processed_train": {
-        "available": True,
-        "rows": 5634,
-        "features": 39,
-        "missing_values": 0,
-        "class_distribution": {"0": 4139, "1": 1495},
-    },
-    "processed_test": {
-        "available": True,
-        "rows": 1409,
-        "features": 39,
-        "missing_values": 0,
-        "class_distribution": {"0": 1035, "1": 374},
-    },
-}
-
-
-def _dataset_summary(path: Path) -> dict:
-    if not path.exists():
-        return {"available": False, "rows": 0, "features": 0, "missing_values": 0}
-    data = pd.read_csv(path)
-    target = "Churn Value"
-    dist = {}
-    if target in data.columns:
-        dist = {
-            str(label): int(count)
-            for label, count in data[target].value_counts().sort_index().items()
-        }
-    return {
-        "available": True,
-        "rows": len(data),
-        "features": len(data.columns) - 1,
-        "missing_values": int(data.isna().sum().sum()),
-        "class_distribution": dist,
-    }
-
-
-def _get_all_dataset_summaries() -> dict:
-    # 1. Compute dynamically if local CSV files exist
-    train_path = BASE_DIR / "data/raw/train.csv"
-    if train_path.exists():
-        return {
-            "train":           _dataset_summary(BASE_DIR / "data/raw/train.csv"),
-            "test":            _dataset_summary(BASE_DIR / "data/raw/test.csv"),
-            "processed_train": _dataset_summary(BASE_DIR / "data/processed/train_processed.csv"),
-            "processed_test":  _dataset_summary(BASE_DIR / "data/processed/test_processed.csv"),
-        }
-    # 2. Check if dataset_summary.json exists (bundled in Docker container)
-    if DATASET_SUMMARY_PATH.exists():
-        try:
-            return json.loads(DATASET_SUMMARY_PATH.read_text(encoding="utf-8"))
-        except Exception:
-            pass
-    # 3. Fallback to default constants
-    return DEFAULT_DATASET_SUMMARY
-
-
 def _mlflow_runs() -> list:
-    mlflow.set_tracking_uri(TRACKING_URI)
-    experiment = mlflow.get_experiment_by_name("customer-churn")
-    if experiment is None:
+    try:
+        mlflow.set_tracking_uri(TRACKING_URI)
+        exp = mlflow.get_experiment_by_name("credit-fraud")
+        if exp is None:
+            return []
+        runs = mlflow.search_runs(
+            experiment_ids=[exp.experiment_id],
+            order_by=["start_time DESC"],
+        )
+        result = []
+        for _, r in runs.iterrows():
+            def clean(v):
+                return None if pd.isna(v) else v
+            result.append({
+                "run_id":          clean(r.get("run_id")),
+                "run_name":        clean(r.get("tags.mlflow.runName")),
+                "run_stage":       clean(r.get("tags.run_stage")),
+                "status":          clean(r.get("status")) or "UNKNOWN",
+                "start_time":      r.get("start_time").isoformat() if pd.notna(r.get("start_time")) else None,
+                "model_type":      clean(r.get("params.model_type")),
+                "cv_mean_pr_auc":  clean(r.get("metrics.cv_mean_pr_auc")),
+                "cv_std_pr_auc":   clean(r.get("metrics.cv_std_pr_auc")),
+                "val_pr_auc":      clean(r.get("metrics.val_pr_auc")),
+                "val_recall":      clean(r.get("metrics.val_recall")),
+                "test_pr_auc":     clean(r.get("metrics.test_pr_auc")),
+                "test_roc_auc":    clean(r.get("metrics.test_roc_auc")),
+                "test_f1_score":   clean(r.get("metrics.test_f1_score")),
+                "test_precision":  clean(r.get("metrics.test_precision")),
+                "test_recall":     clean(r.get("metrics.test_recall")),
+                "test_recall_at_fp_budget": clean(r.get("metrics.test_recall_at_fp_budget")),
+            })
+        return result
+    except Exception:
         return []
-
-    runs = mlflow.search_runs(
-        experiment_ids=[experiment.experiment_id],
-        order_by=["start_time DESC"],
-    )
-    run_history = []
-    for _, run in runs.iterrows():
-        model_type = run.get("params.model_type")
-        if pd.isna(model_type):
-            model_type = "unknown"
-
-        def clean(value):
-            return None if pd.isna(value) else value
-
-        # Format model-specific parameter summary
-        param_parts = []
-        if model_type == "logistic_regression":
-            if pd.notna(run.get("params.C")):
-                param_parts.append(f"C={run.get('params.C')}")
-            if pd.notna(run.get("params.max_iter")):
-                param_parts.append(f"iter={run.get('params.max_iter')}")
-        elif model_type in ("random_forest", "xgboost"):
-            if pd.notna(run.get("params.n_estimators")):
-                param_parts.append(f"trees={run.get('params.n_estimators')}")
-            if pd.notna(run.get("params.max_depth")):
-                param_parts.append(f"depth={run.get('params.max_depth')}")
-            if pd.notna(run.get("params.learning_rate")):
-                param_parts.append(f"lr={run.get('params.learning_rate')}")
-
-        run_name = clean(run.get("tags.mlflow.runName"))
-        run_stage = clean(run.get("tags.run_stage"))
-        if not run_stage:
-            run_stage = "Champion" if (run_name and "final" in run_name) else "5-Fold CV"
-
-        run_history.append({
-            "run_id":        clean(run.get("run_id")),
-            "run_name":      run_name,
-            "run_stage":     run_stage,
-            "status":        clean(run.get("status")) or "UNKNOWN",
-            "start_time":    run.get("start_time").isoformat() if pd.notna(run.get("start_time")) else None,
-            "model_type":    model_type,
-            "params_summary": ", ".join(param_parts) if param_parts else "-",
-            "n_estimators":  clean(run.get("params.n_estimators")),
-            "max_depth":     clean(run.get("params.max_depth")),
-            "random_state":  clean(run.get("params.random_state")),
-            "learning_rate": clean(run.get("params.learning_rate")),
-            "C":             clean(run.get("params.C")),
-            "max_iter":      clean(run.get("params.max_iter")),
-            # CV selection metrics (candidate runs)
-            "cv_mean_roc_auc": clean(run.get("metrics.cv_mean_roc_auc")),
-            "cv_std_roc_auc":  clean(run.get("metrics.cv_std_roc_auc")),
-            # Final test metrics (only present on the *_final run)
-            "test_roc_auc":  clean(run.get("metrics.test_roc_auc")),
-            "test_accuracy": clean(run.get("metrics.test_accuracy")),
-            "test_f1_score": clean(run.get("metrics.test_f1_score")),
-            "test_precision":clean(run.get("metrics.test_precision")),
-            "test_recall":   clean(run.get("metrics.test_recall")),
-        })
-    return run_history
 
 
 # ============================================================================ #
@@ -237,70 +176,176 @@ def _mlflow_runs() -> list:
 # ============================================================================ #
 @app.get("/api/dashboard")
 def dashboard_data():
-    runs       = _mlflow_runs()
-    metrics    = json.loads(METRICS_PATH.read_text(encoding="utf-8")) if METRICS_PATH.exists() else {}
-    latest_run = runs[0] if runs else None
-
-    # Best run by ROC-AUC (primary metric for churn)
+    runs    = _mlflow_runs()
+    metrics = json.loads(METRICS_PATH.read_text(encoding="utf-8")) if METRICS_PATH.exists() else {}
     best_run = max(
-        (r for r in runs if isinstance(r.get("test_roc_auc"), (float, int))),
-        key=lambda r: r["test_roc_auc"],
+        (r for r in runs if isinstance(r.get("test_pr_auc"), (float, int))),
+        key=lambda r: r["test_pr_auc"],
         default=None,
     )
+    subgroup_rows = []
+    if SUBGROUP_PATH.exists():
+        import csv
+        with SUBGROUP_PATH.open() as f:
+            reader = csv.DictReader(f)
+            subgroup_rows = list(reader)
 
     return {
+        "data_provenance": "synthetic/simulated (Sparkov)",
         "project": {
-            "name": "ChurnOps — Customer Churn Prediction",
+            "name":        "CreditOps — Credit Card Fraud Detection",
             "description": (
-                "A DVC-managed model comparison pipeline with MLflow experiment tracking "
-                "and a FastAPI prediction service for customer churn classification."
+                "A DVC-managed MLOps pipeline that trains and serves a credit card fraud "
+                "classifier. Data: Sparkov simulation (Kaggle kartik2112/fraud-detection). "
+                "No real cardholder data is used."
             ),
             "pipeline": [
-                "Data Collection",
-                "Data Preprocessing",
-                "Model Training",
-                "Evaluation",
+                "Data Collection", "Data Preprocessing",
+                "Model Training", "Evaluation", "Dataset Profile",
+                "Stationarity Check",
             ],
         },
-        "datasets": _get_all_dataset_summaries(),
         "results": metrics,
         "tracking": {
-            "experiment":      "customer-churn",
-            "selected_model":  SELECTED_MODEL,
-            "run_count":       len(runs),
-            "finished_count":  sum(r["status"] == "FINISHED" for r in runs),
-            "latest_run":      latest_run,
-            "best_run":        best_run,
+            "experiment":     "credit-fraud",
+            "selected_model": SELECTED_MODEL,
+            "threshold":      threshold,
+            "run_count":      len(runs),
+            "best_run":       best_run,
         },
-        "runs": runs,
+        "runs":             runs,
+        "subgroup_metrics": subgroup_rows[:50],  # top 50 for dashboard
     }
 
 
 @app.get("/api/runs")
-def runs():
-    return {"experiment": "customer-churn", "runs": _mlflow_runs()}
+def api_runs():
+    return {
+        "experiment":      "credit-fraud",
+        "data_provenance": "synthetic/simulated (Sparkov)",
+        "runs":            _mlflow_runs(),
+    }
 
 
 @app.get("/api/monitor")
 def monitor_status():
     """
-    Operational monitoring statistics derived from the prediction log.
+    Operational monitoring statistics, distribution drift check, and monitoring architecture.
 
-    Returns Layer A stats (count, distribution, latency, model version usage).
-    Layer B (ROC-AUC, F1) requires ground-truth labels — see the monitoring
-    documentation in src/monitor.py for the integration workflow.
+    Layer A: Operational monitoring (real-time, zero ground truth needed).
+      - Fraud detection rate shift vs training baseline
+      - Probability distribution calibration
+      - Feature stationarity (PSI & KS statistics)
+      - API latency SLA (Mean & P95)
+
+    Layer B: Model performance monitoring (delayed ground truth).
+      - PR-AUC degradation (alert if < 0.10)
+      - Recall drop at 5% FP budget (alert if < 0.60)
+      - Automated retraining recommendations
     """
-    from src.retrain_trigger import check_distribution_drift
     stats = get_operational_stats()
     drift = check_distribution_drift()
+
+    stationarity_summary = {}
+    stationarity_file = BASE_DIR / "stationarity_report.json"
+    if stationarity_file.exists():
+        try:
+            st_data = json.loads(stationarity_file.read_text(encoding="utf-8"))
+            stationarity_summary = st_data.get("summary", {})
+            stationarity_summary["conclusion"] = st_data.get("conclusion", "")
+        except Exception:
+            pass
+
     return {
-        "operational": stats,
-        "drift_check": drift,
+        "data_provenance": "synthetic/simulated (Sparkov)",
+        "operational":     stats,
+        "drift_check":     drift,
+        "stationarity":    stationarity_summary,
+        "monitoring_architecture": {
+            "layer_a_operational": {
+                "name": "Layer A — Operational Drift & System Health",
+                "ground_truth_required": False,
+                "metrics_tracked": [
+                    "Rolling Fraud Detection Rate vs 0.579% Baseline",
+                    "Score Probability Distribution (Mean, Min, Max, StDev)",
+                    "Population Stability Index (PSI) per feature (Threshold < 0.10)",
+                    "Kolmogorov-Smirnov (KS) Two-Sample Test (Tolerance < 0.05)",
+                    "Inference Latency SLA (Mean & P95 ms)"
+                ],
+                "status": "active"
+            },
+            "layer_b_performance": {
+                "name": "Layer B — Model Performance & Retrain Governance",
+                "ground_truth_required": True,
+                "metrics_tracked": [
+                    "PR-AUC (Precision-Recall Area Under Curve, Trigger: < 0.10)",
+                    "Recall at 5% False-Positive Budget (Trigger: < 0.60)",
+                    "Subgroup Parity Across Transaction Categories & Age Bands"
+                ],
+                "status": "ready_for_eval"
+            },
+            "retraining_triggers": {
+                "pr_auc_threshold": 0.10,
+                "recall_threshold": 0.60,
+                "training_fraud_rate_baseline": 0.00579,
+                "drift_tolerance": 0.003
+            }
+        },
         "note": (
-            "Model performance metrics (ROC-AUC, Precision, Recall, F1) "
-            "require ground-truth churn outcomes. These become available "
-            "30-90 days after predictions, once actual churn is observed."
+            "PR-AUC, precision, recall, and F1 require ground-truth fraud labels. "
+            "These become available when actual fraud outcomes are confirmed — "
+            "typically days to weeks after the transaction. "
+            "Any drift detected is compared against a Sparkov-simulation baseline."
         ),
+    }
+
+
+@app.get("/api/stationarity")
+def stationarity_api():
+    """Returns the full stationarity report (PSI and KS tests across all splits and months)."""
+    st_file = BASE_DIR / "stationarity_report.json"
+    if st_file.exists():
+        data = json.loads(st_file.read_text(encoding="utf-8"))
+        data.setdefault("data_provenance", "synthetic/simulated (Sparkov)")
+        return data
+    return {
+        "data_provenance": "synthetic/simulated (Sparkov)",
+        "error": "stationarity_report.json not found — run dvc repro Stationarity_Check",
+    }
+
+
+@app.get("/api/predictions/recent")
+def recent_predictions(limit: int = 50):
+    """Returns recent prediction records from the log for real-time monitoring."""
+    log_file = BASE_DIR / "predictions.jsonl"
+    if not log_file.exists():
+        return {"total": 0, "records": [], "data_provenance": "synthetic/simulated (Sparkov)"}
+    records = []
+    with log_file.open(encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                try:
+                    records.append(json.loads(line))
+                except Exception:
+                    pass
+    return {
+        "total": len(records),
+        "records": records[-limit:][::-1],
+        "data_provenance": "synthetic/simulated (Sparkov)",
+    }
+
+
+@app.get("/api/dataset")
+def dataset_api():
+    """JSON endpoint backing the /dataset page. Reads dataset_profile.json."""
+    if PROFILE_PATH.exists():
+        data = json.loads(PROFILE_PATH.read_text(encoding="utf-8"))
+        data.setdefault("data_provenance", "synthetic/simulated (Sparkov)")
+        return data
+    return {
+        "data_provenance": "synthetic/simulated (Sparkov)",
+        "error":           "dataset_profile.json not found — run dvc repro Dataset_Profile",
     }
 
 
@@ -308,74 +353,70 @@ def monitor_status():
 # Prediction endpoint                                                           #
 # ============================================================================ #
 @app.post("/predict")
-def model_predict(payload: Customer):
+def model_predict(payload: Transaction):
     """
-    Predict whether a customer is likely to churn.
+    Predict whether a credit card transaction is fraudulent.
 
-    Returns the predicted class (0=retained, 1=churn), the churn probability,
-    and the model type used.
+    Returns:
+      - prediction: 0 (legitimate) or 1 (fraud)
+      - fraud_probability: model confidence for the fraud class
+      - decision: "fraud" or "legitimate"
+      - threshold: decision boundary used
+
+    ⚠ SIMULATED DATA: Trained on Sparkov simulation, not real transactions.
     """
     start_ms = time.time() * 1000
 
-    # Build a DataFrame with column names matching training data
-    row = {
-        "Gender":                             payload.Gender,
-        "Age":                                payload.Age,
-        "Married":                            payload.Married,
-        "Number of Dependents":               payload.Number_of_Dependents,
-        "Satisfaction Score":                 payload.Satisfaction_Score,
-        "Referred a Friend":                  payload.Referred_a_Friend,
-        "Number of Referrals":                payload.Number_of_Referrals,
-        "Tenure in Months":                   payload.Tenure_in_Months,
-        "Offer":                              payload.Offer,
-        "Phone Service":                      payload.Phone_Service,
-        "Multiple Lines":                     payload.Multiple_Lines,
-        "Internet Service":                   payload.Internet_Service,
-        "Internet Type":                      payload.Internet_Type,
-        "Online Security":                    payload.Online_Security,
-        "Online Backup":                      payload.Online_Backup,
-        "Device Protection Plan":             payload.Device_Protection_Plan,
-        "Premium Tech Support":               payload.Premium_Tech_Support,
-        "Streaming TV":                       payload.Streaming_TV,
-        "Streaming Movies":                   payload.Streaming_Movies,
-        "Streaming Music":                    payload.Streaming_Music,
-        "Unlimited Data":                     payload.Unlimited_Data,
-        "Contract":                           payload.Contract,
-        "Paperless Billing":                  payload.Paperless_Billing,
-        "Payment Method":                     payload.Payment_Method,
-        "Avg Monthly Long Distance Charges":  payload.Avg_Monthly_Long_Distance_Charges,
-        "Avg Monthly GB Download":            payload.Avg_Monthly_GB_Download,
-        "Monthly Charge":                     payload.Monthly_Charge,
-        "Total Charges":                      payload.Total_Charges,
-        "Total Refunds":                      payload.Total_Refunds,
-        "Total Extra Data Charges":           payload.Total_Extra_Data_Charges,
-        "Total Long Distance Charges":        payload.Total_Long_Distance_Charges,
-        "Total Revenue":                      payload.Total_Revenue,
+    # Build raw row dict matching what features.py expects
+    raw_row = {
+        "trans_date_trans_time": payload.trans_date_trans_time,
+        "amt":                   payload.amt,
+        "category":              payload.category,
+        "gender":                payload.gender,
+        "dob":                   payload.dob,
+        "lat":                   payload.lat,
+        "long":                  payload.long,
+        "city_pop":              payload.city_pop,
+        "merch_lat":             payload.merch_lat,
+        "merch_long":            payload.merch_long,
     }
 
-    sample_df = pd.DataFrame([row])
+    try:
+        raw_df       = pd.DataFrame([raw_row])
+        features_df  = build_features(raw_df)
+        features_enc = preprocessor.transform(features_df)
+        fraud_prob   = float(model.predict_proba(features_enc)[0][1])
+    except Exception as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Inference processing failed: {str(exc)}"
+        )
 
-    # Apply the exact same preprocessing used during training
-    sample_prepared = prepare_features(sample_df)
-    sample_encoded  = preprocessor.transform(sample_prepared)
+    predicted    = int(fraud_prob >= threshold)
+    decision     = "fraud" if predicted == 1 else "legitimate"
+    latency_ms   = time.time() * 1000 - start_ms
 
-    predicted_value = int(model.predict(sample_encoded)[0])
-    churn_prob      = float(model.predict_proba(sample_encoded)[0][1])
-    latency_ms      = time.time() * 1000 - start_ms
+    # Log prediction (derived features + transaction metadata, no PII)
+    derived = features_df.iloc[0].to_dict()
+    derived["amt"] = round(float(payload.amt), 2)
+    derived["category"] = str(payload.category)
 
-    # Log prediction for operational monitoring
     log_prediction(
-        prediction=predicted_value,
-        probability=churn_prob,
+        prediction=predicted,
+        probability=fraud_prob,
+        decision=decision,
         model_version=SELECTED_MODEL,
         latency_ms=latency_ms,
+        derived_features=derived,
     )
 
     return {
-        "prediction":        predicted_value,
-        "churn":             predicted_value == 1,
-        "prediction_label":  "Likely to Churn" if predicted_value == 1 else "Likely to Stay",
-        "churn_probability": round(churn_prob, 4),
+        "prediction":        predicted,
+        "fraud":             predicted == 1,
+        "decision":          decision,
+        "fraud_probability": round(fraud_prob, 4),
+        "threshold":         round(threshold, 4),
         "model":             SELECTED_MODEL,
         "latency_ms":        round(latency_ms, 2),
+        "data_provenance":   "synthetic/simulated (Sparkov)",
     }

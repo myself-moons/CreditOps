@@ -1,0 +1,13 @@
+.git
+.github
+.venv
+Credit_Data/
+data/raw/
+data/processed/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.dvc/cache
+*.log

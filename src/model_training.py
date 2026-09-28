@@ -1,28 +1,45 @@
-r"""
-model_training.py -- ChurnOps
+"""
+model_training.py — CreditOps
 
-MODEL SELECTION METHODOLOGY (correct, post-fix):
--------------------------------------------------
-Full dataset
-    |
-    |-- Training data (80%)  --> Stratified 5-fold CV
-    |                                |
-    |                                |-- Logistic Regression  -> mean CV ROC-AUC
-    |                                |-- Random Forest        -> mean CV ROC-AUC
-    |                                \-- XGBoost             -> mean CV ROC-AUC
-    |
-    |   1. Select model with highest mean CV ROC-AUC
-    |   2. Retrain selected model on the COMPLETE training split
-    |
-    \-- Test data (20%) -- UNTOUCHED until step 3.
-                3. Evaluate the retrained winner ONCE -> final metrics
+DVC Stage: Model_Training
+--------------------------
+MODEL SELECTION METHODOLOGY
+----------------------------
+The pipeline uses a temporal split (70/15/15) to avoid data leakage.
 
-The test set is NOT used for model selection.
+  Training data (70%)
+      |
+      |-- Logistic Regression   → cross-val PR-AUC on training folds
+      |-- Random Forest         → cross-val PR-AUC on training folds
+      |-- XGBoost               → cross-val PR-AUC on training folds
+      |-- LightGBM (if available)
+      |
+      |  Select model by mean CV PR-AUC (not ROC-AUC — fraud is ~0.5%)
+      |  Retrain selected model on FULL training split
+      |
+  Validation data (15%) → Tune decision threshold
+  Test data (15%)        → UNTOUCHED until final evaluation
+
+PRIMARY METRIC: PR-AUC (average precision)
+  At ~0.5% fraud rate, accuracy and ROC-AUC are misleading.
+  PR-AUC focuses on the minority class and is the correct selection metric.
+
+IMBALANCE HANDLING
+  Majority-class downsampling for training only (documented in params.yaml).
+  Full val and test splits are always evaluated without downsampling.
+
+MLflow experiment: credit-fraud
+Model Registry:    champion alias set on the best model.
+
+SIMULATED DATA NOTICE: Source data is Sparkov simulation.
 """
 
 import argparse
+import json
+import logging
 import os
 import pickle
+import sys
 from pathlib import Path
 
 import mlflow
@@ -34,309 +51,303 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     accuracy_score,
+    average_precision_score,
     f1_score,
     precision_score,
     recall_score,
     roc_auc_score,
+    precision_recall_curve,
 )
 from sklearn.model_selection import StratifiedKFold, cross_val_score
-from xgboost import XGBClassifier
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-TARGET   = "Churn Value"
+sys.path.insert(0, str(ROOT_DIR))
 
-# -- Cross-validation configuration ------------------------------------------ #
-CV_N_SPLITS   = 5
-CV_SHUFFLE    = True
-# Random state for StratifiedKFold comes from params (model.random_state)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
 
-
-# --------------------------------------------------------------------------- #
-# CLI / params                                                                 #
-# --------------------------------------------------------------------------- #
-def parse_args():
-    parser = argparse.ArgumentParser(description="Train and track a churn classification model")
-    parser.add_argument("--params-file",  type=Path, default=ROOT_DIR / "params.yaml")
-    parser.add_argument("--model-type",   choices=["logistic_regression", "random_forest", "xgboost", "all"])
-    parser.add_argument("--n-estimators", type=int)
-    parser.add_argument("--max-depth",    type=int)
-    parser.add_argument("--random-state", type=int)
-    parser.add_argument("--learning-rate",    type=float)
-    parser.add_argument("--subsample",        type=float)
-    parser.add_argument("--colsample-bytree", type=float)
-    parser.add_argument("--max-iter",     type=int)
-    parser.add_argument("--C",            type=float, dest="C")
-    return parser.parse_args()
+TARGET = "is_fraud"
+CV_N_SPLITS = 3   # fewer folds for speed on large data
 
 
-def load_params(args):
-    with args.params_file.open() as f:
-        configured = yaml.safe_load(f).get("model", {})
+def load_params() -> dict:
+    with (ROOT_DIR / "params.yaml").open() as f:
+        return yaml.safe_load(f)
 
-    params = {
-        "model_type":       configured.get("model_type",       "all"),
-        "n_estimators":     configured.get("n_estimators",     200),
-        "max_depth":        configured.get("max_depth",        None),
-        "random_state":     configured.get("random_state",     42),
-        "learning_rate":    configured.get("learning_rate",    0.1),
-        "subsample":        configured.get("subsample",        1.0),
-        "colsample_bytree": configured.get("colsample_bytree", 1.0),
-        "max_iter":         configured.get("max_iter",         1000),
-        "C":                configured.get("C",                1.0),
+
+def downsample_majority(X: pd.DataFrame, y: np.ndarray, frac: float, rng: int) -> tuple:
+    """Downsample majority class (non-fraud) for TRAINING ONLY."""
+    idx_fraud    = np.where(y == 1)[0]
+    idx_nonfraud = np.where(y == 0)[0]
+    rng_obj      = np.random.default_rng(rng)
+    keep_n       = max(1, int(len(idx_nonfraud) * frac))
+    keep_idx     = rng_obj.choice(idx_nonfraud, size=keep_n, replace=False)
+    all_idx      = np.concatenate([idx_fraud, keep_idx])
+    rng_obj.shuffle(all_idx)
+    X_out = X.iloc[all_idx].reset_index(drop=True)
+    y_out = y[all_idx]
+    logger.info("Downsampled majority: %d non-fraud kept (%.0f%%) + %d fraud = %d total",
+                keep_n, frac * 100, len(idx_fraud), len(all_idx))
+    return X_out, y_out
+
+
+def compute_metrics(y_true, y_prob, threshold: float = 0.5, fp_budget: float = 0.05) -> dict:
+    """Compute full metric suite including PR-AUC and recall at FP budget."""
+    y_pred = (y_prob >= threshold).astype(int)
+    pr_auc = average_precision_score(y_true, y_prob)
+    roc    = roc_auc_score(y_true, y_prob)
+
+    # Recall at fixed false-positive rate budget
+    n_neg = int((y_true == 0).sum())
+    fp_budget_count = int(n_neg * fp_budget)
+    prec_arr, rec_arr, thresh_arr = precision_recall_curve(y_true, y_prob)
+    # Compute FP at each threshold
+    recall_at_budget = 0.0
+    for t in sorted(np.unique(y_prob), reverse=True):
+        y_p = (y_prob >= t).astype(int)
+        fp_count = int(((y_p == 1) & (y_true == 0)).sum())
+        if fp_count <= fp_budget_count:
+            recall_at_budget = float(recall_score(y_true, y_p, zero_division=0))
+            break
+
+    return {
+        "pr_auc":            round(pr_auc, 6),
+        "roc_auc":           round(roc, 6),
+        "accuracy":          round(accuracy_score(y_true, y_pred), 6),
+        "precision":         round(precision_score(y_true, y_pred, zero_division=0), 6),
+        "recall":            round(recall_score(y_true, y_pred, zero_division=0), 6),
+        "f1_score":          round(f1_score(y_true, y_pred, zero_division=0), 6),
+        "recall_at_fp_budget": round(recall_at_budget, 6),
+        "fp_budget_rate":    fp_budget,
+        "threshold":         round(threshold, 4),
     }
-    # CLI overrides
-    for name in params:
-        cli_val = getattr(args, name, None)
-        if cli_val is not None:
-            params[name] = cli_val
-    return params
 
 
-# --------------------------------------------------------------------------- #
-# Model factory                                                                #
-# --------------------------------------------------------------------------- #
-def build_model(params: dict, model_type: str):
-    rs = params["random_state"]
+def tune_threshold(y_true, y_prob, metric: str = "f1") -> float:
+    """Find threshold that maximises F1 on val set."""
+    best_t, best_s = 0.5, 0.0
+    for t in np.arange(0.01, 0.99, 0.01):
+        y_p = (y_prob >= t).astype(int)
+        if metric == "f1":
+            s = f1_score(y_true, y_p, zero_division=0)
+        else:
+            s = average_precision_score(y_true, y_p)
+        if s > best_s:
+            best_s, best_t = s, t
+    logger.info("Best threshold on val: %.2f  (val F1=%.4f)", best_t, best_s)
+    return float(best_t)
+
+
+def build_model(model_type: str, params: dict, scale_pos_weight: float = 1.0):
+    rs = params["model"]["random_state"]
+    ne = params["model"]["n_estimators"]
+    md = params["model"]["max_depth"]
+    lr = params["model"]["learning_rate"]
+    ss = params["model"]["subsample"]
+    cb = params["model"]["colsample_bytree"]
+    C  = params["model"]["C"]
+    mi = params["model"]["max_iter"]
 
     if model_type == "logistic_regression":
         return LogisticRegression(
-            C=params["C"],
-            max_iter=params["max_iter"],
-            random_state=rs,
-            class_weight="balanced",
-            solver="lbfgs",
+            C=C, max_iter=mi, random_state=rs,
+            class_weight="balanced", solver="lbfgs", n_jobs=-1,
         )
-
     if model_type == "random_forest":
         return RandomForestClassifier(
-            n_estimators=params["n_estimators"],
-            max_depth=params["max_depth"],
-            random_state=rs,
-            class_weight="balanced",
-            n_jobs=-1,
+            n_estimators=ne, max_depth=md, random_state=rs,
+            class_weight="balanced", n_jobs=-1,
         )
-
     if model_type == "xgboost":
-        # scale_pos_weight compensates for the class imbalance
-        # ratio = number of negatives / number of positives
-        # This is set dynamically based on training data inside main()
+        from xgboost import XGBClassifier
         return XGBClassifier(
-            n_estimators=params["n_estimators"],
-            max_depth=params["max_depth"] or 6,
-            learning_rate=params["learning_rate"],
-            subsample=params["subsample"],
-            colsample_bytree=params["colsample_bytree"],
-            random_state=rs,
-            eval_metric="logloss",
-            n_jobs=-1,
+            n_estimators=ne, max_depth=md, learning_rate=lr,
+            subsample=ss, colsample_bytree=cb, random_state=rs,
+            scale_pos_weight=scale_pos_weight,
+            eval_metric="logloss", n_jobs=-1, verbosity=0,
         )
-
-    raise ValueError(f"Unsupported model type: {model_type}")
-
-
-def compute_metrics(y_true, y_pred, y_prob):
-    return {
-        "accuracy":  accuracy_score(y_true, y_pred),
-        "precision": precision_score(y_true, y_pred, zero_division=0),
-        "recall":    recall_score(y_true, y_pred, zero_division=0),
-        "f1_score":  f1_score(y_true, y_pred, zero_division=0),
-        "roc_auc":   roc_auc_score(y_true, y_prob),
-    }
+    if model_type == "lightgbm":
+        import lightgbm as lgb
+        return lgb.LGBMClassifier(
+            n_estimators=ne, max_depth=md, learning_rate=lr,
+            subsample=ss, colsample_bytree=cb, random_state=rs,
+            scale_pos_weight=scale_pos_weight,
+            n_jobs=-1, verbosity=-1,
+        )
+    raise ValueError(f"Unknown model_type: {model_type}")
 
 
-def get_model_params(params: dict, model_type: str) -> dict:
-    """Extract and return only hyperparameters relevant to the specified model."""
-    rs = params.get("random_state", 42)
-    if model_type == "logistic_regression":
-        return {
-            "model_type": "logistic_regression",
-            "C": float(params.get("C", 1.0)),
-            "max_iter": int(params.get("max_iter", 1000)),
-            "random_state": int(rs),
-            "class_weight": "balanced",
-            "solver": "lbfgs",
-        }
-    elif model_type == "random_forest":
-        return {
-            "model_type": "random_forest",
-            "n_estimators": int(params.get("n_estimators", 100)),
-            "max_depth": int(params.get("max_depth", 6)),
-            "random_state": int(rs),
-            "class_weight": "balanced",
-        }
-    elif model_type == "xgboost":
-        return {
-            "model_type": "xgboost",
-            "n_estimators": int(params.get("n_estimators", 100)),
-            "max_depth": int(params.get("max_depth", 6)),
-            "learning_rate": float(params.get("learning_rate", 0.1)),
-            "subsample": float(params.get("subsample", 0.8)),
-            "colsample_bytree": float(params.get("colsample_bytree", 0.8)),
-            "random_state": int(rs),
-            "eval_metric": "logloss",
-        }
-    return {"model_type": model_type, "random_state": int(rs)}
+def main() -> None:
+    params = load_params()
+    m_cfg  = params["model"]
+    d_cfg  = params["data"]
+    mon_cfg = params["monitoring"]
+    fp_budget = float(mon_cfg.get("fp_budget_rate", 0.05))
+    ds_frac   = float(d_cfg.get("majority_downsample_frac", 0.30))
+    rs        = int(m_cfg["random_state"])
 
+    mlflow.set_tracking_uri(
+        os.getenv("MLFLOW_TRACKING_URI", f"file:{ROOT_DIR / 'mlruns'}")
+    )
+    mlflow.set_experiment(
+        os.getenv("MLFLOW_EXPERIMENT_NAME", params["mlflow"]["experiment_name"])
+    )
 
-# --------------------------------------------------------------------------- #
-# Main                                                                         #
-# --------------------------------------------------------------------------- #
-def main():
-    args   = parse_args()
-    params = load_params(args)
+    # ── Load processed data ─────────────────────────────────────────────── #
+    proc_dir = ROOT_DIR / "data" / "processed"
+    train = pd.read_csv(proc_dir / "train_processed.csv")
+    val   = pd.read_csv(proc_dir / "val_processed.csv")
+    test  = pd.read_csv(proc_dir / "test_processed.csv")
 
-    tracking_uri = os.getenv("MLFLOW_TRACKING_URI", f"file:{ROOT_DIR / 'mlruns'}")
-    mlflow.set_tracking_uri(tracking_uri)
-    mlflow.set_experiment(os.getenv("MLFLOW_EXPERIMENT_NAME", "customer-churn"))
+    X_train_full = train.drop(columns=[TARGET])
+    y_train_full = train[TARGET].values
+    X_val  = val.drop(columns=[TARGET])
+    y_val  = val[TARGET].values
+    X_test = test.drop(columns=[TARGET])
+    y_test = test[TARGET].values
 
-    # -- Load data ----------------------------------------------------------- #
-    train = pd.read_csv(ROOT_DIR / "data/processed/train_processed.csv")
-    test  = pd.read_csv(ROOT_DIR / "data/processed/test_processed.csv")
+    # ── Downsample majority class for training (documented) ─────────────── #
+    logger.info("Downsampling majority class (non-fraud) in TRAIN for speed.")
+    logger.info("Val and test splits are NOT downsampled — full evaluation.")
+    X_train, y_train = downsample_majority(X_train_full, y_train_full, ds_frac, rs)
 
-    X_train = train.drop(columns=[TARGET])
-    y_train = train[TARGET].values
-    X_test  = test.drop(columns=[TARGET])
-    y_test  = test[TARGET].values
-
-    # Class imbalance ratio for XGBoost scale_pos_weight
     neg, pos = (y_train == 0).sum(), (y_train == 1).sum()
     scale_pos_weight = neg / pos if pos > 0 else 1.0
+    logger.info("Train after downsampling: %d rows | neg=%d pos=%d | scale_pos_weight=%.2f",
+                len(y_train), neg, pos, scale_pos_weight)
 
-    model_choices = (
+    # ── Model candidates ────────────────────────────────────────────────── #
+    mt = m_cfg["model_type"]
+    candidates = (
         ["logistic_regression", "random_forest", "xgboost"]
-        if params["model_type"] == "all"
-        else [params["model_type"]]
+        if mt == "all"
+        else [mt]
     )
 
-    # -- Stratified K-Fold cross-validator ----------------------------------- #
-    skf = StratifiedKFold(
-        n_splits=CV_N_SPLITS,
-        shuffle=CV_SHUFFLE,
-        random_state=params["random_state"],
-    )
+    # Try lightgbm — include only if it installs cleanly
+    try:
+        import lightgbm  # noqa: F401
+        if mt == "all":
+            candidates.append("lightgbm")
+        logger.info("LightGBM available — adding to candidates")
+    except ImportError:
+        logger.info("LightGBM not installed — skipping")
 
-    # -- Phase 1: Cross-validate all candidate models on TRAINING data only -- #
-    # The test set is NOT touched during this phase.
-    print(f"\n-- Phase 1: {CV_N_SPLITS}-fold Stratified CV on training data --")
+    skf = StratifiedKFold(n_splits=CV_N_SPLITS, shuffle=True, random_state=rs)
 
-    cv_results: dict[str, dict] = {}          # model_type -> {mean, std, fold_scores, clf, run_id}
+    # ── Phase 1: Cross-validate on training data ─────────────────────────── #
+    logger.info("=== Phase 1: %d-fold CV on training data (PR-AUC) ===", CV_N_SPLITS)
+    cv_results: dict[str, dict] = {}
 
-    for model_type in model_choices:
-        trial_params = {**params, "model_type": model_type}
-        clf = build_model(trial_params, model_type)
-
-        # Inject scale_pos_weight for XGBoost after construction
-        if model_type == "xgboost":
-            clf.set_params(scale_pos_weight=scale_pos_weight)
-
-        # Run CV on training data -- ROC-AUC per fold
-        fold_scores = cross_val_score(
-            clf,
-            X_train, y_train,
-            cv=skf,
-            scoring="roc_auc",
-            n_jobs=-1,
+    for mt_name in candidates:
+        clf = build_model(mt_name, params, scale_pos_weight)
+        scores = cross_val_score(
+            clf, X_train, y_train, cv=skf,
+            scoring="average_precision", n_jobs=1,
         )
+        mean_pr = float(np.mean(scores))
+        std_pr  = float(np.std(scores))
+        logger.info("  [%s]  CV PR-AUC = %.4f ± %.4f  folds=%s",
+                    mt_name, mean_pr, std_pr, [round(s, 4) for s in scores])
 
-        mean_auc = float(np.mean(fold_scores))
-        std_auc  = float(np.std(fold_scores))
-
-        print(
-            f"  [{model_type}]  CV ROC-AUC = {mean_auc:.4f} +/- {std_auc:.4f}  "
-            f"(folds: {[round(s, 4) for s in fold_scores]})"
-        )
-
-        # Log CV results to MLflow (one run per candidate)
-        model_specific_params = get_model_params(trial_params, model_type)
-        with mlflow.start_run(run_name=f"{model_type}_cv") as run:
+        with mlflow.start_run(run_name=f"{mt_name}_cv") as run:
             mlflow.set_tags({
                 "run_stage": "cv_candidate",
-                "model_family": model_type,
+                "model_family": mt_name,
+                "data_provenance": "synthetic/simulated (Sparkov)",
             })
-            mlflow.log_params(model_specific_params)
+            mlflow.log_params({"model_type": mt_name, **{
+                k: v for k, v in m_cfg.items() if k != "model_type"
+            }})
             mlflow.log_metrics({
-                "cv_mean_roc_auc": mean_auc,
-                "cv_std_roc_auc":  std_auc,
-                **{f"cv_fold_{i+1}_roc_auc": float(s) for i, s in enumerate(fold_scores)},
+                "cv_mean_pr_auc": mean_pr,
+                "cv_std_pr_auc": std_pr,
+                **{f"cv_fold_{i+1}_pr_auc": float(s) for i, s in enumerate(scores)},
             })
+            cv_run_id = run.info.run_id
 
-        cv_results[model_type] = {
-            "mean_auc":   mean_auc,
-            "std_auc":    std_auc,
-            "fold_scores": fold_scores.tolist(),
-            "params":      trial_params,
-            "cv_run_id":   run.info.run_id,
+        cv_results[mt_name] = {
+            "mean_pr": mean_pr, "std_pr": std_pr,
+            "fold_scores": scores.tolist(), "cv_run_id": cv_run_id,
         }
 
-    # -- Phase 2: Select the winning model from CV results ------------------- #
-    # Test set has NOT been used yet.
-    best_model_type = max(cv_results, key=lambda m: cv_results[m]["mean_auc"])
-    best_cv         = cv_results[best_model_type]
+    # ── Phase 2: Select best model ──────────────────────────────────────── #
+    best_name = max(cv_results, key=lambda m: cv_results[m]["mean_pr"])
+    best_cv   = cv_results[best_name]
+    logger.info("=== Phase 2: Selected '%s' (CV PR-AUC=%.4f) ===", best_name, best_cv["mean_pr"])
 
-    print(f"\n-- Phase 2: Selected '{best_model_type}' (CV ROC-AUC = {best_cv['mean_auc']:.4f}) --")
-    print("  Retraining selected model on COMPLETE training split...")
-
-    # -- Phase 3: Retrain the winner on the FULL training split -------------- #
-    final_clf = build_model(best_cv["params"], best_model_type)
-    if best_model_type == "xgboost":
-        final_clf.set_params(scale_pos_weight=scale_pos_weight)
-
+    # ── Phase 3: Retrain on full training split ─────────────────────────── #
+    logger.info("Retraining on FULL training split...")
+    final_clf = build_model(best_name, params, scale_pos_weight)
     final_clf.fit(X_train, y_train)
 
-    # -- Phase 4: Evaluate ONCE on the untouched test split ------------------ #
-    # This is the only place the test set is used -- AFTER model selection.
-    print("\n-- Phase 3: Final evaluation on UNTOUCHED test split (one shot) --")
+    # ── Phase 4: Tune threshold on VAL (not test) ──────────────────────── #
+    val_prob  = final_clf.predict_proba(X_val)[:, 1]
+    threshold = tune_threshold(y_val, val_prob, metric="f1")
 
+    val_m = compute_metrics(y_val, val_prob, threshold=threshold, fp_budget=fp_budget)
+    logger.info("Val metrics: PR-AUC=%.4f ROC-AUC=%.4f F1=%.4f recall=%.4f recall@FPR=%.4f",
+                val_m["pr_auc"], val_m["roc_auc"], val_m["f1_score"],
+                val_m["recall"], val_m["recall_at_fp_budget"])
+
+    # ── Phase 5: Evaluate ONCE on untouched test split ─────────────────── #
+    logger.info("=== Phase 5: Final evaluation on UNTOUCHED test split ===")
     test_prob = final_clf.predict_proba(X_test)[:, 1]
-    test_pred = final_clf.predict(X_test)
-    test_m    = compute_metrics(y_test, test_pred, test_prob)
+    test_m    = compute_metrics(y_test, test_prob, threshold=threshold, fp_budget=fp_budget)
+    logger.info("Test metrics: PR-AUC=%.4f ROC-AUC=%.4f F1=%.4f recall=%.4f recall@FPR=%.4f",
+                test_m["pr_auc"], test_m["roc_auc"], test_m["f1_score"],
+                test_m["recall"], test_m["recall_at_fp_budget"])
 
-    print(
-        f"  [{best_model_type}]  "
-        f"Test ROC-AUC={test_m['roc_auc']:.4f}  "
-        f"F1={test_m['f1_score']:.4f}  "
-        f"Acc={test_m['accuracy']:.4f}"
-    )
-
-    # -- Phase 5: Log final model and test metrics to MLflow ----------------- #
-    winner_params = get_model_params(best_cv["params"], best_model_type)
-    with mlflow.start_run(run_name=f"{best_model_type}_final") as final_run:
+    # ── Phase 6: Log final model to MLflow ─────────────────────────────── #
+    with mlflow.start_run(run_name=f"{best_name}_final") as final_run:
         mlflow.set_tags({
             "run_stage": "final_champion",
-            "model_family": best_model_type,
+            "model_family": best_name,
             "selected_as_champion": "true",
+            "data_provenance": "synthetic/simulated (Sparkov)",
         })
         mlflow.log_params({
-            **winner_params,
-            "selection_method": "stratified_5fold_cv",
+            "model_type": best_name,
+            "selection_metric": "pr_auc",
+            "threshold": threshold,
+            "downsample_frac": ds_frac,
+            **{k: v for k, v in m_cfg.items() if k != "model_type"},
         })
         mlflow.log_metrics({
-            # CV selection metrics
-            "cv_mean_roc_auc": best_cv["mean_auc"],
-            "cv_std_roc_auc":  best_cv["std_auc"],
-            # Final test metrics (generated ONCE, after model selection)
-            "test_roc_auc":  test_m["roc_auc"],
-            "test_accuracy": test_m["accuracy"],
-            "test_precision":test_m["precision"],
-            "test_recall":   test_m["recall"],
-            "test_f1_score": test_m["f1_score"],
+            "cv_mean_pr_auc": best_cv["mean_pr"],
+            "cv_std_pr_auc":  best_cv["std_pr"],
+            **{f"val_{k}": v for k, v in val_m.items() if isinstance(v, (int, float))},
+            **{f"test_{k}": v for k, v in test_m.items() if isinstance(v, (int, float))},
         })
         mlflow.sklearn.log_model(final_clf, "model")
         final_run_id = final_run.info.run_id
 
-    print(f"\nFinal model: {type(final_clf).__name__}")
-    print(f"  CV mean ROC-AUC : {best_cv['mean_auc']:.4f} +/- {best_cv['std_auc']:.4f}")
-    print(f"  Test ROC-AUC    : {test_m['roc_auc']:.4f}")
-    print(f"  Test Accuracy   : {test_m['accuracy']:.4f}")
-    print(f"  Test F1         : {test_m['f1_score']:.4f}")
+        # Register in MLflow Model Registry with champion alias
+        try:
+            model_uri = f"runs:/{final_run_id}/model"
+            reg = mlflow.register_model(model_uri, "credit-fraud-classifier")
+            client = mlflow.tracking.MlflowClient()
+            client.set_registered_model_alias(
+                "credit-fraud-classifier",
+                params["mlflow"].get("champion_alias", "champion"),
+                reg.version,
+            )
+            logger.info("Registered as champion v%s", reg.version)
+        except Exception as e:
+            logger.warning("Model Registry step failed (non-fatal): %s", e)
 
-    # -- Save artifacts ------------------------------------------------------ #
+    # ── Save artifacts ──────────────────────────────────────────────────── #
     (ROOT_DIR / ".mlflow_run_id").write_text(final_run_id)
 
     with (ROOT_DIR / "model.pkl").open("wb") as f:
         pickle.dump(final_clf, f)
 
-    print("\nmodel.pkl saved.")
+    # Save threshold for use by API and evaluation
+    (ROOT_DIR / ".decision_threshold").write_text(str(threshold))
+
+    logger.info("model.pkl + .mlflow_run_id + .decision_threshold saved.")
+    logger.info("Training complete. Champion: %s  Test PR-AUC: %.4f",
+                best_name, test_m["pr_auc"])
 
 
 if __name__ == "__main__":

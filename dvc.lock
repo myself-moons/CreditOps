@@ -3,124 +3,273 @@ stages:
   Data_Collection:
     cmd: python src/data_collection.py
     deps:
-    - path: Churn_Data/Demographics.xlsx
+    - path: Credit_Data/fraudTest.csv
       hash: md5
-      md5: 85fb796f1b2c95fb2857c094d627a91e
-      size: 300878
-    - path: Churn_Data/Location.xlsx
+      md5: 692357a2589a1a6fcd44f14b3e1f9d2c
+      size: 150354339
+    - path: Credit_Data/fraudTrain.csv
       hash: md5
-      md5: 392063b0562d2cb070f619d4492e1d21
-      size: 542906
-    - path: Churn_Data/Population.xlsx
+      md5: 9723893e5492dc0551036edcf596e284
+      size: 351238196
+    - path: params.yaml
       hash: md5
-      md5: 45ad4e6c60d18244f93e9f00ee4dd7b8
-      size: 40845
-    - path: Churn_Data/Services.xlsx
-      hash: md5
-      md5: f23a73ea0186a76b8631d023a25669a6
-      size: 1033834
-    - path: Churn_Data/Status.xlsx
-      hash: md5
-      md5: d1b920ab6e29f3f3cb06742dfe5b5f8b
-      size: 429339
+      md5: 29baea8fbd1754fec9c9941042648e17
+      size: 1781
     - path: src/data_collection.py
       hash: md5
-      md5: 1f1ad2262e18e0bb557db4f01b100c58
-      size: 4083
+      md5: ee448547a9a8eb21f2267b49648d6754
+      size: 4527
+    - path: src/dataset_adapter.py
+      hash: md5
+      md5: 166d6f5f3d4845daea3e9b196643c7c9
+      size: 6692
+    params:
+      params.yaml:
+        data:
+          raw_train: Credit_Data/fraudTrain.csv
+          raw_test: Credit_Data/fraudTest.csv
+          time_col: trans_date_trans_time
+          label_col: is_fraud
+          train_frac: 0.7
+          val_frac: 0.15
+          majority_downsample_frac: 0.3
+          random_state: 42
     outs:
     - path: data/raw/test.csv
       hash: md5
-      md5: 847a9f18c4d0fd53641f11e0d750d6ef
-      size: 212187
+      md5: 5ec9a70c0e8f2f86a04f94dcae9e255b
+      size: 72584559
     - path: data/raw/train.csv
       hash: md5
-      md5: b1b3f280022f0cf7007f0e777daef8e5
-      size: 847206
+      md5: 6d6b3873878412c335cc3d0d3802e0c5
+      size: 338719012
+    - path: data/raw/val.csv
+      hash: md5
+      md5: a9ca7f46116eb29b04efe90ec4985d12
+      size: 72591403
+    - path: split_info.json
+      hash: md5
+      md5: 9717a17617af4c255467d24e57b76a49
+      size: 745
   Data_Preprocessing:
     cmd: python src/data_preprocessing.py
     deps:
     - path: data/raw/test.csv
       hash: md5
-      md5: 847a9f18c4d0fd53641f11e0d750d6ef
-      size: 212187
+      md5: 5ec9a70c0e8f2f86a04f94dcae9e255b
+      size: 72584559
     - path: data/raw/train.csv
       hash: md5
-      md5: b1b3f280022f0cf7007f0e777daef8e5
-      size: 847206
+      md5: 6d6b3873878412c335cc3d0d3802e0c5
+      size: 338719012
+    - path: data/raw/val.csv
+      hash: md5
+      md5: a9ca7f46116eb29b04efe90ec4985d12
+      size: 72591403
     - path: src/data_preprocessing.py
       hash: md5
-      md5: f18f4b4af6ab7f1d0787735fceaeb967
-      size: 6595
+      md5: cdaf9fbe98cbcec066d09c2e945f8c64
+      size: 4614
+    - path: src/features.py
+      hash: md5
+      md5: 405cad645ce5be6c845166d4cca2e9d6
+      size: 6850
     outs:
     - path: data/processed/test_processed.csv
       hash: md5
-      md5: 5bbbcff4a29153f446f1652ee1c98974
-      size: 513280
+      md5: 74426c501e990424063573a8499b9217
+      size: 51285474
     - path: data/processed/train_processed.csv
       hash: md5
-      md5: 214aa8e48c217b19adc0796d4249b050
-      size: 2050122
+      md5: e955c621eb05d4de1742e2eb9976e642
+      size: 239194301
+    - path: data/processed/val_processed.csv
+      hash: md5
+      md5: 7890f6d0d9b21eebfa465e6ef3516a17
+      size: 51275507
     - path: preprocessor.pkl
       hash: md5
-      md5: 29d4ea74d858ed4e7a27a04210919472
-      size: 4019
+      md5: 1329cfcb9a1a9cc865fecf7467fb0ea7
+      size: 2326
   Model_Training:
-    cmd: python src/model_training.py --model-type all
+    cmd: python src/model_training.py
     deps:
     - path: data/processed/test_processed.csv
       hash: md5
-      md5: 5bbbcff4a29153f446f1652ee1c98974
-      size: 513280
+      md5: 74426c501e990424063573a8499b9217
+      size: 51285474
     - path: data/processed/train_processed.csv
       hash: md5
-      md5: 214aa8e48c217b19adc0796d4249b050
-      size: 2050122
+      md5: e955c621eb05d4de1742e2eb9976e642
+      size: 239194301
+    - path: data/processed/val_processed.csv
+      hash: md5
+      md5: 7890f6d0d9b21eebfa465e6ef3516a17
+      size: 51275507
+    - path: params.yaml
+      hash: md5
+      md5: 29baea8fbd1754fec9c9941042648e17
+      size: 1781
+    - path: src/features.py
+      hash: md5
+      md5: 405cad645ce5be6c845166d4cca2e9d6
+      size: 6850
     - path: src/model_training.py
       hash: md5
-      md5: 33687795ce0cabf112e5c25104a6e3ee
-      size: 13608
+      md5: d5254af49d5ff37b64f9b7c0b18031ca
+      size: 14779
     params:
       params.yaml:
+        data.majority_downsample_frac: 0.3
+        data.random_state: 42
+        mlflow:
+          experiment_name: credit-fraud
+          champion_alias: champion
         model:
-          model_type: all
-          n_estimators: 200
-          max_depth: 8
+          model_type: logistic_regression
+          n_estimators: 100
+          max_depth: 6
           random_state: 42
-          learning_rate: 0.08
-          subsample: 0.95
-          colsample_bytree: 0.95
+          learning_rate: 0.1
+          subsample: 0.8
+          colsample_bytree: 0.8
           max_iter: 1000
           C: 1.0
+        monitoring.fp_budget_rate: 0.05
     outs:
+    - path: .decision_threshold
+      hash: md5
+      md5: 0a4a2fbfa050681b56c8bfce230ee97c
+      size: 4
     - path: .mlflow_run_id
       hash: md5
-      md5: b38660226589990db0691562f8767308
+      md5: 751c3f2224053b3b1d394369c4d50554
       size: 32
     - path: model.pkl
       hash: md5
-      md5: d43a7d659538e0662d3ca74861b3c4ee
-      size: 580195
+      md5: a4b00887ce0c218772ecae2182fb28b3
+      size: 1334
   Evaluation:
     cmd: python src/model_evaluation.py
     deps:
-    - path: .mlflow_run_id
+    - path: .decision_threshold
       hash: md5
-      md5: b38660226589990db0691562f8767308
-      size: 32
+      md5: 0a4a2fbfa050681b56c8bfce230ee97c
+      size: 4
+    - path: data/raw/test.csv
+      hash: md5
+      md5: 5ec9a70c0e8f2f86a04f94dcae9e255b
+      size: 72584559
     - path: model.pkl
       hash: md5
-      md5: d43a7d659538e0662d3ca74861b3c4ee
-      size: 580195
+      md5: a4b00887ce0c218772ecae2182fb28b3
+      size: 1334
     - path: preprocessor.pkl
       hash: md5
-      md5: 29d4ea74d858ed4e7a27a04210919472
-      size: 4019
+      md5: 1329cfcb9a1a9cc865fecf7467fb0ea7
+      size: 2326
+    - path: src/features.py
+      hash: md5
+      md5: 405cad645ce5be6c845166d4cca2e9d6
+      size: 6850
     - path: src/model_evaluation.py
       hash: md5
-      md5: 5f4b761bfb3e646b7b03a0bd5343960d
-      size: 4228
+      md5: c57475e9558e46b0b0e94980e8201e99
+      size: 8934
     outs:
     - path: metrics.json
       hash: md5
-      md5: f594bd7521cc4b87a8fa26fb8d065cf4
-      size: 419
+      md5: 64bed976f4798cc845bb98b5a1a284ec
+      size: 1249
+    - path: subgroup_metrics.csv
+      hash: md5
+      md5: 03c9d3cd532403fe83470ed8c5b55835
+      size: 2263
+  Dataset_Profile:
+    cmd: python src/dataset_profile.py
+    deps:
+    - path: Credit_Data/fraudTest.csv
+      hash: md5
+      md5: 692357a2589a1a6fcd44f14b3e1f9d2c
+      size: 150354339
+    - path: Credit_Data/fraudTrain.csv
+      hash: md5
+      md5: 9723893e5492dc0551036edcf596e284
+      size: 351238196
+    - path: data/raw/test.csv
+      hash: md5
+      md5: 5ec9a70c0e8f2f86a04f94dcae9e255b
+      size: 72584559
+    - path: data/raw/train.csv
+      hash: md5
+      md5: 6d6b3873878412c335cc3d0d3802e0c5
+      size: 338719012
+    - path: data/raw/val.csv
+      hash: md5
+      md5: a9ca7f46116eb29b04efe90ec4985d12
+      size: 72591403
+    - path: split_info.json
+      hash: md5
+      md5: 9717a17617af4c255467d24e57b76a49
+      size: 745
+    - path: src/dataset_adapter.py
+      hash: md5
+      md5: 166d6f5f3d4845daea3e9b196643c7c9
+      size: 6692
+    - path: src/dataset_profile.py
+      hash: md5
+      md5: 79a3be79a3e063be4488e74a7f92cdd3
+      size: 8818
+    outs:
+    - path: dataset_profile.json
+      hash: md5
+      md5: 51c447d8c52f38a2722c9f35860be29a
+      size: 15788
+  Stationarity_Check:
+    cmd: python src/stationarity_check.py
+    deps:
+    - path: .decision_threshold
+      hash: md5
+      md5: 0a4a2fbfa050681b56c8bfce230ee97c
+      size: 4
+    - path: data/raw/test.csv
+      hash: md5
+      md5: 5ec9a70c0e8f2f86a04f94dcae9e255b
+      size: 72584559
+    - path: data/raw/train.csv
+      hash: md5
+      md5: 6d6b3873878412c335cc3d0d3802e0c5
+      size: 338719012
+    - path: data/raw/val.csv
+      hash: md5
+      md5: a9ca7f46116eb29b04efe90ec4985d12
+      size: 72591403
+    - path: model.pkl
+      hash: md5
+      md5: a4b00887ce0c218772ecae2182fb28b3
+      size: 1334
+    - path: preprocessor.pkl
+      hash: md5
+      md5: 1329cfcb9a1a9cc865fecf7467fb0ea7
+      size: 2326
+    - path: src/dataset_adapter.py
+      hash: md5
+      md5: 166d6f5f3d4845daea3e9b196643c7c9
+      size: 6692
+    - path: src/features.py
+      hash: md5
+      md5: 405cad645ce5be6c845166d4cca2e9d6
+      size: 6850
+    - path: src/stationarity_check.py
+      hash: md5
+      md5: 664ec6224065e9c6c85702dc489887c2
+      size: 10757
+    outs:
+    - path: stationarity_report.csv
+      hash: md5
+      md5: 0f4c70ae9566bd9f17c4644f78a9c4cd
+      size: 9903
+    - path: stationarity_report.json
+      hash: md5
+      md5: a058f59075772754772023e243a814bc
+      size: 46499
