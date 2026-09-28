@@ -1,0 +1,15 @@
+artifact_uri: file:C:\Github_Repositories\CreditOps\mlruns/951803475629456168/861d71dbb245448a9007983dcc6ee6fd/artifacts
+end_time: 1790615642804
+entry_point_name: ''
+experiment_id: '951803475629456168'
+lifecycle_stage: active
+run_id: 861d71dbb245448a9007983dcc6ee6fd
+run_name: logistic_regression_cv
+run_uuid: 861d71dbb245448a9007983dcc6ee6fd
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1790615642746
+status: 3
+tags: []
+user_id: malha

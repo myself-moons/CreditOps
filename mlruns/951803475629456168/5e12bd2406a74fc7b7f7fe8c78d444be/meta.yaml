@@ -1,0 +1,15 @@
+artifact_uri: file:C:\Github_Repositories\CreditOps\mlruns/951803475629456168/5e12bd2406a74fc7b7f7fe8c78d444be/artifacts
+end_time: 1790615815421
+entry_point_name: ''
+experiment_id: '951803475629456168'
+lifecycle_stage: active
+run_id: 5e12bd2406a74fc7b7f7fe8c78d444be
+run_name: xgboost_cv
+run_uuid: 5e12bd2406a74fc7b7f7fe8c78d444be
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1790615815359
+status: 3
+tags: []
+user_id: malha

@@ -1,53 +1,53 @@
 {
-  "pr_auc": 0.118985,
-  "roc_auc": 0.850232,
-  "accuracy": 0.994551,
-  "precision": 0.242583,
-  "recall": 0.300866,
-  "f1_score": 0.268599,
-  "recall_at_fp_budget": 0.0,
+  "pr_auc": 0.87225,
+  "roc_auc": 0.997731,
+  "accuracy": 0.99887,
+  "precision": 0.856308,
+  "recall": 0.79329,
+  "f1_score": 0.823596,
+  "recall_at_fp_budget": 0.001082,
   "fp_budget_rate": 0.05,
-  "threshold": 0.91,
+  "threshold": 0.97,
   "n_samples": 277860,
   "n_fraud": 924,
   "fraud_rate": 0.003325,
   "weakest_subgroups": [
     {
-      "group_dimension": "amt_bucket",
-      "group_value": "$50-100",
-      "n_samples": 83508,
-      "pr_auc": 0.000177,
-      "recall": 0.0
-    },
-    {
       "group_dimension": "category",
-      "group_value": "health_fitness",
-      "n_samples": 18296,
-      "pr_auc": 0.000804,
+      "group_value": "personal_care",
+      "n_samples": 19733,
+      "pr_auc": 0.090035,
       "recall": 0.0
     },
     {
       "group_dimension": "category",
       "group_value": "kids_pets",
       "n_samples": 24195,
-      "pr_auc": 0.000821,
+      "pr_auc": 0.100267,
       "recall": 0.0
     },
     {
       "group_dimension": "category",
-      "group_value": "grocery_net",
-      "n_samples": 9851,
-      "pr_auc": 0.001026,
+      "group_value": "travel",
+      "n_samples": 8645,
+      "pr_auc": 0.105096,
       "recall": 0.0
     },
     {
       "group_dimension": "category",
-      "group_value": "personal_care",
-      "n_samples": 19733,
-      "pr_auc": 0.001439,
+      "group_value": "health_fitness",
+      "n_samples": 18296,
+      "pr_auc": 0.121367,
+      "recall": 0.0
+    },
+    {
+      "group_dimension": "category",
+      "group_value": "food_dining",
+      "n_samples": 19364,
+      "pr_auc": 0.135802,
       "recall": 0.0
     }
   ],
   "data_provenance": "synthetic/simulated (Sparkov)",
-  "model_type": "LogisticRegression"
+  "model_type": "XGBClassifier"
 }

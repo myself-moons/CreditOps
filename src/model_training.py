@@ -224,14 +224,9 @@ def main() -> None:
         else [mt]
     )
 
-    # Try lightgbm — include only if it installs cleanly
-    try:
-        import lightgbm  # noqa: F401
-        if mt == "all":
-            candidates.append("lightgbm")
-        logger.info("LightGBM available — adding to candidates")
-    except ImportError:
-        logger.info("LightGBM not installed — skipping")
+    # LightGBM is optional and excluded from 'all' due to Windows C DLL instability
+    if mt == "lightgbm":
+        candidates = ["lightgbm"]
 
     skf = StratifiedKFold(n_splits=CV_N_SPLITS, shuffle=True, random_state=rs)
 
@@ -240,36 +235,39 @@ def main() -> None:
     cv_results: dict[str, dict] = {}
 
     for mt_name in candidates:
-        clf = build_model(mt_name, params, scale_pos_weight)
-        scores = cross_val_score(
-            clf, X_train, y_train, cv=skf,
-            scoring="average_precision", n_jobs=1,
-        )
-        mean_pr = float(np.mean(scores))
-        std_pr  = float(np.std(scores))
-        logger.info("  [%s]  CV PR-AUC = %.4f ± %.4f  folds=%s",
-                    mt_name, mean_pr, std_pr, [round(s, 4) for s in scores])
+        try:
+            clf = build_model(mt_name, params, scale_pos_weight)
+            scores = cross_val_score(
+                clf, X_train, y_train, cv=skf,
+                scoring="average_precision", n_jobs=1,
+            )
+            mean_pr = float(np.mean(scores))
+            std_pr  = float(np.std(scores))
+            logger.info("  [%s]  CV PR-AUC = %.4f ± %.4f  folds=%s",
+                        mt_name, mean_pr, std_pr, [round(s, 4) for s in scores])
 
-        with mlflow.start_run(run_name=f"{mt_name}_cv") as run:
-            mlflow.set_tags({
-                "run_stage": "cv_candidate",
-                "model_family": mt_name,
-                "data_provenance": "synthetic/simulated (Sparkov)",
-            })
-            mlflow.log_params({"model_type": mt_name, **{
-                k: v for k, v in m_cfg.items() if k != "model_type"
-            }})
-            mlflow.log_metrics({
-                "cv_mean_pr_auc": mean_pr,
-                "cv_std_pr_auc": std_pr,
-                **{f"cv_fold_{i+1}_pr_auc": float(s) for i, s in enumerate(scores)},
-            })
-            cv_run_id = run.info.run_id
+            with mlflow.start_run(run_name=f"{mt_name}_cv") as run:
+                mlflow.set_tags({
+                    "run_stage": "cv_candidate",
+                    "model_family": mt_name,
+                    "data_provenance": "synthetic/simulated (Sparkov)",
+                })
+                mlflow.log_params({"model_type": mt_name, **{
+                    k: v for k, v in m_cfg.items() if k != "model_type"
+                }})
+                mlflow.log_metrics({
+                    "cv_mean_pr_auc": mean_pr,
+                    "cv_std_pr_auc": std_pr,
+                    **{f"cv_fold_{i+1}_pr_auc": float(s) for i, s in enumerate(scores)},
+                })
+                cv_run_id = run.info.run_id
 
-        cv_results[mt_name] = {
-            "mean_pr": mean_pr, "std_pr": std_pr,
-            "fold_scores": scores.tolist(), "cv_run_id": cv_run_id,
-        }
+            cv_results[mt_name] = {
+                "mean_pr": mean_pr, "std_pr": std_pr,
+                "fold_scores": scores.tolist(), "cv_run_id": cv_run_id,
+            }
+        except Exception as exc:
+            logger.error("  [%s]  CV failed: %s", mt_name, exc)
 
     # ── Phase 2: Select best model ──────────────────────────────────────── #
     best_name = max(cv_results, key=lambda m: cv_results[m]["mean_pr"])

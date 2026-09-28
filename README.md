@@ -4,7 +4,7 @@
 
 A reproducible, end-to-end MLOps pipeline that trains and serves a credit card fraud classifier.
 
-**Maintainer:** myself-moons  
+**Maintainer:** Manthan Waghela / myself-moons  
 **Live Deployment:** [https://creditops.onrender.com](https://creditops.onrender.com)
 
 > ⚠️ **SIMULATED DATA** — This project uses the Sparkov-generated Credit Card Transactions Fraud
@@ -46,7 +46,7 @@ Retraining Trigger (PR-AUC + recall thresholds in params.yaml)
 
 | Model | Test PR-AUC | Test ROC-AUC | Test Recall | Test F1 | Recall@5%FPR | Test Accuracy | Decision Threshold |
 |---|---|---|---|---|---|---|---|
-| **Logistic Regression (Champion)** | **0.1190** | **0.8502** | **30.09%** | **0.2686** | **0.00%** | **99.46%** | **0.91** |
+| **XGBoost (Champion)** | **0.8722** | **0.9977** | **79.33%** | **0.8236** | **0.11%** | **99.89%** | **0.97** |
 
 *Evaluated on held-out temporal test split (277,860 transactions, 924 fraud cases, 0.3325% fraud rate).*
 
@@ -54,9 +54,9 @@ Retraining Trigger (PR-AUC + recall thresholds in params.yaml)
 
 | Model | 3-Fold CV Mean PR-AUC | Std Dev | Role |
 |---|---|---|---|
-| **Logistic Regression** | **0.3485** | ±0.0032 | **Champion** — selected for production serving, lightweight, calibrated |
+| **XGBoost** | **0.9553** | ±0.0020 | **Champion** — selected for production serving, gradient boosted trees with `scale_pos_weight` |
 | **Random Forest** | **0.8341** | ±0.0055 | Benchmark ensemble (100 estimators, max depth 6) |
-| **XGBoost** | **0.9553** | ±0.0020 | Benchmark gradient boosted trees with `scale_pos_weight` |
+| **Logistic Regression** | **0.3485** | ±0.0032 | Regularized linear baseline |
 
 **Primary metric: PR-AUC** — at ~0.5% fraud rate, accuracy and ROC-AUC are misleading.
 PR-AUC measures performance on the minority (fraud) class across all thresholds.

@@ -20,7 +20,7 @@ features:
   log_eps: 1e-6       # added to amt and city_pop before log to avoid log(0)
 
 model:
-  model_type: logistic_regression          # all | logistic_regression | random_forest | xgboost
+  model_type: all          # all | logistic_regression | random_forest | xgboost
   n_estimators: 100        # capped for training time
   max_depth: 6
   random_state: 42

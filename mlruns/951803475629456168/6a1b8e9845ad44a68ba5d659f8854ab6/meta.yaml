@@ -1,0 +1,15 @@
+artifact_uri: file:C:\Github_Repositories\CreditOps\mlruns/951803475629456168/6a1b8e9845ad44a68ba5d659f8854ab6/artifacts
+end_time: 1790615678314
+entry_point_name: ''
+experiment_id: '951803475629456168'
+lifecycle_stage: active
+run_id: 6a1b8e9845ad44a68ba5d659f8854ab6
+run_name: random_forest_cv
+run_uuid: 6a1b8e9845ad44a68ba5d659f8854ab6
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1790615678247
+status: 3
+tags: []
+user_id: malha
