@@ -4,7 +4,8 @@
 
 A reproducible, end-to-end MLOps pipeline that trains and serves a credit card fraud classifier.
 
-**Maintainer:** myself-moons
+**Maintainer:** myself-moons  
+**Live Deployment:** [https://creditops.onrender.com](https://creditops.onrender.com)
 
 > ⚠️ **SIMULATED DATA** — This project uses the Sparkov-generated Credit Card Transactions Fraud
 > Detection Dataset (Kaggle: kartik2112/fraud-detection, License: CC0 1.0).
@@ -41,11 +42,21 @@ Retraining Trigger (PR-AUC + recall thresholds in params.yaml)
 
 ## Metrics (measured from real simulated data)
 
-> All numbers below come from an actual training run. Fill in after `dvc repro` completes.
+> All numbers below are extracted directly from an actual training run (`metrics.json` and MLflow tracking run).
 
-| Model | Test PR-AUC | Test ROC-AUC | Test Recall | Test F1 | Recall@5%FPR |
-|---|---|---|---|---|---|
-| *(run dvc repro to populate)* | — | — | — | — | — |
+| Model | Test PR-AUC | Test ROC-AUC | Test Recall | Test F1 | Recall@5%FPR | Test Accuracy | Decision Threshold |
+|---|---|---|---|---|---|---|---|
+| **Logistic Regression (Champion)** | **0.1190** | **0.8502** | **30.09%** | **0.2686** | **0.00%** | **99.46%** | **0.91** |
+
+*Evaluated on held-out temporal test split (277,860 transactions, 924 fraud cases, 0.3325% fraud rate).*
+
+### Candidate Model Cross-Validation (3-Fold CV PR-AUC)
+
+| Model | 3-Fold CV Mean PR-AUC | Std Dev | Role |
+|---|---|---|---|
+| **Logistic Regression** | **0.3485** | ±0.0032 | **Champion** — selected for production serving, lightweight, calibrated |
+| **Random Forest** | **0.8341** | ±0.0055 | Benchmark ensemble (100 estimators, max depth 6) |
+| **XGBoost** | **0.9553** | ±0.0020 | Benchmark gradient boosted trees with `scale_pos_weight` |
 
 **Primary metric: PR-AUC** — at ~0.5% fraud rate, accuracy and ROC-AUC are misleading.
 PR-AUC measures performance on the minority (fraud) class across all thresholds.
@@ -84,11 +95,11 @@ Raw data is tracked with DVC (`Credit_Data/` is in `.gitignore`).
 
 ### Temporal Split
 
-| Split | Fraction | Period |
-|---|---|---|
-| Train | 70% | Jan 2019 → ~Apr 2020 |
-| Validation | 15% | ~Apr 2020 → ~Sep 2020 |
-| Test | 15% | ~Sep 2020 → Dec 2020 |
+| Split | Fraction | Rows | Period | Fraud Rate | Fraud Count |
+|---|---|---|---|---|---|
+| Train | 70% | 1,296,675 | 2019-01-01 → 2020-06-21 | 0.5789% | 7,506 |
+| Validation | 15% | 277,859 | 2020-06-21 → 2020-10-03 | 0.4394% | 1,221 |
+| Test | 15% | 277,860 | 2020-10-03 → 2020-12-31 | 0.3325% | 924 |
 
 Random splitting is not used — see [Why Temporal Split](#why-temporal-split).
 
@@ -115,6 +126,8 @@ src/
   dashboard.html          MLflow run comparison dashboard
   predict.html            Transaction fraud prediction form
   dataset.html            Dataset overview with charts and data dictionary
+  monitor.html            Operational and drift monitoring dashboard
+  logs.html               Real-time transaction prediction audit logs
 tests/
   test_api.py             Full test suite (API, validation, temporal split, features)
 docs/
@@ -220,15 +233,16 @@ uvicorn src.main:app --host 0.0.0.0 --port 8000
 .venv/Scripts/uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
 
-Pages: `/` (landing) · `/predict` · `/dashboard` · `/dataset` · `/docs` (Swagger)
+Pages: `/` (landing) · `/predict` · `/dashboard` · `/dataset` · `/monitor` · `/logs` · `/docs` (Swagger)
 
 API endpoints:
-- `GET  /health`         — model status
+- `GET  /health`         — model & system health status
 - `POST /predict`        — fraud prediction
-- `GET  /api/monitor`    — operational monitoring stats
+- `GET  /api/monitor`    — operational monitoring stats & PSI metrics
 - `GET  /api/dataset`    — dataset profile JSON
 - `GET  /api/dashboard`  — MLflow run history + metrics
 - `GET  /api/runs`       — MLflow runs only
+- `GET  /api/logs`       — recent transaction prediction logs
 
 ### Example prediction
 
@@ -292,7 +306,7 @@ with a known onset window. See [docs/limitations.md](docs/limitations.md).
 
 ## Stationarity
 
-The Sparkov simulation is nearly stationary (expected: mean PSI < 0.10 across features and months).
+The Sparkov simulation is nearly stationary (measured mean PSI: **0.0173** across all features and months, well below the 0.10 threshold).
 This is measured and reported honestly in `stationarity_report.json` after `dvc repro Stationarity_Check`.
 Any variation reported is simulation-internal, not real-world concept drift.
 
