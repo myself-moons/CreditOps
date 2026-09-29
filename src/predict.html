@@ -203,9 +203,12 @@
   .preset-btn {
     background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary);
     padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
   }
   .preset-btn:hover { border-color: var(--accent-blue); background: var(--bg-card-hover); }
+  .preset-btn.active {
+    background: rgba(59, 130, 246, 0.15); border-color: var(--accent-blue); color: var(--accent-blue);
+  }
 
   .predict-grid {
     display: grid; grid-template-columns: 1.25fr 1fr; gap: 24px;
@@ -500,9 +503,18 @@
     <!-- Quick Presets -->
     <div class="preset-bar">
       <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Quick Presets:</span>
-      <button class="preset-btn" onclick="applyPreset('fraud')">High-Risk Suspicious Travel ($1,250)</button>
-      <button class="preset-btn" onclick="applyPreset('legit')">Normal Daytime Grocery ($28.50)</button>
-      <button class="preset-btn" onclick="applyPreset('night')">Late Night Online Shopping ($380)</button>
+      <button type="button" class="preset-btn active" data-preset="fraud_online" onclick="applyPreset('fraud_online')">
+        🚨 High-Risk Online Fraud ($1,148)
+      </button>
+      <button type="button" class="preset-btn" data-preset="fraud_pos" onclick="applyPreset('fraud_pos')">
+        🚨 2 AM Grocery Theft ($315)
+      </button>
+      <button type="button" class="preset-btn" data-preset="watchlist" onclick="applyPreset('watchlist')">
+        ⚠️ Watchlist Online Order ($550)
+      </button>
+      <button type="button" class="preset-btn" data-preset="legit" onclick="applyPreset('legit')">
+        ✅ Normal Daytime Grocery ($28.50)
+      </button>
     </div>
 
     <div class="predict-grid">
@@ -527,7 +539,7 @@
               </div>
               <div>
                 <label for="txn_time" style="font-size:0.72rem;margin-bottom:4px;color:var(--text-secondary);">Time</label>
-                <input type="time" id="txn_time" step="1" value="02:45:00" required onchange="updateDatetimePreview();">
+                <input type="time" id="txn_time" step="1" value="22:45:00" required onchange="updateDatetimePreview();">
               </div>
             </div>
 
@@ -541,7 +553,7 @@
 
             <div class="datetime-preview" id="datetimePreview">
               <svg class="icon-svg sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              <span id="datetimePreviewText">Monday, June 15, 2020 at 02:45:00 AM</span>
+              <span id="datetimePreviewText">Monday, June 15, 2020 at 10:45:00 PM</span>
               <span id="timeRiskBadge" class="item-badge" style="margin-left:auto;">Night Fraud Window</span>
             </div>
           </div>
@@ -550,10 +562,11 @@
             <div class="form-row">
               <label for="category">Merchant Category</label>
               <select id="category">
-                <option value="travel" selected>travel</option>
-                <option value="shopping_net">shopping_net</option>
+                <option value="shopping_net" selected>shopping_net</option>
                 <option value="grocery_pos">grocery_pos</option>
                 <option value="misc_net">misc_net</option>
+                <option value="shopping_pos">shopping_pos</option>
+                <option value="travel">travel</option>
                 <option value="gas_transport">gas_transport</option>
                 <option value="food_dining">food_dining</option>
                 <option value="entertainment">entertainment</option>
@@ -563,12 +576,11 @@
                 <option value="health_fitness">health_fitness</option>
                 <option value="misc_pos">misc_pos</option>
                 <option value="grocery_net">grocery_net</option>
-                <option value="shopping_pos">shopping_pos</option>
               </select>
             </div>
             <div class="form-row">
               <label for="amt">Amount (USD)</label>
-              <input type="number" id="amt" value="1250.00" step="0.01" min="0" required>
+              <input type="number" id="amt" value="1148.50" step="0.01" min="0" required>
             </div>
           </div>
 
@@ -583,37 +595,37 @@
             <div class="form-row">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                 <label for="dob" style="margin-bottom:0;">Date of Birth</label>
-                <span id="ageBadge" style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">Age: 58</span>
+                <span id="ageBadge" style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">Age: 56 yrs</span>
               </div>
-              <input type="date" id="dob" value="1962-04-18" min="1920-01-01" max="2015-12-31" required onchange="updateAge()">
+              <input type="date" id="dob" value="1964-01-04" min="1920-01-01" max="2015-12-31" required onchange="updateAge()">
             </div>
           </div>
 
           <div class="two-col">
             <div class="form-row">
               <label for="lat">Cardholder Latitude</label>
-              <input type="number" id="lat" value="36.1699" step="0.0001" required>
+              <input type="number" id="lat" value="42.8546" step="0.0001" required>
             </div>
             <div class="form-row">
               <label for="long">Cardholder Longitude</label>
-              <input type="number" id="long" value="-115.1398" step="0.0001" required>
+              <input type="number" id="long" value="-75.6605" step="0.0001" required>
             </div>
           </div>
 
           <div class="two-col">
             <div class="form-row">
               <label for="merch_lat">Merchant Latitude</label>
-              <input type="number" id="merch_lat" value="34.0522" step="0.0001" required>
+              <input type="number" id="merch_lat" value="42.6005" step="0.0001" required>
             </div>
             <div class="form-row">
               <label for="merch_long">Merchant Longitude</label>
-              <input type="number" id="merch_long" value="-118.2437" step="0.0001" required>
+              <input type="number" id="merch_long" value="-75.7131" step="0.0001" required>
             </div>
           </div>
 
           <div class="form-row">
             <label for="city_pop">City Population</label>
-            <input type="number" id="city_pop" value="641676" required>
+            <input type="number" id="city_pop" value="2500" required>
           </div>
 
           <button type="submit" class="submit-btn" id="submitBtn">Score Transaction</button>
@@ -786,20 +798,46 @@ function updateAge() {
 updateDatetimePreview();
 updateAge();
 
-// Presets
+// Presets calibrated to champion XGBoost fraud model distributions
 const PRESETS = {
-  fraud: {
+  fraud_online: {
     date: "2020-06-15",
-    time: "02:45:00",
-    category: "travel",
-    amt: 1250.00,
+    time: "22:45:00",
+    category: "shopping_net",
+    amt: 1148.50,
     gender: "M",
-    dob: "1962-04-18",
-    lat: 36.1699,
-    long: -115.1398,
-    merch_lat: 34.0522,
-    merch_long: -118.2437,
-    city_pop: 641676
+    dob: "1964-01-04",
+    lat: 42.8546,
+    long: -75.6605,
+    merch_lat: 42.6005,
+    merch_long: -75.7131,
+    city_pop: 2500
+  },
+  fraud_pos: {
+    date: "2020-06-15",
+    time: "02:15:00",
+    category: "grocery_pos",
+    amt: 315.00,
+    gender: "F",
+    dob: "1968-02-05",
+    lat: 36.5276,
+    long: -93.9359,
+    merch_lat: 36.0645,
+    merch_long: -94.4807,
+    city_pop: 2693
+  },
+  watchlist: {
+    date: "2020-06-15",
+    time: "23:30:00",
+    category: "shopping_net",
+    amt: 550.00,
+    gender: "M",
+    dob: "1994-01-22",
+    lat: 29.7604,
+    long: -95.3698,
+    merch_lat: 32.7767,
+    merch_long: -96.7970,
+    city_pop: 2320268
   },
   legit: {
     date: "2020-06-15",
@@ -813,30 +851,28 @@ const PRESETS = {
     merch_lat: 40.7180,
     merch_long: -74.0020,
     city_pop: 8336817
-  },
-  night: {
-    date: "2020-06-15",
-    time: "23:55:00",
-    category: "shopping_net",
-    amt: 380.00,
-    gender: "M",
-    dob: "1994-01-22",
-    lat: 29.7604,
-    long: -95.3698,
-    merch_lat: 32.7767,
-    merch_long: -96.7970,
-    city_pop: 2320268
   }
 };
 
-function applyPreset(name) {
+// Aliases for backwards compatibility
+PRESETS.fraud = PRESETS.fraud_online;
+PRESETS.night = PRESETS.watchlist;
+
+function applyPreset(name, autoSubmit = true) {
   const p = PRESETS[name];
   if (!p) return;
+
+  // Highlight active button in the quick presets bar
+  document.querySelectorAll('.preset-btn').forEach(b => {
+    b.classList.remove('active');
+    if (b.getAttribute('data-preset') === name) b.classList.add('active');
+  });
+
   dateInput.value = p.date;
   timeInput.value = p.time;
   updateDatetimePreview();
   document.getElementById('category').value = p.category;
-  document.getElementById('amt').value = p.amt;
+  document.getElementById('amt').value = p.amt.toFixed(2);
   document.getElementById('gender').value = p.gender;
   document.getElementById('dob').value = p.dob;
   updateAge();
@@ -845,6 +881,15 @@ function applyPreset(name) {
   document.getElementById('merch_lat').value = p.merch_lat;
   document.getElementById('merch_long').value = p.merch_long;
   document.getElementById('city_pop').value = p.city_pop;
+
+  if (autoSubmit) {
+    const form = document.getElementById('predictionForm');
+    if (typeof form.requestSubmit === 'function') {
+      form.requestSubmit();
+    } else {
+      form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }
+  }
 }
 
 // Human-Readable Alert Modal System
