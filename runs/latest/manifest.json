@@ -1,0 +1,16 @@
+{
+  "run_id": "control_sudden_seed42",
+  "scenario": "control",
+  "shape": "sudden",
+  "seed": 42,
+  "onset_window": 15,
+  "ramp_windows": 5,
+  "magnitude": 1.0,
+  "window_size_days": 2,
+  "n_windows": 122,
+  "stream_start": "2020-09-01",
+  "stream_end": "2020-12-31",
+  "data_hash": "ac5b770dbf8548789829c05402e7b0f59ce5f3f9fa594d85648fa3f73d2f6db3",
+  "git_commit": "unknown",
+  "affected_categories": []
+}

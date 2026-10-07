@@ -60,11 +60,28 @@ class DatasetAdapter:
     DATA_PROVENANCE = "synthetic/simulated (Sparkov)"
     LICENSE = "CC0 1.0 Universal (Public Domain Dedication)"
 
-    def __init__(self, params: Optional[dict] = None):
+    def __init__(
+        self,
+        params: Optional[dict] = None,
+        train_path: Optional[str | Path] = None,
+        test_path: Optional[str | Path] = None,
+    ):
         self._params = params or _load_params()
         data_cfg = self._params.get("data", {})
-        self._train_path = ROOT_DIR / data_cfg.get("raw_train", "Credit_Data/fraudTrain.csv")
-        self._test_path  = ROOT_DIR / data_cfg.get("raw_test",  "Credit_Data/fraudTest.csv")
+        default_train = ROOT_DIR / "data" / "fraudTrain.csv"
+        default_test  = ROOT_DIR / "data" / "fraudTest.csv"
+        self._train_path = Path(train_path) if train_path else (
+            ROOT_DIR / data_cfg.get("raw_train", "Credit_Data/fraudTrain.csv")
+        )
+        if not self._train_path.exists() and default_train.exists():
+            self._train_path = default_train
+
+        self._test_path = Path(test_path) if test_path else (
+            ROOT_DIR / data_cfg.get("raw_test", "Credit_Data/fraudTest.csv")
+        )
+        if not self._test_path.exists() and default_test.exists():
+            self._test_path = default_test
+
         self._time_col   = data_cfg.get("time_col", "trans_date_trans_time")
         self._label_col  = data_cfg.get("label_col", "is_fraud")
 
@@ -125,6 +142,55 @@ class DatasetAdapter:
         logger.info(
             "Final: %d rows (dropped %d = %d dups + %d bad timestamps)",
             len(df), initial_rows - len(df), dropped_dups, ts_nulls,
+        )
+        return df
+
+    def load_slice(self, start: str, end: str) -> pd.DataFrame:
+        """
+        Load and return a slice of real Sparkov data between start and end dates.
+        Only reads the required CSV file(s) for speed, parses timestamps,
+        drops duplicates, sorts by time, and filters to [start, end].
+        """
+        start_ts = pd.Timestamp(start)
+        end_ts = pd.Timestamp(end) + pd.Timedelta(days=1) - pd.Timedelta("1ns")
+
+        train_path = self._train_path if self._train_path.exists() else (ROOT_DIR / "data" / "fraudTrain.csv")
+        test_path = self._test_path if self._test_path.exists() else (ROOT_DIR / "data" / "fraudTest.csv")
+
+        # fraudTrain ends on 2020-06-21 12:13:37; fraudTest starts on 2020-06-21 12:14:25
+        split_boundary = pd.Timestamp("2020-06-21 12:14:00")
+
+        dfs = []
+        if start_ts < split_boundary:
+            logger.info("load_slice: reading %s for period starting %s", train_path.name, start)
+            df_tr = pd.read_csv(train_path, low_memory=False)
+            if "Unnamed: 0" in df_tr.columns:
+                df_tr.drop(columns=["Unnamed: 0"], inplace=True)
+            dfs.append(df_tr)
+
+        if end_ts >= split_boundary:
+            logger.info("load_slice: reading %s for period ending %s", test_path.name, end)
+            df_te = pd.read_csv(test_path, low_memory=False)
+            if "Unnamed: 0" in df_te.columns:
+                df_te.drop(columns=["Unnamed: 0"], inplace=True)
+            dfs.append(df_te)
+
+        if not dfs:
+            return pd.DataFrame(columns=self.EXPECTED_COLS)
+
+        df = pd.concat(dfs, ignore_index=True) if len(dfs) > 1 else dfs[0]
+
+        df[self._time_col] = pd.to_datetime(df[self._time_col], errors="coerce")
+        df = df[df[self._time_col].notna()].copy()
+
+        mask = (df[self._time_col] >= start_ts) & (df[self._time_col] <= end_ts)
+        df = df[mask].drop_duplicates().sort_values(self._time_col).reset_index(drop=True)
+
+        logger.info(
+            "load_slice (%s to %s): loaded %d rows (%d fraud, rate=%.5f)",
+            start, end, len(df),
+            int(df[self._label_col].sum()) if self._label_col in df.columns else 0,
+            float(df[self._label_col].mean()) if self._label_col in df.columns else 0.0,
         )
         return df
 

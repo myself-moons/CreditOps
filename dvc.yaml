@@ -101,3 +101,18 @@ stages:
           cache: false
       - stationarity_report.csv:
           cache: false
+
+  Observatory_Drift:
+    cmd: python src/observatory/run_stream.py
+    deps:
+      - src/observatory/run_stream.py
+      - src/observatory/config.py
+      - src/observatory/drift/injector.py
+      - src/observatory/simulator/stream.py
+      - src/observatory/simulator/manifest.py
+      - observatory.yaml
+    outs:
+      - runs/latest/manifest.json:
+          cache: false
+      - runs/latest/stream_summary.json:
+          cache: false

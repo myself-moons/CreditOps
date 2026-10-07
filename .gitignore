@@ -1,10 +1,16 @@
 /.mlflow_run_id
 /Credit_Data/
+Credit_Data/
+Credit_Data
+data/fraudTrain.csv
+data/fraudTest.csv
 /data/raw/
 /data/processed/
 /predictions.jsonl
 /.venv/
-**/__pycache__/
+venv/
+/__pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
+*.db

@@ -1,0 +1,34 @@
+MDS-24 | Continuous MLOps Drift Observatory with Adaptive Retraining Policy Evaluation
+
+**challenge:**
+Drift dashboards identify changing data but do not establish which signals predict performance degradation or when retraining is worthwhile. The project must produce a working, stakeholder-testable prototype of "Continuous MLOps Drift Observatory with Adaptive Retraining Policy Evaluation" rather than a presentation-only concept. The system must integrate versioned pipeline, synthetic and real drift scenarios, data and concept drift detectors, performance monitoring, retraining policies, cost model, dashboard. The distinguishing technical contribution is monitoring for drift or unknown classes with controlled update and rollback policies. It must operate on realistic or safely simulated data, handle failure and edge cases, preserve security and privacy, and expose measurable evidence through detection delay, false alarms, performance loss avoided, retraining cost, reproducibility and scalability. The final solution must demonstrate an end-to-end workflow from data or event intake to decision, user action, audit trail and operational monitoring.
+
+**Suggested technology stack**
+
+  * **Innovation layer:** Python, PyTorch, XGBoost/LightGBM, MLflow, monitoring for drift or unknown classes with DVC, Airflow or Prefect, Optuna, SHAP, controlled update and rollback policies
+  * FastAPI, Docker/Kubernetes, Evidently or custom monitoring
+
+**Project Objectives**
+
+  * Validate the workflow and pain points of ML engineers, risk owners and data scientists; define personas, misuse cases, measurable success criteria, non-functional requirements and an Agile product backlog.
+  * Review recent primary research, technical standards and comparable systems; formulate research questions or architecture hypotheses and pre-register the baseline and evaluation protocol.
+  * Design a modular architecture and data model for versioned pipeline, synthetic and real drift scenarios, data and concept drift detectors, including API/data contracts, authentication, authorization, auditability and failure handling.
+  * Implement the complete operational workflow covering performance monitoring, retraining policies, cost model, dashboard, with realistic state transitions and role-based user journeys.
+  * Deliver the cutting-edge contribution: monitoring for drift or unknown classes with controlled update and rollback policies. Compare it with a simpler baseline or manual process and document where the advanced approach adds value.
+  * Engineer production-quality controls: automated tests, input validation, secrets management, dependency checking, CI/CD, containerized execution and logs/metrics/traces appropriate to the project.
+  * Evaluate the system using detection delay, false alarms, performance loss avoided, retraining cost, reproducibility and scalability; include stress or robustness tests, subgroup/edge-case analysis where applicable, limitations and clear go/no-go acceptance criteria.
+  * Produce a reproducible artifact package that enables another team to repeat the deployment or experiments and verify the reported findings.
+
+**Preferred Deliverables**
+
+  * **Industry problem brief:** stakeholder map, current-process evidence, user stories, misuse/abuse cases, scope exclusions, risks, success metrics and prioritized backlog.
+  * **Solution design pack:** C4 or equivalent architecture, sequence/data-flow diagrams, database or feature schema, API/data contracts, UI prototype, threat model and test strategy.
+  * **Integrated minimum viable industry prototype** implementing the project-specific modules: versioned pipeline, synthetic and real drift scenarios, data and concept drift detectors, performance monitoring, retraining policies, cost model.
+  * **Innovation module and comparison study** demonstrating monitoring for drift or unknown classes with controlled update and rollback policies, including baseline results, experiment configuration and failure analysis.
+  * **Data/model/hardware package** using public benchmark datasets with scripted covariate, label and concept shifts; include provenance, permissions, data dictionary, versioning, annotation or simulator protocol and reproducible setup.
+  * **Postgraduate research package:** structured literature review, reproducible baselines, ablation or architecture comparison, uncertainty analysis and a paper-style results and discussion chapter.
+  * **Engineering evidence pack:** issue board, branch and pull-request history, code review records, automated unit/integration tests, dependency scan, container image, CI pipeline and release notes.
+  * **Evaluation dossier** for detection delay, false alarms, performance loss avoided, retraining cost, reproducibility and scalability, with acceptance thresholds, edge cases, load/latency or resource measurements, security/privacy checks and responsible-AI review where relevant.
+  * **Deployable demonstration** using Python, PyTorch, XGBoost/LightGBM, MLflow, DVC, Airflow or Prefect, Optuna, SHAP, FastAPI, Docker/Kubernetes, Evidently or custom monitoring; OpenAPI or model card/system card, administrator and user guide, 5-8 minute demo video, final report, presentation and individual contribution evidence.
+
+You don't need to do all of this as per your project design, but a working and solid project is what we need.

@@ -1,0 +1,89 @@
+Phase 1: Drift scenarios + stream + config. V1 must remain
+untouched and all 49 V1 tests must stay green. You
+
+Create:
+1. observatory.yaml (loaded by src/observatory/config.py) with: seed, window_size_days
+   (default 2), stream_start/stream_end (use the test period plus the tail of validation
+   so we get enough windows), and a drift_injection block:
+     scenario: control | covariate_shift | fraud_rate_shift | concept_drift | novel_pattern
+     shape: sudden | gradual
+     onset_window: <int index>
+     ramp_windows: <int, used when shape=gradual>
+     magnitude: <float, scenario-specific meaning documented in the file>
+     affected_categories: <list, optional>
+
+2. src/observatory/drift/injector.py: a seeded function that takes a window of V1
+   feature data (built with build_features from src/features.py; do NOT duplicate feature
+   logic) and applies the configured drift to windows at or after onset_window.
+   Scenario definitions:
+   - control: no change (used to measure false alarms).
+   - covariate_shift: shift distribution of transaction amount (log_amt) and
+     cardholder-merchant distance upward by `magnitude`, labels untouched.
+   - fraud_rate_shift: resample/relabel so the fraud rate in affected windows rises to
+     `magnitude` x baseline (baseline 0.579%) by oversampling real fraud rows. Do not
+     fabricate labels on legitimate rows.
+   - concept_drift: change the feature-to-fraud relationship while keeping the
+     marginal feature distributions similar, e.g. swap which merchant categories /
+     hours carry the fraud, by moving fraud labels to rows of different categories.
+     Document exactly how.
+   - novel_pattern: introduce a fraud typology unseen in training: fraud rows get a
+     new merchant category value not present in the training set (and a distinctive
+     amount/time signature). Preprocessing must not crash on the unseen category;
+     handle it and note how.
+   Gradual shape linearly ramps the effect from 0 to full over ramp_windows.
+
+3. src/observatory/simulator/stream.py: uses DatasetAdapter to yield time-ordered
+   windows (window_size_days) as dicts/objects with: window_index, start_date,
+   end_date, dataframe, is_drifted (ground truth bool), drift_strength (0..1). Log the
+   total number of windows and the number of fraud rows per window; print a warning if
+   any window has fewer than N fraud rows (make N configurable, default 5).
+   Support a final fallback if the stream has too few windows: shrink window_size_days
+   and tell me.
+
+4. Scenario manifest: for every run write runs/<run_id>/manifest.json with scenario,
+   shape, seed, onset_window, ramp_windows, magnitude, window_size_days, n_windows,
+   data hash of the source slice, and git commit. Same seed + config must produce an
+   identical manifest and identical windows.
+
+5. DVC stage "Observatory_Drift" in dvc.yaml that generates the stream summary and
+   manifest, without breaking existing stages.
+
+6. docs/observatory_data_dictionary.md: describe each scenario, how it is simulated,
+   what is real vs synthetic, the provenance of the base data (Sparkov, simulated),
+   and the assumptions/limitations of each injection. Keep it concise.
+
+7. Tests in tests/observatory/:
+   - same seed gives identical output; different seed gives a different output
+   - control scenario leaves data unchanged
+   - windows before onset are unchanged, windows after are changed
+   - is_drifted and onset_window ground truth are correct, including gradual ramp
+   - fraud_rate_shift reaches the target rate within tolerance
+   - novel_pattern produces a category unseen in training and the preprocessing handles it
+   - empty window and missing-column inputs fail gracefully with a clear error
+
+Finish by: running pytest tests/ (V1) and pytest tests/observatory/, then give me a
+summary with: files created/changed, number of windows in the stream, a small table of
+fraud rate per window for each scenario (first 5 windows around onset), and any
+assumptions you made. Update docs/CAPSTONE_PLAN.md to tick Phase 1.
+
+Phase 2: build detectors (PSI/KS aggregate, novelty score) and the delayed-label
+performance monitor with the interface update(window) -> DetectionResult(score, alarm,
+window_index). Handle empty windows, NaNs and missing columns without crashing and log
+the failure. Write drift_events through the LogStore. Add tests incl. edge cases.
+
+Phase 3: implement the 4 policies, cost model and replay engine as specified. Output per
+run: detection delay, false alarms, performance loss avoided vs NeverRetrain, number and
+cost of retrains, total cost. Write policy_decisions through the LogStore. Add tests,
+incl. a no-leakage test and a same-seed-same-result test.
+
+Phase 4: implement the registry state transitions, promotion gate, automatic rollback,
+LogStore with SQLite + Firebase RTDB backends (env-var credentials, fallback to SQLite,
+never commit keys), the audit_log, API-key roles, and persistent prediction logging for
+the live API. Add tests for every transition and for the Firebase-absent fallback
+(mock Firebase in tests).
+
+Phase 5: write experiments/run_all.py (scenarios x policies x 3 seeds -> results CSV and
+evaluation_report.json with mean +/- std), an /observatory dashboard page (drift
+timeline, policy decisions, cost, champion lineage, audit trail, rollback/approve
+buttons by role), a Dockerfile/compose, a minimal GitHub Actions workflow, and
+docs: model card, limitations, user/admin guide.

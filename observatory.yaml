@@ -1,0 +1,88 @@
+# observatory.yaml — CreditOps v2 Observatory Configuration
+#
+# SIMULATED DATA NOTICE: All scenarios operate on Sparkov-simulated data.
+# Any drift is either (a) natural simulation variation or (b) explicitly injected.
+# Injected drift is always labelled, seeded, and config-driven.
+#
+# Loaded by: src/observatory/config.py
+
+observatory:
+  seed: 42
+  data_dir: "data"             # directory containing fraudTrain.csv and fraudTest.csv
+  raw_train: "data/fraudTrain.csv"
+  raw_test: "data/fraudTest.csv"
+  window_size_days: 2         # each stream window covers 2 calendar days
+  # Stream covers the full test period (held-out, no overlap with train or validation tuning)
+  # Train: 2019-01-01 to 2020-06-21 | Val: 2020-06-21 to 2020-10-03 | Test: 2020-10-03 to 2020-12-31
+  stream_start: "2020-10-04"  # start of held-out test slice (zero leakage)
+  stream_end:   "2020-12-31"  # end of test split
+  min_fraud_per_window: 5     # warn if any window has fewer fraud rows
+  min_windows: 10             # fallback: shrink window_size_days if stream yields fewer windows
+
+  drift_injection:
+    # scenario: control | covariate_shift | fraud_rate_shift | concept_drift | novel_pattern
+    scenario: control
+
+    # shape: sudden | gradual
+    # sudden  — full magnitude applied from onset_window onward
+    # gradual — magnitude ramps linearly from 0 to full over ramp_windows windows
+    shape: sudden
+    onset_window: 15           # 0-indexed window index at which drift begins
+    ramp_windows: 5            # used only when shape=gradual
+
+    # magnitude: scenario-specific float
+    #   covariate_shift  — additive shift applied to log_amt and log(haversine_km+1) (in log units)
+    #   fraud_rate_shift — target fraud rate multiplier (e.g. 3.0 → 3× baseline 0.579%)
+    #   concept_drift    — fraction of fraud labels flipped within affected_categories windows
+    #   novel_pattern    — fraction of fraud transactions replaced with novel high-amount pattern
+    #   control          — ignored
+    magnitude: 1.0
+
+    # affected_categories: optional list of V1 category names (e.g. ["travel", "entertainment"])
+    # If empty or null → all categories affected (for fraud_rate_shift/concept_drift)
+    affected_categories: []
+
+  # Monitoring & Drift Detection (Phase 2)
+  monitoring:
+    reference_type: "stream_windows" # stream_windows | validation
+    reference_windows: 10            # first 10 stream windows (0-9) used as reference
+    k_prev_windows: 3                # DataDriftDetector pooled history windows K
+    label_delay_windows: 2           # PerformanceMonitor label delay
+    k_perf_windows: 5                # PerformanceMonitor evaluation window count
+    min_fraud_rows: 5                # Minimum fraud rows for performance metrics
+
+    # Alarm thresholds calibrated on control-stream windows 0-14 ONLY (no onset windows).
+    # Derivation:
+    #   data_drift: windows 0-14 max score was 0.9878 (mean 0.5075). Threshold set to 1.000.
+    #     Control windows 15-88 max is 0.8165 -> 0 false alarms.
+    #   unseen_category: control windows have 0 unseen category rows. Min unseen count set to 3.
+    #     Control windows 0-88 have 0 false alarms.
+    #   isolation_outlier: iForest fitted on random 50k train sample. Control 0-14 max outlier frac was 0.1130.
+    #     Threshold set to 0.130. Control windows 15-88 max is 0.1121 -> 0 false alarms.
+    #   fraud_score_drift: windows 0-14 max PSI was 0.0115 (mean 0.0060). Threshold set to 0.020.
+    #     Control windows 15-88 max is 0.0189 -> 0 false alarms.
+    #   performance_recall: windows 0-14 min recall was 0.5610 (mean 0.6947). Threshold set to 0.500.
+    #     Alarm triggers when recall < 0.500. Control windows 15-88 min recall is 0.6410 -> 0 false alarms.
+    #   pr_auc_drop: windows 0-14 max PR-AUC drop was 0.1101 vs ref. Threshold set to 0.180.
+    #     Alarm triggers when drop >= 0.180. Control windows 15-88 max drop is 0.1138 -> 0 false alarms.
+    thresholds:
+      data_drift: 1.000
+      novelty: 0.240
+      isolation_outlier: 0.130
+      unseen_category: 3
+      fraud_score_drift: 0.020
+      performance_recall: 0.500
+      pr_auc_drop: 0.180
+
+  governance:
+    k_val_windows: 3        # hold out most recent K_val labelled windows
+    margin_recall: 0.02     # challenger must beat champion recall by this margin
+    margin_cost: 100.0      # automatic rollback if realised cost exceeds shadow by margin_cost
+    rollback_window_m: 5    # shadow scoring evaluation window count
+    min_val_rows: 20
+
+cost_model:
+  fn_cost: 500      # $ per fraud missed (false negative)
+  fp_cost: 5        # $ per legitimate flagged as fraud (false positive)
+  retrain_cost: 200 # $ per retraining run
+  review_cost: 10   # $ per manual review triggered by a policy alert
