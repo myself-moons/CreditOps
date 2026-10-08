@@ -375,6 +375,7 @@ python experiments/run_all.py
 
 ## Documentation Index
 
+- [capstone_v2_guide.md](docs/capstone_v2_guide.md) — 🌟 **Comprehensive Beginner's Guide & UI Walkthrough**: Why drift matters, page-by-page tour, element explanations, how to run, and how to interpret results.
 - [CAPSTONE_PLAN.md](docs/CAPSTONE_PLAN.md) — Capstone development roadmap and phase completion log.
 - [results_summary.md](docs/results_summary.md) — Phase 5 final evaluation results, tables, and hypothesis tests.
 - [evaluation_protocol.md](docs/evaluation_protocol.md) — Pre-registered experimental setup, cost models, and acceptance thresholds.
