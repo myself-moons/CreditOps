@@ -448,6 +448,12 @@ class TestStreamWindowAndFallback:
             windows = list(stream)
         assert len(windows) >= 3
 
+    HAVE_REAL_DATA = (ROOT / "data" / "fraudTest.csv").exists() or (ROOT / "Credit_Data" / "fraudTest.csv").exists()
+
+    @pytest.mark.skipif(
+        not HAVE_REAL_DATA,
+        reason="Large raw Sparkov data absent (run locally with full dataset in data/ or Credit_Data/)",
+    )
     def test_stream_uses_real_data(self):
         # Slices real Sparkov dataset via DatasetAdapter
         cfg = ObservatoryConfig(

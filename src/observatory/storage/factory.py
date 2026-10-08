@@ -88,6 +88,7 @@ def get_log_store(backend: Optional[str] = None, **kwargs) -> LogStore:
 
 
 def _fallback_sqlite(**kwargs) -> SQLiteLogStore:
-    default_db = ROOT / "runs" / "observatory.db"
+    env_db = os.getenv("SQLITE_DB_PATH")
+    default_db = Path(env_db) if env_db else (ROOT / "runs" / "observatory.db")
     db_path = kwargs.get("db_path", str(default_db))
     return SQLiteLogStore(db_path=db_path)

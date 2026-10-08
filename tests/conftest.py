@@ -25,8 +25,9 @@ from src.observatory.storage.firebase_store import FirebaseLogStore
 
 
 @pytest.fixture(autouse=True)
-def ensure_sqlite_in_tests(monkeypatch):
-    """Enforce SQLiteLogStore in all tests."""
+def ensure_sqlite_in_tests(monkeypatch, tmp_path):
+    """Enforce SQLiteLogStore in all tests and isolate database per test."""
     monkeypatch.setenv("STORE_BACKEND", "sqlite")
     monkeypatch.setenv("FIREBASE_CREDENTIALS_PATH", "")
     monkeypatch.setenv("FIREBASE_DATABASE_URL", "")
+    monkeypatch.setenv("SQLITE_DB_PATH", str(tmp_path / "test_observatory.db"))
