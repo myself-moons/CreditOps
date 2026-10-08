@@ -68,6 +68,7 @@ class ReplayResult:
     per_window_pr_auc: List[float] = field(default_factory=list, repr=False)
     per_window_recall: List[float] = field(default_factory=list, repr=False)
     decisions: List[Dict[str, Any]] = field(default_factory=list, repr=False)
+    window_traces: List[Dict[str, Any]] = field(default_factory=list, repr=False)
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -173,6 +174,7 @@ class ReplayEngine:
         rejected_versions: List[str] = []
         rolled_back_versions: List[str] = []
         model_version_counter = 1
+        current_champion_version = "v1.0"
 
         detector_history: List[Dict[str, DetectionResult]] = []
         performance_history: List[DetectionResult] = []
@@ -182,6 +184,7 @@ class ReplayEngine:
         window_pr_aucs: List[float] = []
         window_recalls: List[float] = []
         recorded_decisions: List[Dict[str, Any]] = []
+        window_traces: List[Dict[str, Any]] = []
 
         # Shadow rollback tracker:
         # {
@@ -259,6 +262,7 @@ class ReplayEngine:
                         # Revert champion
                         current_champion = rollback_tracker["shadow_model"]
                         current_decision_threshold = rollback_tracker["shadow_threshold"]
+                        current_champion_version = rollback_tracker.get("shadow_version", "v1.0")
                         rollback_tracker = None
                     elif t >= rollback_tracker["expiry_window"] and all(
                         kw in eval_windows
@@ -329,6 +333,25 @@ class ReplayEngine:
                     "cost": cost_res.total_cost,
                 })
 
+            # Record per-window trace
+            sig_dict = {name: round(float(r.metric_value), 5) for name, r in det_results.items()}
+            if perf_result:
+                sig_dict["performance_recall"] = round(float(perf_result.metric_value), 5)
+            alm_dict = {name: bool(r.is_alarm) for name, r in det_results.items()}
+            if perf_result:
+                alm_dict["performance"] = bool(perf_result.is_alarm)
+
+            window_traces.append({
+                "window_index": t,
+                "signals": sig_dict,
+                "alarms": alm_dict,
+                "policy_decision": {"action": decision.action, "reason": decision.reason},
+                "model_version": current_champion_version,
+                "model_state": "SHADOW_ACTIVE" if rollback_tracker is not None else "CHAMPION",
+                "per_window_cost": round(float(cost_res.total_cost), 2),
+                "pr_auc": round(float(pr_auc), 4),
+            })
+
             # 7. Execute retraining if requested
             if decision.action == "retrain":
                 max_train_window_idx = t - self.label_delay
@@ -373,7 +396,95 @@ class ReplayEngine:
                         random_state=self.seed + t,
                     )
                     challenger.fit(X_all, y_all, sample_weight=w_all)
+                    model_version_counter += 1
+                    current_champion_version = f"v{model_version_counter}.0"
                     current_champion = challenger
+                    windows_since_last_retrain = 0
+                    retrain_windows.append(t)
+
+                elif self.deployment_mode == "naive_recalibrated":
+                    # Ablation: Challenger trained on earlier windows (holding out K_val to recalibrate threshold),
+                    # recalibrates threshold to match FP budget, and deploys immediately without gate or rollback.
+                    if len(available_stream_windows) > self.k_val_windows:
+                        val_stream_windows = available_stream_windows[-self.k_val_windows:]
+                        train_stream_windows = available_stream_windows[:-self.k_val_windows]
+                    elif len(available_stream_windows) > 1:
+                        k = min(self.k_val_windows, len(available_stream_windows) - 1)
+                        val_stream_windows = available_stream_windows[-k:]
+                        train_stream_windows = available_stream_windows[:-k]
+                    else:
+                        val_stream_windows = available_stream_windows
+                        train_stream_windows = []
+
+                    if train_stream_windows:
+                        s_feats = pd.concat([w.features_df for w in train_stream_windows], ignore_index=True)
+                        s_labels = pd.concat([w.labels for w in train_stream_windows], ignore_index=True).values
+                        X_s = self.preprocessor.transform(s_feats)
+                        y_s = s_labels
+                        w_s = np.where(y_s == 1, self.stream_weight, 1.0)
+                        w_base = np.ones(len(self.y_train_base))
+                        X_all = np.vstack([self.X_train_base, X_s])
+                        y_all = np.concatenate([self.y_train_base, y_s])
+                        w_all = np.concatenate([w_base, w_s])
+                    else:
+                        X_all = self.X_train_base
+                        y_all = self.y_train_base
+                        w_all = np.ones(len(self.y_train_base))
+
+                    spw = float((w_all[y_all == 0].sum()) / max(1, w_all[y_all == 1].sum()))
+                    challenger = xgb.XGBClassifier(
+                        n_estimators=100,
+                        learning_rate=0.1,
+                        max_depth=6,
+                        scale_pos_weight=spw,
+                        subsample=0.8,
+                        colsample_bytree=0.8,
+                        n_jobs=-1,
+                        random_state=self.seed + t,
+                    )
+                    challenger.fit(X_all, y_all, sample_weight=w_all)
+
+                    model_version_counter += 1
+                    cand_version = f"v{model_version_counter}.0"
+                    data_hash = f"train_win_{[w.window_index for w in train_stream_windows]}_rows_{len(y_all)}"
+
+                    if val_stream_windows:
+                        val_feats = pd.concat([w.features_df for w in val_stream_windows], ignore_index=True)
+                        val_labels = pd.concat([w.labels for w in val_stream_windows], ignore_index=True).values
+                        X_val = self.preprocessor.transform(val_feats)
+                        y_val = val_labels
+                        val_legit_idx = np.where(y_val == 0)[0]
+                        probs_chall = challenger.predict_proba(X_val)[:, 1]
+                    else:
+                        val_legit_idx = np.array([])
+                        probs_chall = np.array([])
+
+                    if len(val_legit_idx) < 20:
+                        challenger_threshold = current_decision_threshold
+                    else:
+                        q = max(0.0, min(1.0, 1.0 - fp_budget))
+                        challenger_threshold = float(np.quantile(probs_chall[val_legit_idx], q))
+
+                    self.registry.register_candidate(
+                        model=challenger,
+                        version=cand_version,
+                        threshold=challenger_threshold,
+                        data_hash=data_hash,
+                        metrics={"fp_budget": fp_budget, "recalibrated_threshold": challenger_threshold},
+                        actor="naive_recalibrated",
+                        reason="Immediate deployment with recalibrated threshold (ablation)",
+                        created_window=t,
+                    )
+                    self.registry.promote(
+                        version=cand_version,
+                        actor="naive_recalibrated",
+                        reason="Direct promotion (ablation, no gate)",
+                        metrics={"recalibrated_threshold": challenger_threshold},
+                    )
+                    promoted_versions.append(cand_version)
+                    current_champion = challenger
+                    current_decision_threshold = challenger_threshold
+                    current_champion_version = cand_version
                     windows_since_last_retrain = 0
                     retrain_windows.append(t)
 
@@ -514,8 +625,10 @@ class ReplayEngine:
                         promoted_versions.append(cand_version)
                         shadow_champion = current_champion
                         shadow_threshold = current_decision_threshold
+                        shadow_version = current_champion_version
                         current_champion = challenger
                         current_decision_threshold = challenger_threshold
+                        current_champion_version = cand_version
                         windows_since_last_retrain = 0
                         retrain_windows.append(t)
 
@@ -525,6 +638,7 @@ class ReplayEngine:
                             "promoted_window": t,
                             "shadow_model": shadow_champion,
                             "shadow_threshold": shadow_threshold,
+                            "shadow_version": shadow_version,
                             "expiry_window": t + self.rollback_window_m,
                             "window_data": {},
                         }
@@ -589,4 +703,5 @@ class ReplayEngine:
             per_window_pr_auc=window_pr_aucs,
             per_window_recall=window_recalls,
             decisions=recorded_decisions,
+            window_traces=window_traces,
         )

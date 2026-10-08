@@ -14,3 +14,7 @@ venv/
 *$py.class
 .pytest_cache/
 *.db
+secrets/
+.env
+*firebase*.json
+*serviceAccountKey*.json
