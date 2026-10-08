@@ -24,6 +24,9 @@ import pickle
 import time
 from pathlib import Path
 
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+
 import mlflow
 import pandas as pd
 from fastapi import FastAPI, HTTPException
@@ -52,6 +55,8 @@ app = FastAPI(
     ),
     version="1.0.0",
 )
+
+from src.observatory.router import observatory_router; app.include_router(observatory_router, prefix="/observatory")
 
 BASE_DIR          = Path(__file__).resolve().parent.parent
 MODEL_PATH        = BASE_DIR / "model.pkl"

@@ -1,0 +1,2974 @@
+{
+  "scenario": "covariate_shift",
+  "policy": "FixedSchedule(naive)",
+  "seed": 2,
+  "onset_window": 30,
+  "n_retrains": 5,
+  "retrain_windows": [
+    0,
+    21,
+    42,
+    63,
+    84
+  ],
+  "detection_delay": 12,
+  "false_alarms": 2,
+  "total_fn_fp_cost": 278795.0,
+  "total_retrain_cost": 1000.0,
+  "total_alert_cost": 0.0,
+  "total_cost": 279795.0,
+  "loss_avoided_vs_never": -41520.0,
+  "net_benefit": -42520.0,
+  "mean_pr_auc_after_onset": 0.3272556958665919,
+  "duration_seconds": 40.97,
+  "promoted_versions": [],
+  "rejected_versions": [],
+  "rolled_back_versions": [],
+  "per_window_costs": [
+    5700.0,
+    8505.0,
+    2505.0,
+    500.0,
+    2500.0,
+    500.0,
+    3010.0,
+    4500.0,
+    4000.0,
+    2505.0,
+    3510.0,
+    5500.0,
+    3505.0,
+    2500.0,
+    4010.0,
+    5.0,
+    5.0,
+    5.0,
+    1000.0,
+    505.0,
+    1500.0,
+    4705.0,
+    500.0,
+    1500.0,
+    1000.0,
+    1500.0,
+    0.0,
+    3000.0,
+    5000.0,
+    500.0,
+    3440.0,
+    7760.0,
+    7790.0,
+    3270.0,
+    2310.0,
+    3475.0,
+    2475.0,
+    3445.0,
+    1790.0,
+    3295.0,
+    4765.0,
+    2260.0,
+    2750.0,
+    1500.0,
+    0.0,
+    4500.0,
+    7500.0,
+    8000.0,
+    3500.0,
+    1500.0,
+    2500.0,
+    5.0,
+    6500.0,
+    12005.0,
+    11000.0,
+    3000.0,
+    5.0,
+    0.0,
+    5500.0,
+    7510.0,
+    1005.0,
+    4010.0,
+    6010.0,
+    5700.0,
+    3000.0,
+    11000.0,
+    4505.0,
+    2000.0,
+    9000.0,
+    7500.0,
+    2000.0,
+    2500.0,
+    6500.0,
+    3005.0,
+    2005.0,
+    1500.0,
+    3500.0,
+    2005.0,
+    4000.0,
+    1500.0,
+    0.0,
+    0.0,
+    0.0,
+    5.0,
+    200.0,
+    5.0,
+    0.0,
+    5.0,
+    10.0
+  ],
+  "per_window_pr_auc": [
+    0.9298123080896349,
+    0.7495865754503225,
+    0.8460524218846983,
+    0.975595238095238,
+    0.7902650032068207,
+    0.8524305555555556,
+    0.3683224850320046,
+    0.6272297154633926,
+    0.5186445697136192,
+    0.3130144365438483,
+    0.7790998599790254,
+    0.9401707642726207,
+    0.8805139299366372,
+    0.8758531092201729,
+    0.8762813802433607,
+    1.0,
+    0.0,
+    0.0,
+    0.7538790560471976,
+    0.9196428571428572,
+    0.9198552384308198,
+    0.9248454762554076,
+    0.94375,
+    0.9999999999999999,
+    0.631439204070783,
+    0.6467525195968645,
+    1.0,
+    0.8181521743831965,
+    0.8087006098628299,
+    1.0,
+    0.01906587617575023,
+    0.03366003704161032,
+    0.048145758766834613,
+    0.02890717509464859,
+    0.005266921886125601,
+    0.12033001374589246,
+    0.018729241027486302,
+    0.03265359879115791,
+    0.011635246403135797,
+    0.029863444474866743,
+    0.04522278863648515,
+    0.03180252504520264,
+    0.02662595398321224,
+    0.6580374104644872,
+    0.0,
+    0.620519191434049,
+    0.6688578375690923,
+    0.786771522109206,
+    0.5915844407938614,
+    0.005268586803325019,
+    0.44348196070734075,
+    1.0,
+    0.7289336060644226,
+    0.7807357635531228,
+    0.6582812715426755,
+    0.6777514066983642,
+    0.0,
+    0.0,
+    0.6541072123788826,
+    0.39084743807766087,
+    0.6349893162393162,
+    0.013112278080310997,
+    0.27332090055447245,
+    0.6548089489478673,
+    0.7051188935643432,
+    0.7387664708595508,
+    0.7256789352632887,
+    0.05501944629200595,
+    0.46822134655755787,
+    0.5873113948384909,
+    0.6835332572823657,
+    0.7400802484398972,
+    0.42231206250476366,
+    0.7781985912781696,
+    0.8573685201804022,
+    0.09828524677753288,
+    0.15186508344958155,
+    0.010552305153994745,
+    0.6759599819566596,
+    0.9164965986394558,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "per_window_recall": [
+    0.725,
+    0.45161290322580644,
+    0.6875,
+    0.9285714285714286,
+    0.6428571428571429,
+    0.75,
+    0.14285714285714285,
+    0.35714285714285715,
+    0.2,
+    0.16666666666666666,
+    0.5882352941176471,
+    0.5925925925925926,
+    0.65,
+    0.7058823529411765,
+    0.5789473684210527,
+    1.0,
+    1.0,
+    1.0,
+    0.5,
+    0.8,
+    0.8,
+    0.7631578947368421,
+    0.75,
+    0.7,
+    0.6,
+    0.25,
+    1.0,
+    0.5384615384615384,
+    0.375,
+    0.75,
+    0.25,
+    0.0625,
+    0.21052631578947367,
+    0.25,
+    0.2,
+    0.5,
+    0.42857142857142855,
+    0.5384615384615384,
+    0.0,
+    0.25,
+    0.3076923076923077,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.5,
+    1.0,
+    0.0,
+    0.0,
+    0.23809523809523808,
+    0.0,
+    0.0,
+    0.375,
+    1.0,
+    0.23529411764705882,
+    0.1724137931034483,
+    0.043478260869565216,
+    0.25,
+    1.0,
+    1.0,
+    0.0,
+    0.0625,
+    0.5,
+    0.0,
+    0.14285714285714285,
+    0.3888888888888889,
+    0.45454545454545453,
+    0.2413793103448276,
+    0.35714285714285715,
+    0.0,
+    0.14285714285714285,
+    0.21052631578947367,
+    0.5555555555555556,
+    0.5454545454545454,
+    0.0,
+    0.5,
+    0.6923076923076923,
+    0.0,
+    0.0,
+    0.0,
+    0.2,
+    0.5714285714285714,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "decisions": [
+    {
+      "window": 0,
+      "action": "retrain",
+      "reason": "Fixed schedule interval reached (999 >= 20)"
+    },
+    {
+      "window": 1,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (0 < 20)"
+    },
+    {
+      "window": 2,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (1 < 20)"
+    },
+    {
+      "window": 3,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (2 < 20)"
+    },
+    {
+      "window": 4,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (3 < 20)"
+    },
+    {
+      "window": 5,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (4 < 20)"
+    },
+    {
+      "window": 6,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (5 < 20)"
+    },
+    {
+      "window": 7,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (6 < 20)"
+    },
+    {
+      "window": 8,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (7 < 20)"
+    },
+    {
+      "window": 9,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (8 < 20)"
+    },
+    {
+      "window": 10,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (9 < 20)"
+    },
+    {
+      "window": 11,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (10 < 20)"
+    },
+    {
+      "window": 12,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (11 < 20)"
+    },
+    {
+      "window": 13,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (12 < 20)"
+    },
+    {
+      "window": 14,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (13 < 20)"
+    },
+    {
+      "window": 15,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (14 < 20)"
+    },
+    {
+      "window": 16,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (15 < 20)"
+    },
+    {
+      "window": 17,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (16 < 20)"
+    },
+    {
+      "window": 18,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (17 < 20)"
+    },
+    {
+      "window": 19,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (18 < 20)"
+    },
+    {
+      "window": 20,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (19 < 20)"
+    },
+    {
+      "window": 21,
+      "action": "retrain",
+      "reason": "Fixed schedule interval reached (20 >= 20)"
+    },
+    {
+      "window": 22,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (0 < 20)"
+    },
+    {
+      "window": 23,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (1 < 20)"
+    },
+    {
+      "window": 24,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (2 < 20)"
+    },
+    {
+      "window": 25,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (3 < 20)"
+    },
+    {
+      "window": 26,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (4 < 20)"
+    },
+    {
+      "window": 27,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (5 < 20)"
+    },
+    {
+      "window": 28,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (6 < 20)"
+    },
+    {
+      "window": 29,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (7 < 20)"
+    },
+    {
+      "window": 30,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (8 < 20)"
+    },
+    {
+      "window": 31,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (9 < 20)"
+    },
+    {
+      "window": 32,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (10 < 20)"
+    },
+    {
+      "window": 33,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (11 < 20)"
+    },
+    {
+      "window": 34,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (12 < 20)"
+    },
+    {
+      "window": 35,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (13 < 20)"
+    },
+    {
+      "window": 36,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (14 < 20)"
+    },
+    {
+      "window": 37,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (15 < 20)"
+    },
+    {
+      "window": 38,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (16 < 20)"
+    },
+    {
+      "window": 39,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (17 < 20)"
+    },
+    {
+      "window": 40,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (18 < 20)"
+    },
+    {
+      "window": 41,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (19 < 20)"
+    },
+    {
+      "window": 42,
+      "action": "retrain",
+      "reason": "Fixed schedule interval reached (20 >= 20)"
+    },
+    {
+      "window": 43,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (0 < 20)"
+    },
+    {
+      "window": 44,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (1 < 20)"
+    },
+    {
+      "window": 45,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (2 < 20)"
+    },
+    {
+      "window": 46,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (3 < 20)"
+    },
+    {
+      "window": 47,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (4 < 20)"
+    },
+    {
+      "window": 48,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (5 < 20)"
+    },
+    {
+      "window": 49,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (6 < 20)"
+    },
+    {
+      "window": 50,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (7 < 20)"
+    },
+    {
+      "window": 51,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (8 < 20)"
+    },
+    {
+      "window": 52,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (9 < 20)"
+    },
+    {
+      "window": 53,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (10 < 20)"
+    },
+    {
+      "window": 54,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (11 < 20)"
+    },
+    {
+      "window": 55,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (12 < 20)"
+    },
+    {
+      "window": 56,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (13 < 20)"
+    },
+    {
+      "window": 57,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (14 < 20)"
+    },
+    {
+      "window": 58,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (15 < 20)"
+    },
+    {
+      "window": 59,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (16 < 20)"
+    },
+    {
+      "window": 60,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (17 < 20)"
+    },
+    {
+      "window": 61,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (18 < 20)"
+    },
+    {
+      "window": 62,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (19 < 20)"
+    },
+    {
+      "window": 63,
+      "action": "retrain",
+      "reason": "Fixed schedule interval reached (20 >= 20)"
+    },
+    {
+      "window": 64,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (0 < 20)"
+    },
+    {
+      "window": 65,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (1 < 20)"
+    },
+    {
+      "window": 66,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (2 < 20)"
+    },
+    {
+      "window": 67,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (3 < 20)"
+    },
+    {
+      "window": 68,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (4 < 20)"
+    },
+    {
+      "window": 69,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (5 < 20)"
+    },
+    {
+      "window": 70,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (6 < 20)"
+    },
+    {
+      "window": 71,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (7 < 20)"
+    },
+    {
+      "window": 72,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (8 < 20)"
+    },
+    {
+      "window": 73,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (9 < 20)"
+    },
+    {
+      "window": 74,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (10 < 20)"
+    },
+    {
+      "window": 75,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (11 < 20)"
+    },
+    {
+      "window": 76,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (12 < 20)"
+    },
+    {
+      "window": 77,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (13 < 20)"
+    },
+    {
+      "window": 78,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (14 < 20)"
+    },
+    {
+      "window": 79,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (15 < 20)"
+    },
+    {
+      "window": 80,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (16 < 20)"
+    },
+    {
+      "window": 81,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (17 < 20)"
+    },
+    {
+      "window": 82,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (18 < 20)"
+    },
+    {
+      "window": 83,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (19 < 20)"
+    },
+    {
+      "window": 84,
+      "action": "retrain",
+      "reason": "Fixed schedule interval reached (20 >= 20)"
+    },
+    {
+      "window": 85,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (0 < 20)"
+    },
+    {
+      "window": 86,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (1 < 20)"
+    },
+    {
+      "window": 87,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (2 < 20)"
+    },
+    {
+      "window": 88,
+      "action": "no_action",
+      "reason": "Waiting for fixed schedule (3 < 20)"
+    }
+  ],
+  "window_traces": [
+    {
+      "window_index": 0,
+      "signals": {
+        "DataDrift": 0.98783,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11298,
+        "FraudScoreDrift": 0.00209,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "retrain",
+        "reason": "Fixed schedule interval reached (999 >= 20)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5700.0,
+      "pr_auc": 0.9298
+    },
+    {
+      "window_index": 1,
+      "signals": {
+        "DataDrift": 0.49433,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04533,
+        "FraudScoreDrift": 0.00397,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (0 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 8505.0,
+      "pr_auc": 0.7496
+    },
+    {
+      "window_index": 2,
+      "signals": {
+        "DataDrift": 0.16241,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02582,
+        "FraudScoreDrift": 0.00379,
+        "performance_recall": 0.725
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (1 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2505.0,
+      "pr_auc": 0.8461
+    },
+    {
+      "window_index": 3,
+      "signals": {
+        "DataDrift": 0.11275,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01516,
+        "FraudScoreDrift": 0.01153,
+        "performance_recall": 0.70423
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (2 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 500.0,
+      "pr_auc": 0.9756
+    },
+    {
+      "window_index": 4,
+      "signals": {
+        "DataDrift": 0.57793,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01366,
+        "FraudScoreDrift": 0.00583,
+        "performance_recall": 0.72414
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (3 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2500.0,
+      "pr_auc": 0.7903
+    },
+    {
+      "window_index": 5,
+      "signals": {
+        "DataDrift": 0.44071,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02677,
+        "FraudScoreDrift": 0.00366,
+        "performance_recall": 0.74257
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (4 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 500.0,
+      "pr_auc": 0.8524
+    },
+    {
+      "window_index": 6,
+      "signals": {
+        "DataDrift": 0.71271,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.07061,
+        "FraudScoreDrift": 0.00646,
+        "performance_recall": 0.73913
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (5 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3010.0,
+      "pr_auc": 0.3683
+    },
+    {
+      "window_index": 7,
+      "signals": {
+        "DataDrift": 0.80879,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.10794,
+        "FraudScoreDrift": 0.00357,
+        "performance_recall": 0.74684
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (6 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4500.0,
+      "pr_auc": 0.6272
+    },
+    {
+      "window_index": 8,
+      "signals": {
+        "DataDrift": 0.48589,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04217,
+        "FraudScoreDrift": 0.00478,
+        "performance_recall": 0.74545
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (7 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4000.0,
+      "pr_auc": 0.5186
+    },
+    {
+      "window_index": 9,
+      "signals": {
+        "DataDrift": 0.15875,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02252,
+        "FraudScoreDrift": 0.00213,
+        "performance_recall": 0.69811
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (8 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2505.0,
+      "pr_auc": 0.313
+    },
+    {
+      "window_index": 10,
+      "signals": {
+        "DataDrift": 0.11515,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01731,
+        "FraudScoreDrift": 0.01052,
+        "performance_recall": 0.61224
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (9 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3510.0,
+      "pr_auc": 0.7791
+    },
+    {
+      "window_index": 11,
+      "signals": {
+        "DataDrift": 0.58102,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02184,
+        "FraudScoreDrift": 0.00978,
+        "performance_recall": 0.56098
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (10 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5500.0,
+      "pr_auc": 0.9402
+    },
+    {
+      "window_index": 12,
+      "signals": {
+        "DataDrift": 0.44346,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01882,
+        "FraudScoreDrift": 0.01138,
+        "performance_recall": 0.59259
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (11 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3505.0,
+      "pr_auc": 0.8805
+    },
+    {
+      "window_index": 13,
+      "signals": {
+        "DataDrift": 0.71891,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0661,
+        "FraudScoreDrift": 0.0056,
+        "performance_recall": 0.7027
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (12 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2500.0,
+      "pr_auc": 0.8759
+    },
+    {
+      "window_index": 14,
+      "signals": {
+        "DataDrift": 0.81157,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11148,
+        "FraudScoreDrift": 0.00478,
+        "performance_recall": 0.7375
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (13 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4010.0,
+      "pr_auc": 0.8763
+    },
+    {
+      "window_index": 15,
+      "signals": {
+        "DataDrift": 0.49101,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04219,
+        "FraudScoreDrift": 0.00471,
+        "performance_recall": 0.78161
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (14 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 16,
+      "signals": {
+        "DataDrift": 0.16278,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02544,
+        "FraudScoreDrift": 0.00267,
+        "performance_recall": 0.82
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (15 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 17,
+      "signals": {
+        "DataDrift": 0.11974,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02434,
+        "FraudScoreDrift": 0.01385,
+        "performance_recall": 0.84884
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (16 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 18,
+      "signals": {
+        "DataDrift": 0.58339,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01834,
+        "FraudScoreDrift": 0.00354,
+        "performance_recall": 0.84746
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (17 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1000.0,
+      "pr_auc": 0.7539
+    },
+    {
+      "window_index": 19,
+      "signals": {
+        "DataDrift": 0.44553,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02052,
+        "FraudScoreDrift": 0.00999,
+        "performance_recall": 0.87179
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (18 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.9196
+    },
+    {
+      "window_index": 20,
+      "signals": {
+        "DataDrift": 0.72148,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.07267,
+        "FraudScoreDrift": 0.00534,
+        "performance_recall": 0.88462
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (19 < 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.9199
+    },
+    {
+      "window_index": 21,
+      "signals": {
+        "DataDrift": 0.81013,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.1085,
+        "FraudScoreDrift": 0.00058,
+        "performance_recall": 0.91667
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "retrain",
+        "reason": "Fixed schedule interval reached (20 >= 20)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4705.0,
+      "pr_auc": 0.9248
+    },
+    {
+      "window_index": 22,
+      "signals": {
+        "DataDrift": 0.48899,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04309,
+        "FraudScoreDrift": 0.00542,
+        "performance_recall": 0.875
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (0 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 500.0,
+      "pr_auc": 0.9437
+    },
+    {
+      "window_index": 23,
+      "signals": {
+        "DataDrift": 0.16276,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02599,
+        "FraudScoreDrift": 0.0014,
+        "performance_recall": 0.85484
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (1 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 24,
+      "signals": {
+        "DataDrift": 0.12217,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01625,
+        "FraudScoreDrift": 0.00527,
+        "performance_recall": 0.86364
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (2 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1000.0,
+      "pr_auc": 0.6314
+    },
+    {
+      "window_index": 25,
+      "signals": {
+        "DataDrift": 0.58551,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0147,
+        "FraudScoreDrift": 0.00785,
+        "performance_recall": 0.88889
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (3 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.6468
+    },
+    {
+      "window_index": 26,
+      "signals": {
+        "DataDrift": 0.44712,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01735,
+        "FraudScoreDrift": 0.00226,
+        "performance_recall": 0.86111
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (4 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 27,
+      "signals": {
+        "DataDrift": 0.72099,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06824,
+        "FraudScoreDrift": 0.00576,
+        "performance_recall": 0.85246
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (5 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3000.0,
+      "pr_auc": 0.8182
+    },
+    {
+      "window_index": 28,
+      "signals": {
+        "DataDrift": 0.81419,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0972,
+        "FraudScoreDrift": 0.00778,
+        "performance_recall": 0.875
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (6 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5000.0,
+      "pr_auc": 0.8087
+    },
+    {
+      "window_index": 29,
+      "signals": {
+        "DataDrift": 0.49426,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04381,
+        "FraudScoreDrift": 0.005,
+        "performance_recall": 0.78788
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (7 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 500.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 30,
+      "signals": {
+        "DataDrift": 0.24478,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20755,
+        "FraudScoreDrift": 0.78795,
+        "performance_recall": 0.64103
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (8 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3440.0,
+      "pr_auc": 0.0191
+    },
+    {
+      "window_index": 31,
+      "signals": {
+        "DataDrift": 0.26138,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.19933,
+        "FraudScoreDrift": 0.8345,
+        "performance_recall": 0.68421
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (9 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 7760.0,
+      "pr_auc": 0.0337
+    },
+    {
+      "window_index": 32,
+      "signals": {
+        "DataDrift": 0.83204,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.16646,
+        "FraudScoreDrift": 0.76932,
+        "performance_recall": 0.69048
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (10 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 7790.0,
+      "pr_auc": 0.0481
+    },
+    {
+      "window_index": 33,
+      "signals": {
+        "DataDrift": 1.77451,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.17883,
+        "FraudScoreDrift": 0.83053,
+        "performance_recall": 0.57895
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (11 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3270.0,
+      "pr_auc": 0.0289
+    },
+    {
+      "window_index": 34,
+      "signals": {
+        "DataDrift": 2.04085,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.29653,
+        "FraudScoreDrift": 0.83744,
+        "performance_recall": 0.52381
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (12 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2310.0,
+      "pr_auc": 0.0053
+    },
+    {
+      "window_index": 35,
+      "signals": {
+        "DataDrift": 2.14644,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.46134,
+        "FraudScoreDrift": 0.75159,
+        "performance_recall": 0.56364
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (13 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3475.0,
+      "pr_auc": 0.1203
+    },
+    {
+      "window_index": 36,
+      "signals": {
+        "DataDrift": 1.83349,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.32157,
+        "FraudScoreDrift": 0.79493,
+        "performance_recall": 0.5
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (14 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2475.0,
+      "pr_auc": 0.0187
+    },
+    {
+      "window_index": 37,
+      "signals": {
+        "DataDrift": 1.5076,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.2072,
+        "FraudScoreDrift": 0.82312,
+        "performance_recall": 0.51667
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (15 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3445.0,
+      "pr_auc": 0.0327
+    },
+    {
+      "window_index": 38,
+      "signals": {
+        "DataDrift": 1.47113,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20182,
+        "FraudScoreDrift": 0.82565,
+        "performance_recall": 0.62745
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (16 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1790.0,
+      "pr_auc": 0.0116
+    },
+    {
+      "window_index": 39,
+      "signals": {
+        "DataDrift": 1.93698,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.17437,
+        "FraudScoreDrift": 0.85609,
+        "performance_recall": 0.68889
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (17 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3295.0,
+      "pr_auc": 0.0299
+    },
+    {
+      "window_index": 40,
+      "signals": {
+        "DataDrift": 1.7929,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.17848,
+        "FraudScoreDrift": 0.88894,
+        "performance_recall": 0.675
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (18 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4765.0,
+      "pr_auc": 0.0452
+    },
+    {
+      "window_index": 41,
+      "signals": {
+        "DataDrift": 2.05896,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.3104,
+        "FraudScoreDrift": 0.80038,
+        "performance_recall": 0.72093
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (19 < 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2260.0,
+      "pr_auc": 0.0318
+    },
+    {
+      "window_index": 42,
+      "signals": {
+        "DataDrift": 2.14471,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.44653,
+        "FraudScoreDrift": 0.74791,
+        "performance_recall": 0.72727
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "retrain",
+        "reason": "Fixed schedule interval reached (20 >= 20)"
+      },
+      "model_version": "v3.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2750.0,
+      "pr_auc": 0.0266
+    },
+    {
+      "window_index": 43,
+      "signals": {
+        "DataDrift": 1.80594,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.33,
+        "FraudScoreDrift": 0.7193,
+        "performance_recall": 0.69767
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (0 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.658
+    },
+    {
+      "window_index": 44,
+      "signals": {
+        "DataDrift": 1.48615,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.19826,
+        "FraudScoreDrift": 0.7789,
+        "performance_recall": 0.72222
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (1 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 45,
+      "signals": {
+        "DataDrift": 1.44409,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.18425,
+        "FraudScoreDrift": 0.88591,
+        "performance_recall": 0.71795
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (2 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4500.0,
+      "pr_auc": 0.6205
+    },
+    {
+      "window_index": 46,
+      "signals": {
+        "DataDrift": 1.90656,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.18991,
+        "FraudScoreDrift": 0.87454,
+        "performance_recall": 0.74194
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (3 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 7500.0,
+      "pr_auc": 0.6689
+    },
+    {
+      "window_index": 47,
+      "signals": {
+        "DataDrift": 1.78869,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20022,
+        "FraudScoreDrift": 0.90257,
+        "performance_recall": 0.74074
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (4 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 8000.0,
+      "pr_auc": 0.7868
+    },
+    {
+      "window_index": 48,
+      "signals": {
+        "DataDrift": 2.0713,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.30473,
+        "FraudScoreDrift": 0.77276,
+        "performance_recall": 0.66667
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (5 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3500.0,
+      "pr_auc": 0.5916
+    },
+    {
+      "window_index": 49,
+      "signals": {
+        "DataDrift": 2.17427,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.4636,
+        "FraudScoreDrift": 0.83081,
+        "performance_recall": 0.66667
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (6 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.0053
+    },
+    {
+      "window_index": 50,
+      "signals": {
+        "DataDrift": 1.8473,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.3297,
+        "FraudScoreDrift": 0.77791,
+        "performance_recall": 0.61538
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (7 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2500.0,
+      "pr_auc": 0.4435
+    },
+    {
+      "window_index": 51,
+      "signals": {
+        "DataDrift": 1.521,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20308,
+        "FraudScoreDrift": 0.82684,
+        "performance_recall": 0.58182
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (8 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 52,
+      "signals": {
+        "DataDrift": 1.4745,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20497,
+        "FraudScoreDrift": 0.88745,
+        "performance_recall": 0.55556
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (9 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 6500.0,
+      "pr_auc": 0.7289
+    },
+    {
+      "window_index": 53,
+      "signals": {
+        "DataDrift": 1.92587,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.18242,
+        "FraudScoreDrift": 0.86265,
+        "performance_recall": 0.60465
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (10 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 12005.0,
+      "pr_auc": 0.7807
+    },
+    {
+      "window_index": 54,
+      "signals": {
+        "DataDrift": 1.78547,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.19084,
+        "FraudScoreDrift": 0.85417,
+        "performance_recall": 0.61538
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (11 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 11000.0,
+      "pr_auc": 0.6583
+    },
+    {
+      "window_index": 55,
+      "signals": {
+        "DataDrift": 2.04959,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.33519,
+        "FraudScoreDrift": 0.83405,
+        "performance_recall": 0.63934
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (12 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3000.0,
+      "pr_auc": 0.6778
+    },
+    {
+      "window_index": 56,
+      "signals": {
+        "DataDrift": 2.12868,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.45942,
+        "FraudScoreDrift": 0.76512,
+        "performance_recall": 0.66667
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (13 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 57,
+      "signals": {
+        "DataDrift": 1.79187,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.32496,
+        "FraudScoreDrift": 0.75536,
+        "performance_recall": 0.66667
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (14 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 58,
+      "signals": {
+        "DataDrift": 1.51437,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20261,
+        "FraudScoreDrift": 0.79142,
+        "performance_recall": 0.64935
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (15 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5500.0,
+      "pr_auc": 0.6541
+    },
+    {
+      "window_index": 59,
+      "signals": {
+        "DataDrift": 1.5112,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.18723,
+        "FraudScoreDrift": 0.80784,
+        "performance_recall": 0.63333
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (16 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 7510.0,
+      "pr_auc": 0.3908
+    },
+    {
+      "window_index": 60,
+      "signals": {
+        "DataDrift": 1.90885,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.17647,
+        "FraudScoreDrift": 0.86063,
+        "performance_recall": 0.69048
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (17 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1005.0,
+      "pr_auc": 0.635
+    },
+    {
+      "window_index": 61,
+      "signals": {
+        "DataDrift": 1.77472,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.1791,
+        "FraudScoreDrift": 0.8511,
+        "performance_recall": 0.77143
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (18 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4010.0,
+      "pr_auc": 0.0131
+    },
+    {
+      "window_index": 62,
+      "signals": {
+        "DataDrift": 2.04634,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.30647,
+        "FraudScoreDrift": 0.78712,
+        "performance_recall": 0.83871
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (19 < 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 6010.0,
+      "pr_auc": 0.2733
+    },
+    {
+      "window_index": 63,
+      "signals": {
+        "DataDrift": 2.16038,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.45822,
+        "FraudScoreDrift": 0.81379,
+        "performance_recall": 0.76923
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "retrain",
+        "reason": "Fixed schedule interval reached (20 >= 20)"
+      },
+      "model_version": "v4.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5700.0,
+      "pr_auc": 0.6548
+    },
+    {
+      "window_index": 64,
+      "signals": {
+        "DataDrift": 1.84216,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.33123,
+        "FraudScoreDrift": 0.75121,
+        "performance_recall": 0.73585
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (0 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3000.0,
+      "pr_auc": 0.7051
+    },
+    {
+      "window_index": 65,
+      "signals": {
+        "DataDrift": 1.51186,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20101,
+        "FraudScoreDrift": 0.81282,
+        "performance_recall": 0.7
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (1 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 11000.0,
+      "pr_auc": 0.7388
+    },
+    {
+      "window_index": 66,
+      "signals": {
+        "DataDrift": 1.46495,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.19738,
+        "FraudScoreDrift": 0.78336,
+        "performance_recall": 0.65455
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (2 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4505.0,
+      "pr_auc": 0.7257
+    },
+    {
+      "window_index": 67,
+      "signals": {
+        "DataDrift": 1.90647,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.16981,
+        "FraudScoreDrift": 0.81052,
+        "performance_recall": 0.65
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (3 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2000.0,
+      "pr_auc": 0.055
+    },
+    {
+      "window_index": 68,
+      "signals": {
+        "DataDrift": 1.77065,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.19088,
+        "FraudScoreDrift": 0.84147,
+        "performance_recall": 0.66279
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (4 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 9000.0,
+      "pr_auc": 0.4682
+    },
+    {
+      "window_index": 69,
+      "signals": {
+        "DataDrift": 2.05298,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.30761,
+        "FraudScoreDrift": 0.80929,
+        "performance_recall": 0.63158
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (5 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 7500.0,
+      "pr_auc": 0.5873
+    },
+    {
+      "window_index": 70,
+      "signals": {
+        "DataDrift": 2.14199,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.45574,
+        "FraudScoreDrift": 0.75877,
+        "performance_recall": 0.58228
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (6 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2000.0,
+      "pr_auc": 0.6835
+    },
+    {
+      "window_index": 71,
+      "signals": {
+        "DataDrift": 1.81872,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.33109,
+        "FraudScoreDrift": 0.75815,
+        "performance_recall": 0.58621
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (7 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2500.0,
+      "pr_auc": 0.7401
+    },
+    {
+      "window_index": 72,
+      "signals": {
+        "DataDrift": 1.50113,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20463,
+        "FraudScoreDrift": 0.78701,
+        "performance_recall": 0.55224
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (8 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 6500.0,
+      "pr_auc": 0.4223
+    },
+    {
+      "window_index": 73,
+      "signals": {
+        "DataDrift": 1.45776,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20286,
+        "FraudScoreDrift": 0.84373,
+        "performance_recall": 0.54688
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (9 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3005.0,
+      "pr_auc": 0.7782
+    },
+    {
+      "window_index": 74,
+      "signals": {
+        "DataDrift": 1.92305,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.18484,
+        "FraudScoreDrift": 0.82347,
+        "performance_recall": 0.57534
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (10 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2005.0,
+      "pr_auc": 0.8574
+    },
+    {
+      "window_index": 75,
+      "signals": {
+        "DataDrift": 1.78921,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.18564,
+        "FraudScoreDrift": 0.85421,
+        "performance_recall": 0.64062
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (11 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.0983
+    },
+    {
+      "window_index": 76,
+      "signals": {
+        "DataDrift": 2.05717,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.31471,
+        "FraudScoreDrift": 0.80069,
+        "performance_recall": 0.58621
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (12 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3500.0,
+      "pr_auc": 0.1519
+    },
+    {
+      "window_index": 77,
+      "signals": {
+        "DataDrift": 2.13853,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.46032,
+        "FraudScoreDrift": 0.7515,
+        "performance_recall": 0.57692
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (13 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2005.0,
+      "pr_auc": 0.0106
+    },
+    {
+      "window_index": 78,
+      "signals": {
+        "DataDrift": 1.81529,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.32942,
+        "FraudScoreDrift": 0.75746,
+        "performance_recall": 0.625
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (14 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4000.0,
+      "pr_auc": 0.676
+    },
+    {
+      "window_index": 79,
+      "signals": {
+        "DataDrift": 1.49819,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20186,
+        "FraudScoreDrift": 0.77087,
+        "performance_recall": 0.61538
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (15 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.9165
+    },
+    {
+      "window_index": 80,
+      "signals": {
+        "DataDrift": 1.45551,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.19381,
+        "FraudScoreDrift": 0.82557,
+        "performance_recall": 0.62162
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (16 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 81,
+      "signals": {
+        "DataDrift": 1.92021,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.17291,
+        "FraudScoreDrift": 0.8185,
+        "performance_recall": 0.77419
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (17 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 82,
+      "signals": {
+        "DataDrift": 1.78253,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.19594,
+        "FraudScoreDrift": 0.80034,
+        "performance_recall": 0.78571
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (18 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 83,
+      "signals": {
+        "DataDrift": 2.05074,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.31096,
+        "FraudScoreDrift": 0.77083,
+        "performance_recall": 0.71429
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (19 < 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 84,
+      "signals": {
+        "DataDrift": 2.14171,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.45857,
+        "FraudScoreDrift": 0.73974,
+        "performance_recall": 0.82353
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "retrain",
+        "reason": "Fixed schedule interval reached (20 >= 20)"
+      },
+      "model_version": "v5.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 200.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 85,
+      "signals": {
+        "DataDrift": 1.81616,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.32194,
+        "FraudScoreDrift": 0.72313,
+        "performance_recall": 0.85714
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": true
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (0 < 20)"
+      },
+      "model_version": "v6.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 86,
+      "signals": {
+        "DataDrift": 1.48427,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.19807,
+        "FraudScoreDrift": 0.79703,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (1 < 20)"
+      },
+      "model_version": "v6.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 87,
+      "signals": {
+        "DataDrift": 1.44032,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.20808,
+        "FraudScoreDrift": 0.80799,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (2 < 20)"
+      },
+      "model_version": "v6.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 88,
+      "signals": {
+        "DataDrift": 1.90089,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.18063,
+        "FraudScoreDrift": 0.81151,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": true,
+        "UnseenCategory": false,
+        "IsolationOutlier": true,
+        "FraudScoreDrift": true,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Waiting for fixed schedule (3 < 20)"
+      },
+      "model_version": "v6.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10.0,
+      "pr_auc": 0.0
+    }
+  ]
+}

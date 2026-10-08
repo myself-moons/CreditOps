@@ -1,12 +1,18 @@
 services:
   - type: web
     name: creditops-api
-    runtime: python
+    runtime: docker
     plan: free
     region: oregon
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn src.main:app --host 0.0.0.0 --port $PORT
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     healthCheckPath: /health
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.12.3
+      - key: STORE_BACKEND
+        value: firebase
+      - key: FIREBASE_DATABASE_URL
+        sync: false
+      - key: FIREBASE_CREDENTIALS_JSON
+        sync: false
+      - key: OBS_API_KEYS
+        sync: false

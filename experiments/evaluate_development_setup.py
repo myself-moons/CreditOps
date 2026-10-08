@@ -27,6 +27,9 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from dotenv import load_dotenv
+load_dotenv(ROOT / ".env")
+
 from src.dataset_adapter import DatasetAdapter
 from src.features import build_features
 from src.observatory.config import DriftInjectionConfig, load_config

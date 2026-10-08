@@ -1,0 +1,2968 @@
+{
+  "scenario": "control",
+  "policy": "NeverRetrain",
+  "seed": 1,
+  "onset_window": 30,
+  "n_retrains": 0,
+  "retrain_windows": [],
+  "detection_delay": null,
+  "false_alarms": 0,
+  "total_fn_fp_cost": 95110.0,
+  "total_retrain_cost": 0.0,
+  "total_alert_cost": 0.0,
+  "total_cost": 95110.0,
+  "loss_avoided_vs_never": 0.0,
+  "net_benefit": 0.0,
+  "mean_pr_auc_after_onset": 0.6909210439819463,
+  "duration_seconds": 24.36,
+  "promoted_versions": [],
+  "rejected_versions": [],
+  "rolled_back_versions": [],
+  "per_window_costs": [
+    5500.0,
+    5015.0,
+    1500.0,
+    1005.0,
+    2000.0,
+    505.0,
+    2005.0,
+    2505.0,
+    2500.0,
+    1500.0,
+    2505.0,
+    2005.0,
+    2005.0,
+    1510.0,
+    1010.0,
+    5.0,
+    5.0,
+    0.0,
+    505.0,
+    0.0,
+    1005.0,
+    3010.0,
+    5.0,
+    0.0,
+    1005.0,
+    505.0,
+    5.0,
+    2005.0,
+    3500.0,
+    0.0,
+    10.0,
+    2510.0,
+    2505.0,
+    15.0,
+    1500.0,
+    1510.0,
+    0.0,
+    1020.0,
+    10.0,
+    1000.0,
+    505.0,
+    1000.0,
+    500.0,
+    15.0,
+    5.0,
+    505.0,
+    1005.0,
+    500.0,
+    1000.0,
+    1010.0,
+    505.0,
+    0.0,
+    1005.0,
+    2505.0,
+    2515.0,
+    510.0,
+    5.0,
+    20.0,
+    15.0,
+    0.0,
+    10.0,
+    1010.0,
+    2000.0,
+    1520.0,
+    1025.0,
+    1500.0,
+    1505.0,
+    1010.0,
+    4005.0,
+    2505.0,
+    1515.0,
+    510.0,
+    1015.0,
+    2000.0,
+    2015.0,
+    5.0,
+    505.0,
+    2020.0,
+    1515.0,
+    10.0,
+    5.0,
+    5.0,
+    10.0,
+    15.0,
+    5.0,
+    15.0,
+    15.0,
+    0.0,
+    10.0
+  ],
+  "per_window_pr_auc": [
+    0.9298123080896349,
+    0.856690279367722,
+    0.9133739260717783,
+    0.981702777264752,
+    0.9270280667096704,
+    0.7971491228070176,
+    0.6753470619016837,
+    0.80052315624913,
+    0.7255984255153434,
+    0.7923791486291486,
+    0.8085381178984397,
+    0.9809904454692644,
+    0.9412392688678558,
+    0.9124776151823799,
+    0.9529385142856708,
+    1.0,
+    0.0,
+    0.0,
+    0.7599921630094044,
+    1.0,
+    0.9557582691907633,
+    0.9576383701253188,
+    0.94375,
+    1.0,
+    0.769047619047619,
+    0.7710511033681766,
+    1.0,
+    0.8629832102286852,
+    0.8827092171165121,
+    1.0,
+    0.9440972222222223,
+    0.8104747989178094,
+    0.8754287371464711,
+    0.9568700396825397,
+    0.5235798419257572,
+    0.9094974693765018,
+    1.0,
+    0.8446519589743293,
+    1.0,
+    1.0,
+    0.9639771460423632,
+    0.7494017420488008,
+    1.0,
+    0.8873015873015874,
+    0.0,
+    0.9787878787878788,
+    0.9457159507159507,
+    0.9824134199134199,
+    0.8695887445887445,
+    0.5686507936507936,
+    0.9499198717948718,
+    1.0,
+    0.9298651423171884,
+    0.9620386041542115,
+    0.9426878624484023,
+    0.8754516895141895,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.7902629985981904,
+    0.9092559800266566,
+    0.9021926704208459,
+    0.773717581268793,
+    0.9607757671531781,
+    0.8245041577064177,
+    0.5371627993493909,
+    0.8030333102701168,
+    0.7873928001249983,
+    0.8153296743596021,
+    0.9310253699788584,
+    0.8892934750125383,
+    0.9239290193237562,
+    0.8549174959093986,
+    1.0,
+    0.7037696126837831,
+    0.11553647748341807,
+    0.8130834003394979,
+    0.9587585034013604,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "per_window_recall": [
+    0.725,
+    0.6774193548387096,
+    0.8125,
+    0.8571428571428571,
+    0.7142857142857143,
+    0.75,
+    0.42857142857142855,
+    0.6428571428571429,
+    0.5,
+    0.5,
+    0.7058823529411765,
+    0.8518518518518519,
+    0.8,
+    0.8235294117647058,
+    0.8947368421052632,
+    1.0,
+    1.0,
+    1.0,
+    0.75,
+    1.0,
+    0.8666666666666667,
+    0.8421052631578947,
+    1.0,
+    1.0,
+    0.6,
+    0.75,
+    1.0,
+    0.6923076923076923,
+    0.5625,
+    1.0,
+    1.0,
+    0.6875,
+    0.7368421052631579,
+    1.0,
+    0.4,
+    0.75,
+    1.0,
+    0.8461538461538461,
+    1.0,
+    0.75,
+    0.9230769230769231,
+    0.6666666666666666,
+    0.8333333333333334,
+    1.0,
+    1.0,
+    0.8888888888888888,
+    0.8666666666666667,
+    0.9523809523809523,
+    0.7142857142857143,
+    0.3333333333333333,
+    0.875,
+    1.0,
+    0.8823529411764706,
+    0.8275862068965517,
+    0.782608695652174,
+    0.875,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.75,
+    0.7142857142857143,
+    0.8333333333333334,
+    0.8181818181818182,
+    0.896551724137931,
+    0.7857142857142857,
+    0.5,
+    0.6190476190476191,
+    0.7368421052631579,
+    0.6666666666666666,
+    0.9090909090909091,
+    0.8461538461538461,
+    0.6666666666666666,
+    0.6923076923076923,
+    1.0,
+    0.8571428571428571,
+    0.0,
+    0.7,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "decisions": [
+    {
+      "window": 0,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 1,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 2,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 3,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 4,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 5,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 6,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 7,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 8,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 9,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 10,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 11,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 12,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 13,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 14,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 15,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 16,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 17,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 18,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 19,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 20,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 21,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 22,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 23,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 24,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 25,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 26,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 27,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 28,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 29,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 30,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 31,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 32,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 33,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 34,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 35,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 36,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 37,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 38,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 39,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 40,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 41,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 42,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 43,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 44,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 45,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 46,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 47,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 48,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 49,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 50,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 51,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 52,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 53,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 54,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 55,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 56,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 57,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 58,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 59,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 60,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 61,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 62,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 63,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 64,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 65,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 66,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 67,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 68,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 69,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 70,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 71,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 72,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 73,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 74,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 75,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 76,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 77,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 78,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 79,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 80,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 81,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 82,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 83,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 84,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 85,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 86,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 87,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    },
+    {
+      "window": 88,
+      "action": "no_action",
+      "reason": "NeverRetrain policy active (static baseline)"
+    }
+  ],
+  "window_traces": [
+    {
+      "window_index": 0,
+      "signals": {
+        "DataDrift": 0.98783,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11298,
+        "FraudScoreDrift": 0.00209,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5500.0,
+      "pr_auc": 0.9298
+    },
+    {
+      "window_index": 1,
+      "signals": {
+        "DataDrift": 0.49433,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04533,
+        "FraudScoreDrift": 0.00397,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5015.0,
+      "pr_auc": 0.8567
+    },
+    {
+      "window_index": 2,
+      "signals": {
+        "DataDrift": 0.16241,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02582,
+        "FraudScoreDrift": 0.00379,
+        "performance_recall": 0.725
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.9134
+    },
+    {
+      "window_index": 3,
+      "signals": {
+        "DataDrift": 0.11275,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01516,
+        "FraudScoreDrift": 0.01153,
+        "performance_recall": 0.70423
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1005.0,
+      "pr_auc": 0.9817
+    },
+    {
+      "window_index": 4,
+      "signals": {
+        "DataDrift": 0.57793,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01366,
+        "FraudScoreDrift": 0.00583,
+        "performance_recall": 0.72414
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2000.0,
+      "pr_auc": 0.927
+    },
+    {
+      "window_index": 5,
+      "signals": {
+        "DataDrift": 0.44071,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02677,
+        "FraudScoreDrift": 0.00366,
+        "performance_recall": 0.74257
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.7971
+    },
+    {
+      "window_index": 6,
+      "signals": {
+        "DataDrift": 0.71271,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.07061,
+        "FraudScoreDrift": 0.00646,
+        "performance_recall": 0.73913
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2005.0,
+      "pr_auc": 0.6753
+    },
+    {
+      "window_index": 7,
+      "signals": {
+        "DataDrift": 0.80879,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.10794,
+        "FraudScoreDrift": 0.00357,
+        "performance_recall": 0.74684
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2505.0,
+      "pr_auc": 0.8005
+    },
+    {
+      "window_index": 8,
+      "signals": {
+        "DataDrift": 0.48589,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04217,
+        "FraudScoreDrift": 0.00478,
+        "performance_recall": 0.74545
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2500.0,
+      "pr_auc": 0.7256
+    },
+    {
+      "window_index": 9,
+      "signals": {
+        "DataDrift": 0.15875,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02252,
+        "FraudScoreDrift": 0.00213,
+        "performance_recall": 0.69811
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.7924
+    },
+    {
+      "window_index": 10,
+      "signals": {
+        "DataDrift": 0.11515,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01731,
+        "FraudScoreDrift": 0.01052,
+        "performance_recall": 0.61224
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2505.0,
+      "pr_auc": 0.8085
+    },
+    {
+      "window_index": 11,
+      "signals": {
+        "DataDrift": 0.58102,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02184,
+        "FraudScoreDrift": 0.00978,
+        "performance_recall": 0.56098
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2005.0,
+      "pr_auc": 0.981
+    },
+    {
+      "window_index": 12,
+      "signals": {
+        "DataDrift": 0.44346,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01882,
+        "FraudScoreDrift": 0.01138,
+        "performance_recall": 0.59259
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2005.0,
+      "pr_auc": 0.9412
+    },
+    {
+      "window_index": 13,
+      "signals": {
+        "DataDrift": 0.71891,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0661,
+        "FraudScoreDrift": 0.0056,
+        "performance_recall": 0.7027
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1510.0,
+      "pr_auc": 0.9125
+    },
+    {
+      "window_index": 14,
+      "signals": {
+        "DataDrift": 0.81157,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11148,
+        "FraudScoreDrift": 0.00478,
+        "performance_recall": 0.7375
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1010.0,
+      "pr_auc": 0.9529
+    },
+    {
+      "window_index": 15,
+      "signals": {
+        "DataDrift": 0.49101,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04219,
+        "FraudScoreDrift": 0.00471,
+        "performance_recall": 0.78161
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 16,
+      "signals": {
+        "DataDrift": 0.16278,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02544,
+        "FraudScoreDrift": 0.00267,
+        "performance_recall": 0.82
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 17,
+      "signals": {
+        "DataDrift": 0.11974,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02434,
+        "FraudScoreDrift": 0.01385,
+        "performance_recall": 0.84884
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 18,
+      "signals": {
+        "DataDrift": 0.58339,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01834,
+        "FraudScoreDrift": 0.00354,
+        "performance_recall": 0.84746
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.76
+    },
+    {
+      "window_index": 19,
+      "signals": {
+        "DataDrift": 0.44553,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02052,
+        "FraudScoreDrift": 0.00999,
+        "performance_recall": 0.87179
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 20,
+      "signals": {
+        "DataDrift": 0.72148,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.07267,
+        "FraudScoreDrift": 0.00534,
+        "performance_recall": 0.88462
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1005.0,
+      "pr_auc": 0.9558
+    },
+    {
+      "window_index": 21,
+      "signals": {
+        "DataDrift": 0.81013,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.1085,
+        "FraudScoreDrift": 0.00058,
+        "performance_recall": 0.91667
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3010.0,
+      "pr_auc": 0.9576
+    },
+    {
+      "window_index": 22,
+      "signals": {
+        "DataDrift": 0.48899,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04309,
+        "FraudScoreDrift": 0.00542,
+        "performance_recall": 0.875
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.9437
+    },
+    {
+      "window_index": 23,
+      "signals": {
+        "DataDrift": 0.16276,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02599,
+        "FraudScoreDrift": 0.0014,
+        "performance_recall": 0.85484
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 24,
+      "signals": {
+        "DataDrift": 0.12217,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01625,
+        "FraudScoreDrift": 0.00527,
+        "performance_recall": 0.86364
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1005.0,
+      "pr_auc": 0.769
+    },
+    {
+      "window_index": 25,
+      "signals": {
+        "DataDrift": 0.58551,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0147,
+        "FraudScoreDrift": 0.00785,
+        "performance_recall": 0.88889
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.7711
+    },
+    {
+      "window_index": 26,
+      "signals": {
+        "DataDrift": 0.44712,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01735,
+        "FraudScoreDrift": 0.00226,
+        "performance_recall": 0.86111
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 27,
+      "signals": {
+        "DataDrift": 0.72099,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06824,
+        "FraudScoreDrift": 0.00576,
+        "performance_recall": 0.85246
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2005.0,
+      "pr_auc": 0.863
+    },
+    {
+      "window_index": 28,
+      "signals": {
+        "DataDrift": 0.81419,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0972,
+        "FraudScoreDrift": 0.00778,
+        "performance_recall": 0.875
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3500.0,
+      "pr_auc": 0.8827
+    },
+    {
+      "window_index": 29,
+      "signals": {
+        "DataDrift": 0.49426,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04381,
+        "FraudScoreDrift": 0.005,
+        "performance_recall": 0.78788
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 30,
+      "signals": {
+        "DataDrift": 0.16298,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02253,
+        "FraudScoreDrift": 0.00425,
+        "performance_recall": 0.64103
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10.0,
+      "pr_auc": 0.9441
+    },
+    {
+      "window_index": 31,
+      "signals": {
+        "DataDrift": 0.1188,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0194,
+        "FraudScoreDrift": 0.01201,
+        "performance_recall": 0.68421
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2510.0,
+      "pr_auc": 0.8105
+    },
+    {
+      "window_index": 32,
+      "signals": {
+        "DataDrift": 0.58196,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01829,
+        "FraudScoreDrift": 0.01886,
+        "performance_recall": 0.7381
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2505.0,
+      "pr_auc": 0.8754
+    },
+    {
+      "window_index": 33,
+      "signals": {
+        "DataDrift": 0.44929,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0203,
+        "FraudScoreDrift": 0.00783,
+        "performance_recall": 0.7193
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 15.0,
+      "pr_auc": 0.9569
+    },
+    {
+      "window_index": 34,
+      "signals": {
+        "DataDrift": 0.72001,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.05678,
+        "FraudScoreDrift": 0.00754,
+        "performance_recall": 0.73016
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.5236
+    },
+    {
+      "window_index": 35,
+      "signals": {
+        "DataDrift": 0.81337,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.1026,
+        "FraudScoreDrift": 0.00201,
+        "performance_recall": 0.81818
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1510.0,
+      "pr_auc": 0.9095
+    },
+    {
+      "window_index": 36,
+      "signals": {
+        "DataDrift": 0.48743,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04984,
+        "FraudScoreDrift": 0.00576,
+        "performance_recall": 0.76786
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 37,
+      "signals": {
+        "DataDrift": 0.16137,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02274,
+        "FraudScoreDrift": 0.00483,
+        "performance_recall": 0.73333
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1020.0,
+      "pr_auc": 0.8447
+    },
+    {
+      "window_index": 38,
+      "signals": {
+        "DataDrift": 0.12235,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02148,
+        "FraudScoreDrift": 0.01203,
+        "performance_recall": 0.78431
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 39,
+      "signals": {
+        "DataDrift": 0.58181,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01848,
+        "FraudScoreDrift": 0.00443,
+        "performance_recall": 0.82222
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1000.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 40,
+      "signals": {
+        "DataDrift": 0.4444,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02291,
+        "FraudScoreDrift": 0.00684,
+        "performance_recall": 0.8
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.964
+    },
+    {
+      "window_index": 41,
+      "signals": {
+        "DataDrift": 0.71913,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06769,
+        "FraudScoreDrift": 0.00169,
+        "performance_recall": 0.83721
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1000.0,
+      "pr_auc": 0.7494
+    },
+    {
+      "window_index": 42,
+      "signals": {
+        "DataDrift": 0.81039,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.10804,
+        "FraudScoreDrift": 0.00229,
+        "performance_recall": 0.88636
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 500.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 43,
+      "signals": {
+        "DataDrift": 0.49014,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04781,
+        "FraudScoreDrift": 0.00492,
+        "performance_recall": 0.83721
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 15.0,
+      "pr_auc": 0.8873
+    },
+    {
+      "window_index": 44,
+      "signals": {
+        "DataDrift": 0.16163,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02325,
+        "FraudScoreDrift": 0.00609,
+        "performance_recall": 0.83333
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 45,
+      "signals": {
+        "DataDrift": 0.11994,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01712,
+        "FraudScoreDrift": 0.00747,
+        "performance_recall": 0.84615
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.9788
+    },
+    {
+      "window_index": 46,
+      "signals": {
+        "DataDrift": 0.58524,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02018,
+        "FraudScoreDrift": 0.00761,
+        "performance_recall": 0.87097
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1005.0,
+      "pr_auc": 0.9457
+    },
+    {
+      "window_index": 47,
+      "signals": {
+        "DataDrift": 0.44776,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01682,
+        "FraudScoreDrift": 0.00544,
+        "performance_recall": 0.85185
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 500.0,
+      "pr_auc": 0.9824
+    },
+    {
+      "window_index": 48,
+      "signals": {
+        "DataDrift": 0.72171,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06271,
+        "FraudScoreDrift": 0.0043,
+        "performance_recall": 0.88889
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1000.0,
+      "pr_auc": 0.8696
+    },
+    {
+      "window_index": 49,
+      "signals": {
+        "DataDrift": 0.81647,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.10524,
+        "FraudScoreDrift": 0.00346,
+        "performance_recall": 0.92157
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1010.0,
+      "pr_auc": 0.5687
+    },
+    {
+      "window_index": 50,
+      "signals": {
+        "DataDrift": 0.4913,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04452,
+        "FraudScoreDrift": 0.00307,
+        "performance_recall": 0.88462
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.9499
+    },
+    {
+      "window_index": 51,
+      "signals": {
+        "DataDrift": 0.16313,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02576,
+        "FraudScoreDrift": 0.00262,
+        "performance_recall": 0.85455
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 52,
+      "signals": {
+        "DataDrift": 0.12201,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01949,
+        "FraudScoreDrift": 0.00721,
+        "performance_recall": 0.85185
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1005.0,
+      "pr_auc": 0.9299
+    },
+    {
+      "window_index": 53,
+      "signals": {
+        "DataDrift": 0.58399,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01746,
+        "FraudScoreDrift": 0.00743,
+        "performance_recall": 0.86047
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2505.0,
+      "pr_auc": 0.962
+    },
+    {
+      "window_index": 54,
+      "signals": {
+        "DataDrift": 0.44811,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02508,
+        "FraudScoreDrift": 0.00699,
+        "performance_recall": 0.82051
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2515.0,
+      "pr_auc": 0.9427
+    },
+    {
+      "window_index": 55,
+      "signals": {
+        "DataDrift": 0.72017,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06793,
+        "FraudScoreDrift": 0.00586,
+        "performance_recall": 0.83607
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 510.0,
+      "pr_auc": 0.8755
+    },
+    {
+      "window_index": 56,
+      "signals": {
+        "DataDrift": 0.80929,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.10313,
+        "FraudScoreDrift": 0.00256,
+        "performance_recall": 0.83951
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 57,
+      "signals": {
+        "DataDrift": 0.46793,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04885,
+        "FraudScoreDrift": 0.00269,
+        "performance_recall": 0.83951
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 20.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 58,
+      "signals": {
+        "DataDrift": 0.18261,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02095,
+        "FraudScoreDrift": 0.00239,
+        "performance_recall": 0.83117
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 15.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 59,
+      "signals": {
+        "DataDrift": 0.18639,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02073,
+        "FraudScoreDrift": 0.00291,
+        "performance_recall": 0.81667
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 60,
+      "signals": {
+        "DataDrift": 0.58141,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.019,
+        "FraudScoreDrift": 0.00431,
+        "performance_recall": 0.85714
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 61,
+      "signals": {
+        "DataDrift": 0.44431,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0228,
+        "FraudScoreDrift": 0.00774,
+        "performance_recall": 0.97143
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1010.0,
+      "pr_auc": 0.7903
+    },
+    {
+      "window_index": 62,
+      "signals": {
+        "DataDrift": 0.71437,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06526,
+        "FraudScoreDrift": 0.0037,
+        "performance_recall": 1.0
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2000.0,
+      "pr_auc": 0.9093
+    },
+    {
+      "window_index": 63,
+      "signals": {
+        "DataDrift": 0.80899,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.1108,
+        "FraudScoreDrift": 0.00168,
+        "performance_recall": 0.94872
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1520.0,
+      "pr_auc": 0.9022
+    },
+    {
+      "window_index": 64,
+      "signals": {
+        "DataDrift": 0.48772,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04334,
+        "FraudScoreDrift": 0.00634,
+        "performance_recall": 0.88679
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1025.0,
+      "pr_auc": 0.7737
+    },
+    {
+      "window_index": 65,
+      "signals": {
+        "DataDrift": 0.15968,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02109,
+        "FraudScoreDrift": 0.00103,
+        "performance_recall": 0.85
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.9608
+    },
+    {
+      "window_index": 66,
+      "signals": {
+        "DataDrift": 0.11793,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01782,
+        "FraudScoreDrift": 0.00326,
+        "performance_recall": 0.8
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1505.0,
+      "pr_auc": 0.8245
+    },
+    {
+      "window_index": 67,
+      "signals": {
+        "DataDrift": 0.58156,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01768,
+        "FraudScoreDrift": 0.00473,
+        "performance_recall": 0.825
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1010.0,
+      "pr_auc": 0.5372
+    },
+    {
+      "window_index": 68,
+      "signals": {
+        "DataDrift": 0.44527,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01582,
+        "FraudScoreDrift": 0.00466,
+        "performance_recall": 0.82558
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4005.0,
+      "pr_auc": 0.803
+    },
+    {
+      "window_index": 69,
+      "signals": {
+        "DataDrift": 0.71964,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06125,
+        "FraudScoreDrift": 0.00661,
+        "performance_recall": 0.82895
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2505.0,
+      "pr_auc": 0.7874
+    },
+    {
+      "window_index": 70,
+      "signals": {
+        "DataDrift": 0.80907,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.10667,
+        "FraudScoreDrift": 0.00254,
+        "performance_recall": 0.77215
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1515.0,
+      "pr_auc": 0.8153
+    },
+    {
+      "window_index": 71,
+      "signals": {
+        "DataDrift": 0.48977,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.045,
+        "FraudScoreDrift": 0.00583,
+        "performance_recall": 0.75862
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 510.0,
+      "pr_auc": 0.931
+    },
+    {
+      "window_index": 72,
+      "signals": {
+        "DataDrift": 0.16288,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02198,
+        "FraudScoreDrift": 0.00182,
+        "performance_recall": 0.68657
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1015.0,
+      "pr_auc": 0.8893
+    },
+    {
+      "window_index": 73,
+      "signals": {
+        "DataDrift": 0.1202,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0176,
+        "FraudScoreDrift": 0.00285,
+        "performance_recall": 0.70312
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2000.0,
+      "pr_auc": 0.9239
+    },
+    {
+      "window_index": 74,
+      "signals": {
+        "DataDrift": 0.58223,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02128,
+        "FraudScoreDrift": 0.00325,
+        "performance_recall": 0.73973
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2015.0,
+      "pr_auc": 0.8549
+    },
+    {
+      "window_index": 75,
+      "signals": {
+        "DataDrift": 0.44278,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01749,
+        "FraudScoreDrift": 0.00135,
+        "performance_recall": 0.76562
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 76,
+      "signals": {
+        "DataDrift": 0.71741,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06613,
+        "FraudScoreDrift": 0.00326,
+        "performance_recall": 0.75862
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.7038
+    },
+    {
+      "window_index": 77,
+      "signals": {
+        "DataDrift": 0.8068,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11213,
+        "FraudScoreDrift": 0.00124,
+        "performance_recall": 0.78846
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2020.0,
+      "pr_auc": 0.1155
+    },
+    {
+      "window_index": 78,
+      "signals": {
+        "DataDrift": 0.48697,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04476,
+        "FraudScoreDrift": 0.00397,
+        "performance_recall": 0.77083
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1515.0,
+      "pr_auc": 0.8131
+    },
+    {
+      "window_index": 79,
+      "signals": {
+        "DataDrift": 0.15961,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02286,
+        "FraudScoreDrift": 0.00274,
+        "performance_recall": 0.66667
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10.0,
+      "pr_auc": 0.9588
+    },
+    {
+      "window_index": 80,
+      "signals": {
+        "DataDrift": 0.11581,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02006,
+        "FraudScoreDrift": 0.00597,
+        "performance_recall": 0.67568
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 81,
+      "signals": {
+        "DataDrift": 0.58115,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01796,
+        "FraudScoreDrift": 0.00577,
+        "performance_recall": 0.74194
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 82,
+      "signals": {
+        "DataDrift": 0.448,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01727,
+        "FraudScoreDrift": 0.00507,
+        "performance_recall": 0.71429
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 83,
+      "signals": {
+        "DataDrift": 0.71908,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06368,
+        "FraudScoreDrift": 0.00284,
+        "performance_recall": 0.66667
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 15.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 84,
+      "signals": {
+        "DataDrift": 0.81159,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11034,
+        "FraudScoreDrift": 0.00381,
+        "performance_recall": 0.82353
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 85,
+      "signals": {
+        "DataDrift": 0.49091,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04604,
+        "FraudScoreDrift": 0.006,
+        "performance_recall": 1.0
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 15.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 86,
+      "signals": {
+        "DataDrift": 0.16156,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02127,
+        "FraudScoreDrift": 0.00446,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 15.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 87,
+      "signals": {
+        "DataDrift": 0.12024,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01325,
+        "FraudScoreDrift": 0.00802,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 88,
+      "signals": {
+        "DataDrift": 0.58245,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01658,
+        "FraudScoreDrift": 0.00315,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "NeverRetrain policy active (static baseline)"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10.0,
+      "pr_auc": 0.0
+    }
+  ]
+}

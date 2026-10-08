@@ -11,3 +11,7 @@ __pycache__/
 *.pyd
 .dvc/cache
 *.log
+secrets/
+.env
+*.db
+

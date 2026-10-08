@@ -312,25 +312,39 @@ Any variation reported is simulation-internal, not real-world concept drift.
 
 ---
 
-## Quick Start
+---
 
+## Capstone Extension: CreditOps Observatory & Governance Console
+
+The CreditOps Observatory extends the pipeline with real-time stream drift injection, multi-detector monitoring, governed retraining policies, shadow validation, automated rollbacks, and interactive dashboard telemetry.
+
+### Core Architecture & Endpoints
+- **Observatory Console (UI)**: `http://localhost:8000/observatory/` (and integrated within `/dashboard`)
+- **Summary & Criteria**: `GET /observatory/api/summary`
+- **Scenario Replay & Traces**: `GET /observatory/api/trace/{scenario}/{policy}`
+- **Model Registry & Governance Audit**: `GET /observatory/api/models`, `GET /observatory/api/audit`
+- **Live Realtime Telemetry**: `GET /observatory/api/live`
+- **Authorized Rollbacks (RBAC)**: `POST /observatory/api/rollback` (requires `risk_owner` API key in `X-API-Key`)
+- **Authorized Trace Replay (RBAC)**: `POST /observatory/api/replay` (requires `ml_engineer` API key in `X-API-Key`)
+
+### Quick Start (Demo Mode)
 ```bash
-git clone https://github.com/myself-moons/CreditOps.git
-cd CreditOps
+# Seed demo run into Firebase/SQLite log store and launch API
+python scripts/seed_demo.py
+uvicorn src.main:app --host 127.0.0.1 --port 8000
 
-# Create venv and install
-python -m venv .venv
-.venv\Scripts\pip install -r requirements.txt
+# Open dashboard in browser
+# http://127.0.0.1:8000/dashboard (Click 'Launch Observatory')
+# http://127.0.0.1:8000/observatory/
+```
 
-# Data files must be placed in Credit_Data/
-# (fraudTrain.csv and fraudTest.csv from Kaggle kartik2112/fraud-detection)
+### Reproducing Evaluation Suite
+```bash
+# Run frozen 48-run evaluation suite (resumes automatically if interrupted)
+python experiments/run_all.py
 
-# Run full pipeline
-.venv\Scripts\python -m dvc repro
-
-# Run tests
-.venv\Scripts\pytest -q
-
-# Start API
-.venv\Scripts\uvicorn src.main:app --host 0.0.0.0 --port 8000
+# Results saved to:
+# - results/results.csv (Summary mean ± std table)
+# - results/evaluation_report.json (Bitwise verification & scalability metrics)
+# - results/runs/*.json (Window-level traces for each scenario and policy)
 ```

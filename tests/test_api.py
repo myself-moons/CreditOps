@@ -296,6 +296,10 @@ class TestDatasetAPI:
 # ===========================================================================
 # Temporal split correctness (no leakage)
 # ===========================================================================
+HAVE_RAW_SPLITS = (ROOT_DIR / "data/raw/train.csv").exists() and (ROOT_DIR / "data/raw/val.csv").exists()
+
+
+@pytest.mark.skipif(not HAVE_RAW_SPLITS, reason="Large raw split CSVs absent")
 class TestTemporalSplit:
     @pytest.fixture(scope="class")
     def splits(self):
@@ -333,13 +337,11 @@ class TestPreprocessorFitOnTrain:
         assert (ROOT_DIR / "preprocessor.pkl").exists(), \
             "preprocessor.pkl not found — run dvc repro"
 
+    @pytest.mark.skipif(not HAVE_RAW_SPLITS, reason="Large raw split CSVs absent")
     def test_val_not_seen_during_fit(self):
         """Verify val split rows were not used to fit the preprocessor.
         If the preprocessor was fit on train only, the train split must
         predate the val split — which we verified in TestTemporalSplit."""
-        # This is guaranteed by data_preprocessing.py (fit on train only)
-        # and by the temporal split (val comes strictly after train).
-        # Verify by checking that val exists and is non-empty.
         val = pd.read_csv(ROOT_DIR / "data/raw/val.csv", nrows=5)
         assert len(val) > 0
 

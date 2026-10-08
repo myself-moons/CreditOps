@@ -377,6 +377,23 @@
             <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
             <span>Transaction Logs</span>
           </div>
+        <a href="/logs" class="nav-item">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            <span>Transaction Logs</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Group 4: Capstone Extension -->
+      <div class="nav-group">
+        <div class="nav-group-title">Capstone Extension</div>
+        <a href="/observatory" class="nav-item" style="border: 1px solid rgba(139, 92, 246, 0.25); background: rgba(139, 92, 246, 0.05);">
+          <div class="nav-item-left">
+            <svg class="icon-svg sm" viewBox="0 0 24 24" style="color: #a78bfa;"><path d="M2 12h5l2-5 4 10 2-5h7"></path></svg>
+            <span style="font-weight: 600; color: #c4b5fd;">Observatory</span>
+          </div>
+          <span class="item-badge purple" style="background:rgba(139,92,246,0.2);color:#c4b5fd;border:1px solid rgba(139,92,246,0.35);">v2</span>
         </a>
       </div>
 
@@ -389,9 +406,13 @@
         <span style="font-size:0.8rem;color:var(--text-primary);">FastAPI Serving</span>
         <span class="item-badge green">healthy</span>
       </div>
-      <div class="nav-item" style="cursor:default;padding:6px 8px;">
+      <div class="nav-item" style="cursor:default;padding:6px 8px;margin-bottom:4px;">
         <span style="font-size:0.8rem;color:var(--text-primary);">Model Registry</span>
         <span class="item-badge">loaded</span>
+      </div>
+      <div class="nav-item" style="cursor:default;padding:6px 8px;">
+        <span style="font-size:0.8rem;color:var(--text-primary);">Observatory</span>
+        <span class="item-badge purple" style="background:rgba(139,92,246,0.15);color:#a78bfa;">online</span>
       </div>
     </div>
   </aside>
@@ -406,6 +427,10 @@
         A reproducible, end-to-end MLOps architecture featuring temporal 3-way dataset splits, PR-AUC model governance, FastAPI low-latency serving, two-layer operational drift telemetry, and automated retrain triggering.
       </p>
       <div class="hero-btns">
+        <a href="/observatory" class="btn-solid" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); box-shadow: 0 2px 12px rgba(139, 92, 246, 0.4);">
+          <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M2 12h5l2-5 4 10 2-5h7"></path></svg>
+          <span>Observatory &amp; Governance (Capstone)</span>
+        </a>
         <a href="/dashboard" class="btn-solid">
           <svg class="icon-svg sm" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
           <span>Explore Pipelines &amp; Runs</span>

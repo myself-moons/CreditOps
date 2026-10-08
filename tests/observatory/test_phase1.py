@@ -495,6 +495,10 @@ class TestV1Isolation:
         import src.observatory.drift.injector as _i
         import src.observatory.simulator.stream as _s
 
+        # Pop any cached modules so we test clean import isolation
+        sys.modules.pop("src.main", None)
+        sys.modules.pop("src.model_training", None)
+
         importlib.reload(_c)
         importlib.reload(_i)
         importlib.reload(_s)

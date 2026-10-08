@@ -1,0 +1,2970 @@
+{
+  "scenario": "fraud_rate_shift",
+  "policy": "AdaptivePolicy(naive)",
+  "seed": 2,
+  "onset_window": 30,
+  "n_retrains": 1,
+  "retrain_windows": [
+    32
+  ],
+  "detection_delay": 1,
+  "false_alarms": 0,
+  "total_fn_fp_cost": 707750.0,
+  "total_retrain_cost": 200.0,
+  "total_alert_cost": 20.0,
+  "total_cost": 707970.0,
+  "loss_avoided_vs_never": -362640.0,
+  "net_benefit": -362840.0,
+  "mean_pr_auc_after_onset": 0.7148119601913345,
+  "duration_seconds": 24.8,
+  "promoted_versions": [],
+  "rejected_versions": [],
+  "rolled_back_versions": [],
+  "per_window_costs": [
+    5500.0,
+    5015.0,
+    1500.0,
+    1005.0,
+    2000.0,
+    505.0,
+    2005.0,
+    2505.0,
+    2500.0,
+    1500.0,
+    2505.0,
+    2005.0,
+    2005.0,
+    1510.0,
+    1010.0,
+    5.0,
+    5.0,
+    0.0,
+    505.0,
+    0.0,
+    1005.0,
+    3010.0,
+    5.0,
+    0.0,
+    1005.0,
+    505.0,
+    5.0,
+    2005.0,
+    3500.0,
+    0.0,
+    10.0,
+    8020.0,
+    6705.0,
+    3005.0,
+    13000.0,
+    4500.0,
+    4500.0,
+    11005.0,
+    4000.0,
+    8500.0,
+    3005.0,
+    6500.0,
+    9500.0,
+    16005.0,
+    5.0,
+    8000.0,
+    11000.0,
+    7500.0,
+    8500.0,
+    23500.0,
+    10000.0,
+    0.0,
+    9000.0,
+    27515.0,
+    14000.0,
+    3500.0,
+    0.0,
+    10.0,
+    19000.0,
+    9500.0,
+    0.0,
+    31005.0,
+    24500.0,
+    17000.0,
+    22500.0,
+    33000.0,
+    12005.0,
+    25000.0,
+    21000.0,
+    22000.0,
+    23500.0,
+    25500.0,
+    34510.0,
+    3505.0,
+    10505.0,
+    11500.0,
+    14000.0,
+    48000.0,
+    18000.0,
+    17000.0,
+    5.0,
+    5.0,
+    0.0,
+    0.0,
+    5.0,
+    0.0,
+    5.0,
+    0.0,
+    10.0
+  ],
+  "per_window_pr_auc": [
+    0.9298123080896349,
+    0.856690279367722,
+    0.9133739260717783,
+    0.981702777264752,
+    0.9270280667096704,
+    0.7971491228070176,
+    0.6753470619016837,
+    0.80052315624913,
+    0.7255984255153434,
+    0.7923791486291486,
+    0.8085381178984397,
+    0.9809904454692644,
+    0.9412392688678558,
+    0.9124776151823799,
+    0.9529385142856708,
+    1.0,
+    0.0,
+    0.0,
+    0.7599921630094044,
+    1.0,
+    0.9557582691907633,
+    0.9576383701253188,
+    0.94375,
+    1.0,
+    0.769047619047619,
+    0.7710511033681766,
+    1.0,
+    0.8629832102286852,
+    0.8827092171165121,
+    1.0,
+    0.9892704676096581,
+    0.8934098361294585,
+    0.9507827901190835,
+    0.9937184343434343,
+    0.42315857604505613,
+    0.9487846698540058,
+    1.0,
+    0.8699031437489079,
+    0.964983164983165,
+    0.8930361424484671,
+    0.9613198753192359,
+    0.7010248144411403,
+    0.9721688997383191,
+    0.8817704475791548,
+    0.0,
+    0.9910367410367411,
+    0.9248442472043812,
+    0.9618563085697331,
+    0.9572999496648571,
+    0.7047860515945622,
+    0.974645483900722,
+    1.0,
+    0.9516890145207886,
+    0.964758687600288,
+    0.961518538877471,
+    0.9727610153256705,
+    0.0,
+    0.0,
+    1.0,
+    0.9794009780765656,
+    0.9999999999999999,
+    0.7989598634449786,
+    0.9265923602567001,
+    0.929068195987644,
+    0.9541720597316976,
+    0.9788011898248268,
+    0.8892790102893994,
+    0.6998812002612468,
+    0.8642126766724659,
+    0.8478622417833306,
+    0.9076620423327147,
+    0.9785473859048905,
+    0.8603710128013613,
+    0.890594875982965,
+    0.9514825798367432,
+    0.9715048348106367,
+    0.8135286404579561,
+    0.257161865818861,
+    0.9143027653162086,
+    0.9519925710432471,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "per_window_recall": [
+    0.725,
+    0.6774193548387096,
+    0.8125,
+    0.8571428571428571,
+    0.7142857142857143,
+    0.75,
+    0.42857142857142855,
+    0.6428571428571429,
+    0.5,
+    0.5,
+    0.7058823529411765,
+    0.8518518518518519,
+    0.8,
+    0.8235294117647058,
+    0.8947368421052632,
+    1.0,
+    1.0,
+    1.0,
+    0.75,
+    1.0,
+    0.8666666666666667,
+    0.8421052631578947,
+    1.0,
+    1.0,
+    0.6,
+    0.75,
+    1.0,
+    0.6923076923076923,
+    0.5625,
+    1.0,
+    1.0,
+    0.673469387755102,
+    0.7758620689655172,
+    0.8125,
+    0.23529411764705882,
+    0.8125,
+    0.847457627118644,
+    0.6071428571428571,
+    0.7037037037037037,
+    0.41379310344827586,
+    0.85,
+    0.59375,
+    0.6041666666666666,
+    0.42857142857142855,
+    1.0,
+    0.4074074074074074,
+    0.5217391304347826,
+    0.765625,
+    0.46875,
+    0.0,
+    0.6491228070175439,
+    1.0,
+    0.6538461538461539,
+    0.3888888888888889,
+    0.6056338028169014,
+    0.78125,
+    1.0,
+    1.0,
+    0.6513761467889908,
+    0.6415094339622641,
+    1.0,
+    0.046153846153846156,
+    0.26865671641791045,
+    0.6421052631578947,
+    0.6086956521739131,
+    0.3888888888888889,
+    0.5384615384615384,
+    0.18032786885245902,
+    0.373134328358209,
+    0.3125,
+    0.5052631578947369,
+    0.5486725663716814,
+    0.35514018691588783,
+    0.8679245283018868,
+    0.65,
+    0.6617647058823529,
+    0.5692307692307692,
+    0.0,
+    0.6814159292035398,
+    0.6851851851851852,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "decisions": [
+    {
+      "window": 0,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 1,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 2,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 3,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 4,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 5,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 6,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 7,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 8,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 9,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 10,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 11,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 12,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 13,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 14,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 15,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 16,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 17,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 18,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 19,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 20,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 21,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 22,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 23,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 24,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 25,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 26,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 27,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 28,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 29,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 30,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 31,
+      "action": "alert",
+      "reason": "Drift detected; monitoring persistence or awaiting cost benefit clearance"
+    },
+    {
+      "window": 32,
+      "action": "retrain",
+      "reason": "Label-free alarms persisted for 2 windows with expected benefit $3015.00 > retrain cost $200.00"
+    },
+    {
+      "window": 33,
+      "action": "no_action",
+      "reason": "Cooldown active (0 < 5 windows)"
+    },
+    {
+      "window": 34,
+      "action": "no_action",
+      "reason": "Cooldown active (1 < 5 windows)"
+    },
+    {
+      "window": 35,
+      "action": "no_action",
+      "reason": "Cooldown active (2 < 5 windows)"
+    },
+    {
+      "window": 36,
+      "action": "no_action",
+      "reason": "Cooldown active (3 < 5 windows)"
+    },
+    {
+      "window": 37,
+      "action": "no_action",
+      "reason": "Cooldown active (4 < 5 windows)"
+    },
+    {
+      "window": 38,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 39,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 40,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 41,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 42,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 43,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 44,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 45,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 46,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 47,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 48,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 49,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 50,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 51,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 52,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 53,
+      "action": "alert",
+      "reason": "Drift detected; monitoring persistence or awaiting cost benefit clearance"
+    },
+    {
+      "window": 54,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 55,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 56,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 57,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 58,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 59,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 60,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 61,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 62,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 63,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 64,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 65,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 66,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 67,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 68,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 69,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 70,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 71,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 72,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 73,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 74,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 75,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 76,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 77,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 78,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 79,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 80,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 81,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 82,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 83,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 84,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 85,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 86,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 87,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    },
+    {
+      "window": 88,
+      "action": "no_action",
+      "reason": "All signals nominal; no retrain or alert required"
+    }
+  ],
+  "window_traces": [
+    {
+      "window_index": 0,
+      "signals": {
+        "DataDrift": 0.98783,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11298,
+        "FraudScoreDrift": 0.00209,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5500.0,
+      "pr_auc": 0.9298
+    },
+    {
+      "window_index": 1,
+      "signals": {
+        "DataDrift": 0.49433,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04533,
+        "FraudScoreDrift": 0.00397,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5015.0,
+      "pr_auc": 0.8567
+    },
+    {
+      "window_index": 2,
+      "signals": {
+        "DataDrift": 0.16241,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02582,
+        "FraudScoreDrift": 0.00379,
+        "performance_recall": 0.725
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.9134
+    },
+    {
+      "window_index": 3,
+      "signals": {
+        "DataDrift": 0.11275,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01516,
+        "FraudScoreDrift": 0.01153,
+        "performance_recall": 0.70423
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1005.0,
+      "pr_auc": 0.9817
+    },
+    {
+      "window_index": 4,
+      "signals": {
+        "DataDrift": 0.57793,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01366,
+        "FraudScoreDrift": 0.00583,
+        "performance_recall": 0.72414
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2000.0,
+      "pr_auc": 0.927
+    },
+    {
+      "window_index": 5,
+      "signals": {
+        "DataDrift": 0.44071,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02677,
+        "FraudScoreDrift": 0.00366,
+        "performance_recall": 0.74257
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.7971
+    },
+    {
+      "window_index": 6,
+      "signals": {
+        "DataDrift": 0.71271,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.07061,
+        "FraudScoreDrift": 0.00646,
+        "performance_recall": 0.73913
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2005.0,
+      "pr_auc": 0.6753
+    },
+    {
+      "window_index": 7,
+      "signals": {
+        "DataDrift": 0.80879,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.10794,
+        "FraudScoreDrift": 0.00357,
+        "performance_recall": 0.74684
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2505.0,
+      "pr_auc": 0.8005
+    },
+    {
+      "window_index": 8,
+      "signals": {
+        "DataDrift": 0.48589,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04217,
+        "FraudScoreDrift": 0.00478,
+        "performance_recall": 0.74545
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2500.0,
+      "pr_auc": 0.7256
+    },
+    {
+      "window_index": 9,
+      "signals": {
+        "DataDrift": 0.15875,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02252,
+        "FraudScoreDrift": 0.00213,
+        "performance_recall": 0.69811
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1500.0,
+      "pr_auc": 0.7924
+    },
+    {
+      "window_index": 10,
+      "signals": {
+        "DataDrift": 0.11515,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01731,
+        "FraudScoreDrift": 0.01052,
+        "performance_recall": 0.61224
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2505.0,
+      "pr_auc": 0.8085
+    },
+    {
+      "window_index": 11,
+      "signals": {
+        "DataDrift": 0.58102,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02184,
+        "FraudScoreDrift": 0.00978,
+        "performance_recall": 0.56098
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2005.0,
+      "pr_auc": 0.981
+    },
+    {
+      "window_index": 12,
+      "signals": {
+        "DataDrift": 0.44346,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01882,
+        "FraudScoreDrift": 0.01138,
+        "performance_recall": 0.59259
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2005.0,
+      "pr_auc": 0.9412
+    },
+    {
+      "window_index": 13,
+      "signals": {
+        "DataDrift": 0.71891,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0661,
+        "FraudScoreDrift": 0.0056,
+        "performance_recall": 0.7027
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1510.0,
+      "pr_auc": 0.9125
+    },
+    {
+      "window_index": 14,
+      "signals": {
+        "DataDrift": 0.81157,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11148,
+        "FraudScoreDrift": 0.00478,
+        "performance_recall": 0.7375
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1010.0,
+      "pr_auc": 0.9529
+    },
+    {
+      "window_index": 15,
+      "signals": {
+        "DataDrift": 0.49101,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04219,
+        "FraudScoreDrift": 0.00471,
+        "performance_recall": 0.78161
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 16,
+      "signals": {
+        "DataDrift": 0.16278,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02544,
+        "FraudScoreDrift": 0.00267,
+        "performance_recall": 0.82
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 17,
+      "signals": {
+        "DataDrift": 0.11974,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02434,
+        "FraudScoreDrift": 0.01385,
+        "performance_recall": 0.84884
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 18,
+      "signals": {
+        "DataDrift": 0.58339,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01834,
+        "FraudScoreDrift": 0.00354,
+        "performance_recall": 0.84746
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.76
+    },
+    {
+      "window_index": 19,
+      "signals": {
+        "DataDrift": 0.44553,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02052,
+        "FraudScoreDrift": 0.00999,
+        "performance_recall": 0.87179
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 20,
+      "signals": {
+        "DataDrift": 0.72148,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.07267,
+        "FraudScoreDrift": 0.00534,
+        "performance_recall": 0.88462
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1005.0,
+      "pr_auc": 0.9558
+    },
+    {
+      "window_index": 21,
+      "signals": {
+        "DataDrift": 0.81013,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.1085,
+        "FraudScoreDrift": 0.00058,
+        "performance_recall": 0.91667
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3010.0,
+      "pr_auc": 0.9576
+    },
+    {
+      "window_index": 22,
+      "signals": {
+        "DataDrift": 0.48899,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04309,
+        "FraudScoreDrift": 0.00542,
+        "performance_recall": 0.875
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.9437
+    },
+    {
+      "window_index": 23,
+      "signals": {
+        "DataDrift": 0.16276,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02599,
+        "FraudScoreDrift": 0.0014,
+        "performance_recall": 0.85484
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 24,
+      "signals": {
+        "DataDrift": 0.12217,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01625,
+        "FraudScoreDrift": 0.00527,
+        "performance_recall": 0.86364
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 1005.0,
+      "pr_auc": 0.769
+    },
+    {
+      "window_index": 25,
+      "signals": {
+        "DataDrift": 0.58551,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0147,
+        "FraudScoreDrift": 0.00785,
+        "performance_recall": 0.88889
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 505.0,
+      "pr_auc": 0.7711
+    },
+    {
+      "window_index": 26,
+      "signals": {
+        "DataDrift": 0.44712,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01735,
+        "FraudScoreDrift": 0.00226,
+        "performance_recall": 0.86111
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 27,
+      "signals": {
+        "DataDrift": 0.72099,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06824,
+        "FraudScoreDrift": 0.00576,
+        "performance_recall": 0.85246
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 2005.0,
+      "pr_auc": 0.863
+    },
+    {
+      "window_index": 28,
+      "signals": {
+        "DataDrift": 0.81419,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0972,
+        "FraudScoreDrift": 0.00778,
+        "performance_recall": 0.875
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3500.0,
+      "pr_auc": 0.8827
+    },
+    {
+      "window_index": 29,
+      "signals": {
+        "DataDrift": 0.49426,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04381,
+        "FraudScoreDrift": 0.005,
+        "performance_recall": 0.78788
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 30,
+      "signals": {
+        "DataDrift": 0.16275,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02563,
+        "FraudScoreDrift": 0.00264,
+        "performance_recall": 0.64103
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10.0,
+      "pr_auc": 0.9893
+    },
+    {
+      "window_index": 31,
+      "signals": {
+        "DataDrift": 0.12075,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01963,
+        "FraudScoreDrift": 0.02172,
+        "performance_recall": 0.68421
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": true,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "alert",
+        "reason": "Drift detected; monitoring persistence or awaiting cost benefit clearance"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 8020.0,
+      "pr_auc": 0.8934
+    },
+    {
+      "window_index": 32,
+      "signals": {
+        "DataDrift": 0.58404,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02323,
+        "FraudScoreDrift": 0.02925,
+        "performance_recall": 0.87778
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": true,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "retrain",
+        "reason": "Label-free alarms persisted for 2 windows with expected benefit $3015.00 > retrain cost $200.00"
+      },
+      "model_version": "v1.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 6705.0,
+      "pr_auc": 0.9508
+    },
+    {
+      "window_index": 33,
+      "signals": {
+        "DataDrift": 0.45245,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02545,
+        "FraudScoreDrift": 0.00633,
+        "performance_recall": 0.80435
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Cooldown active (0 < 5 windows)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3005.0,
+      "pr_auc": 0.9937
+    },
+    {
+      "window_index": 34,
+      "signals": {
+        "DataDrift": 0.72309,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.05955,
+        "FraudScoreDrift": 0.00849,
+        "performance_recall": 0.80328
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Cooldown active (1 < 5 windows)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 13000.0,
+      "pr_auc": 0.4232
+    },
+    {
+      "window_index": 35,
+      "signals": {
+        "DataDrift": 0.81539,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.10778,
+        "FraudScoreDrift": 0.00208,
+        "performance_recall": 0.85427
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Cooldown active (2 < 5 windows)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4500.0,
+      "pr_auc": 0.9488
+    },
+    {
+      "window_index": 36,
+      "signals": {
+        "DataDrift": 0.48782,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.05405,
+        "FraudScoreDrift": 0.0056,
+        "performance_recall": 0.78603
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Cooldown active (3 < 5 windows)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4500.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 37,
+      "signals": {
+        "DataDrift": 0.16221,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02493,
+        "FraudScoreDrift": 0.00597,
+        "performance_recall": 0.73756
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "Cooldown active (4 < 5 windows)"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 11005.0,
+      "pr_auc": 0.8699
+    },
+    {
+      "window_index": 38,
+      "signals": {
+        "DataDrift": 0.12423,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02115,
+        "FraudScoreDrift": 0.01212,
+        "performance_recall": 0.81818
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 4000.0,
+      "pr_auc": 0.965
+    },
+    {
+      "window_index": 39,
+      "signals": {
+        "DataDrift": 0.58312,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02007,
+        "FraudScoreDrift": 0.00674,
+        "performance_recall": 0.83406
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 8500.0,
+      "pr_auc": 0.893
+    },
+    {
+      "window_index": 40,
+      "signals": {
+        "DataDrift": 0.44596,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02521,
+        "FraudScoreDrift": 0.00822,
+        "performance_recall": 0.83036
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3005.0,
+      "pr_auc": 0.9613
+    },
+    {
+      "window_index": 41,
+      "signals": {
+        "DataDrift": 0.72143,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06674,
+        "FraudScoreDrift": 0.00179,
+        "performance_recall": 0.89041
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 6500.0,
+      "pr_auc": 0.701
+    },
+    {
+      "window_index": 42,
+      "signals": {
+        "DataDrift": 0.81288,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11329,
+        "FraudScoreDrift": 0.00402,
+        "performance_recall": 0.90521
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 9500.0,
+      "pr_auc": 0.9722
+    },
+    {
+      "window_index": 43,
+      "signals": {
+        "DataDrift": 0.49209,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.05046,
+        "FraudScoreDrift": 0.00449,
+        "performance_recall": 0.82065
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 16005.0,
+      "pr_auc": 0.8818
+    },
+    {
+      "window_index": 44,
+      "signals": {
+        "DataDrift": 0.16352,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02325,
+        "FraudScoreDrift": 0.00609,
+        "performance_recall": 0.81818
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 45,
+      "signals": {
+        "DataDrift": 0.11984,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01691,
+        "FraudScoreDrift": 0.0103,
+        "performance_recall": 0.8439
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 8000.0,
+      "pr_auc": 0.991
+    },
+    {
+      "window_index": 46,
+      "signals": {
+        "DataDrift": 0.58555,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02389,
+        "FraudScoreDrift": 0.01289,
+        "performance_recall": 0.85227
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 11000.0,
+      "pr_auc": 0.9248
+    },
+    {
+      "window_index": 47,
+      "signals": {
+        "DataDrift": 0.44757,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01856,
+        "FraudScoreDrift": 0.01066,
+        "performance_recall": 0.8589
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 7500.0,
+      "pr_auc": 0.9619
+    },
+    {
+      "window_index": 48,
+      "signals": {
+        "DataDrift": 0.72369,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06891,
+        "FraudScoreDrift": 0.00415,
+        "performance_recall": 0.90395
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 8500.0,
+      "pr_auc": 0.9573
+    },
+    {
+      "window_index": 49,
+      "signals": {
+        "DataDrift": 0.81852,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11985,
+        "FraudScoreDrift": 0.00407,
+        "performance_recall": 0.93264
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 23500.0,
+      "pr_auc": 0.7048
+    },
+    {
+      "window_index": 50,
+      "signals": {
+        "DataDrift": 0.49427,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.05182,
+        "FraudScoreDrift": 0.00418,
+        "performance_recall": 0.88166
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10000.0,
+      "pr_auc": 0.9746
+    },
+    {
+      "window_index": 51,
+      "signals": {
+        "DataDrift": 0.16605,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.03292,
+        "FraudScoreDrift": 0.00201,
+        "performance_recall": 0.77315
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 52,
+      "signals": {
+        "DataDrift": 0.12632,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02364,
+        "FraudScoreDrift": 0.01754,
+        "performance_recall": 0.77236
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 9000.0,
+      "pr_auc": 0.9517
+    },
+    {
+      "window_index": 53,
+      "signals": {
+        "DataDrift": 0.58864,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02033,
+        "FraudScoreDrift": 0.02241,
+        "performance_recall": 0.80632
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": true,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "alert",
+        "reason": "Drift detected; monitoring persistence or awaiting cost benefit clearance"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 27515.0,
+      "pr_auc": 0.9648
+    },
+    {
+      "window_index": 54,
+      "signals": {
+        "DataDrift": 0.45285,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02444,
+        "FraudScoreDrift": 0.01657,
+        "performance_recall": 0.78423
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 14000.0,
+      "pr_auc": 0.9615
+    },
+    {
+      "window_index": 55,
+      "signals": {
+        "DataDrift": 0.72555,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06978,
+        "FraudScoreDrift": 0.00553,
+        "performance_recall": 0.77592
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3500.0,
+      "pr_auc": 0.9728
+    },
+    {
+      "window_index": 56,
+      "signals": {
+        "DataDrift": 0.81062,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.10313,
+        "FraudScoreDrift": 0.00256,
+        "performance_recall": 0.82663
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 57,
+      "signals": {
+        "DataDrift": 0.46715,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04885,
+        "FraudScoreDrift": 0.00269,
+        "performance_recall": 0.81879
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 58,
+      "signals": {
+        "DataDrift": 0.18257,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02158,
+        "FraudScoreDrift": 0.00458,
+        "performance_recall": 0.77959
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 19000.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 59,
+      "signals": {
+        "DataDrift": 0.1865,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02081,
+        "FraudScoreDrift": 0.00469,
+        "performance_recall": 0.75648
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 9500.0,
+      "pr_auc": 0.9794
+    },
+    {
+      "window_index": 60,
+      "signals": {
+        "DataDrift": 0.58081,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.022,
+        "FraudScoreDrift": 0.00761,
+        "performance_recall": 0.88208
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 1.0
+    },
+    {
+      "window_index": 61,
+      "signals": {
+        "DataDrift": 0.44442,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02245,
+        "FraudScoreDrift": 0.01194,
+        "performance_recall": 0.96392
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 31005.0,
+      "pr_auc": 0.799
+    },
+    {
+      "window_index": 62,
+      "signals": {
+        "DataDrift": 0.71435,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06748,
+        "FraudScoreDrift": 0.00314,
+        "performance_recall": 1.0
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 24500.0,
+      "pr_auc": 0.9266
+    },
+    {
+      "window_index": 63,
+      "signals": {
+        "DataDrift": 0.81017,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11545,
+        "FraudScoreDrift": 0.00274,
+        "performance_recall": 0.92982
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 17000.0,
+      "pr_auc": 0.9291
+    },
+    {
+      "window_index": 64,
+      "signals": {
+        "DataDrift": 0.48817,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0475,
+        "FraudScoreDrift": 0.00615,
+        "performance_recall": 0.8892
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 22500.0,
+      "pr_auc": 0.9542
+    },
+    {
+      "window_index": 65,
+      "signals": {
+        "DataDrift": 0.16134,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0221,
+        "FraudScoreDrift": 0.00264,
+        "performance_recall": 0.84911
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 33000.0,
+      "pr_auc": 0.9788
+    },
+    {
+      "window_index": 66,
+      "signals": {
+        "DataDrift": 0.12019,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02058,
+        "FraudScoreDrift": 0.00585,
+        "performance_recall": 0.84
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 12005.0,
+      "pr_auc": 0.8893
+    },
+    {
+      "window_index": 67,
+      "signals": {
+        "DataDrift": 0.58254,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01739,
+        "FraudScoreDrift": 0.00775,
+        "performance_recall": 0.82667
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 25000.0,
+      "pr_auc": 0.6999
+    },
+    {
+      "window_index": 68,
+      "signals": {
+        "DataDrift": 0.44577,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01563,
+        "FraudScoreDrift": 0.00641,
+        "performance_recall": 0.84211
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 21000.0,
+      "pr_auc": 0.8642
+    },
+    {
+      "window_index": 69,
+      "signals": {
+        "DataDrift": 0.72051,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06158,
+        "FraudScoreDrift": 0.00523,
+        "performance_recall": 0.8051
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 22000.0,
+      "pr_auc": 0.8479
+    },
+    {
+      "window_index": 70,
+      "signals": {
+        "DataDrift": 0.81059,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.10937,
+        "FraudScoreDrift": 0.00107,
+        "performance_recall": 0.76923
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 23500.0,
+      "pr_auc": 0.9077
+    },
+    {
+      "window_index": 71,
+      "signals": {
+        "DataDrift": 0.49154,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04722,
+        "FraudScoreDrift": 0.0034,
+        "performance_recall": 0.73011
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 25500.0,
+      "pr_auc": 0.9785
+    },
+    {
+      "window_index": 72,
+      "signals": {
+        "DataDrift": 0.16504,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02767,
+        "FraudScoreDrift": 0.00397,
+        "performance_recall": 0.66077
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 34510.0,
+      "pr_auc": 0.8604
+    },
+    {
+      "window_index": 73,
+      "signals": {
+        "DataDrift": 0.12192,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02227,
+        "FraudScoreDrift": 0.00435,
+        "performance_recall": 0.7275
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 3505.0,
+      "pr_auc": 0.8906
+    },
+    {
+      "window_index": 74,
+      "signals": {
+        "DataDrift": 0.58522,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02416,
+        "FraudScoreDrift": 0.00563,
+        "performance_recall": 0.80045
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10505.0,
+      "pr_auc": 0.9515
+    },
+    {
+      "window_index": 75,
+      "signals": {
+        "DataDrift": 0.44512,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.0172,
+        "FraudScoreDrift": 0.00215,
+        "performance_recall": 0.80093
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 11500.0,
+      "pr_auc": 0.9715
+    },
+    {
+      "window_index": 76,
+      "signals": {
+        "DataDrift": 0.71847,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.07095,
+        "FraudScoreDrift": 0.00397,
+        "performance_recall": 0.78972
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 14000.0,
+      "pr_auc": 0.8135
+    },
+    {
+      "window_index": 77,
+      "signals": {
+        "DataDrift": 0.80983,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11027,
+        "FraudScoreDrift": 0.00232,
+        "performance_recall": 0.86035
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 48000.0,
+      "pr_auc": 0.2572
+    },
+    {
+      "window_index": 78,
+      "signals": {
+        "DataDrift": 0.49049,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04543,
+        "FraudScoreDrift": 0.00289,
+        "performance_recall": 0.83286
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 18000.0,
+      "pr_auc": 0.9143
+    },
+    {
+      "window_index": 79,
+      "signals": {
+        "DataDrift": 0.16209,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02796,
+        "FraudScoreDrift": 0.00395,
+        "performance_recall": 0.58772
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 17000.0,
+      "pr_auc": 0.952
+    },
+    {
+      "window_index": 80,
+      "signals": {
+        "DataDrift": 0.11651,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02006,
+        "FraudScoreDrift": 0.00597,
+        "performance_recall": 0.60448
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 81,
+      "signals": {
+        "DataDrift": 0.58114,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01796,
+        "FraudScoreDrift": 0.00577,
+        "performance_recall": 0.68889
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 82,
+      "signals": {
+        "DataDrift": 0.44803,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01727,
+        "FraudScoreDrift": 0.00507,
+        "performance_recall": 0.63351
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 83,
+      "signals": {
+        "DataDrift": 0.71908,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.06368,
+        "FraudScoreDrift": 0.00284,
+        "performance_recall": 0.5836
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 84,
+      "signals": {
+        "DataDrift": 0.81159,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.11034,
+        "FraudScoreDrift": 0.00381,
+        "performance_recall": 0.8371
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 85,
+      "signals": {
+        "DataDrift": 0.49091,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.04604,
+        "FraudScoreDrift": 0.006,
+        "performance_recall": 1.0
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 86,
+      "signals": {
+        "DataDrift": 0.16156,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.02127,
+        "FraudScoreDrift": 0.00446,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 5.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 87,
+      "signals": {
+        "DataDrift": 0.12024,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01325,
+        "FraudScoreDrift": 0.00802,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 0.0,
+      "pr_auc": 0.0
+    },
+    {
+      "window_index": 88,
+      "signals": {
+        "DataDrift": 0.58245,
+        "UnseenCategory": 0.0,
+        "IsolationOutlier": 0.01658,
+        "FraudScoreDrift": 0.00315,
+        "performance_recall": null
+      },
+      "alarms": {
+        "DataDrift": false,
+        "UnseenCategory": false,
+        "IsolationOutlier": false,
+        "FraudScoreDrift": false,
+        "performance": false
+      },
+      "policy_decision": {
+        "action": "no_action",
+        "reason": "All signals nominal; no retrain or alert required"
+      },
+      "model_version": "v2.0",
+      "model_state": "CHAMPION",
+      "per_window_cost": 10.0,
+      "pr_auc": 0.0
+    }
+  ]
+}

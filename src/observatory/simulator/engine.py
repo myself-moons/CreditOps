@@ -334,12 +334,12 @@ class ReplayEngine:
                 })
 
             # Record per-window trace
-            sig_dict = {name: round(float(r.metric_value), 5) for name, r in det_results.items()}
-            if perf_result:
-                sig_dict["performance_recall"] = round(float(perf_result.metric_value), 5)
-            alm_dict = {name: bool(r.is_alarm) for name, r in det_results.items()}
-            if perf_result:
-                alm_dict["performance"] = bool(perf_result.is_alarm)
+            sig_dict = {name: round(float(r.score), 5) for name, r in det_results.items() if hasattr(r, "score") and r.score is not None}
+            if perf_result and hasattr(perf_result, "score") and perf_result.score is not None:
+                sig_dict["performance_recall"] = round(float(perf_result.score), 5)
+            alm_dict = {name: bool(r.alarm) for name, r in det_results.items() if hasattr(r, "alarm")}
+            if perf_result and hasattr(perf_result, "alarm"):
+                alm_dict["performance"] = bool(perf_result.alarm)
 
             window_traces.append({
                 "window_index": t,
@@ -623,14 +623,13 @@ class ReplayEngine:
                             metrics=gate_metrics,
                         )
                         promoted_versions.append(cand_version)
+                        retrain_windows.append(t)
                         shadow_champion = current_champion
                         shadow_threshold = current_decision_threshold
                         shadow_version = current_champion_version
                         current_champion = challenger
                         current_decision_threshold = challenger_threshold
                         current_champion_version = cand_version
-                        windows_since_last_retrain = 0
-                        retrain_windows.append(t)
 
                         # Set up shadow rollback tracking for next M windows
                         rollback_tracker = {
@@ -654,6 +653,9 @@ class ReplayEngine:
                         )
                         rejected_versions.append(cand_version)
                         # Current champion continues untouched; retrain cost is paid
+
+                    # Enforce cooldown on all retrain attempts (both promotions and rejections)
+                    windows_since_last_retrain = 0
             else:
                 windows_since_last_retrain += 1
 

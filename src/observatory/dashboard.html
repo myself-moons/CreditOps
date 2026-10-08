@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CreditOps v2 — Continuous MLOps Drift Observatory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Chart.js and annotation plugin from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0a0e17;
+      --bg-card: rgba(18, 26, 43, 0.75);
+      --bg-card-hover: rgba(26, 38, 64, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(56, 189, 248, 0.3);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-blue: #3b82f6;
+      --accent-purple: #a855f7;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --glass-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 1.5rem 2.5rem;
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      background: rgba(10, 14, 23, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #fff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .header-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border-color);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .badge-live {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: var(--accent-emerald);
+    }
+
+    .badge-live::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 2.5rem;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(14, 20, 33, 0.6);
+      backdrop-filter: blur(8px);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.88rem;
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      color: #fff;
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.15);
+    }
+
+    main {
+      padding: 2rem 2.5rem;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards & Layout */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--glass-glow);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-card {
+      padding: 1.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #fff;
+    }
+
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: rgba(14, 22, 38, 0.9);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+    }
+
+    .tag-pass {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+
+    .tag-fail {
+      background: rgba(244, 63, 94, 0.15);
+      color: #fb7185;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+
+    .tag-badge {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+    }
+
+    /* Filters / Form Controls */
+    .controls-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    select, input, button {
+      font-family: inherit;
+    }
+
+    .select-control {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .select-control:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s, box-shadow 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+    }
+
+    .btn:hover {
+      opacity: 0.92;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: none;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+    }
+
+    .btn-danger:hover {
+      box-shadow: 0 0 16px rgba(244, 63, 94, 0.35);
+    }
+
+    /* Chart Container */
+    .chart-box {
+      position: relative;
+      width: 100%;
+      height: 380px;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #111827;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.65rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">C</div>
+      <div>
+        <div class="brand-title">CreditOps Drift Observatory</div>
+        <div class="brand-subtitle">Continuous MLOps & Governed Deployment V2</div>
+      </div>
+    </div>
+    <div class="header-badges">
+      <span class="badge" id="backendBadge">Backend: Loading...</span>
+      <span class="badge badge-live" id="systemStatusBadge">System: Nominal</span>
+    </div>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">📊 Overview & Criteria</button>
+    <button class="tab-btn" onclick="switchTab('explorer')">🔍 Scenario Explorer</button>
+    <button class="tab-btn" onclick="switchTab('comparison')">⚖ Policy Comparison</button>
+    <button class="tab-btn" onclick="switchTab('governance')">🛡 Governance & Audit</button>
+    <button class="tab-btn" onclick="switchTab('live')">⚡ Live Predictions</button>
+  </nav>
+
+  <main>
+    <!-- TAB 1: OVERVIEW -->
+    <section id="pane-overview" class="tab-pane active">
+      <div class="grid-4" id="kpiCards">
+        <div class="card stat-card">
+          <div class="stat-label">Evaluation Runs</div>
+          <div class="stat-value" id="kpiTotalRuns">—</div>
+          <div class="stat-sub">Across 4 scenarios & 6 policies</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Avg Run Latency</div>
+          <div class="stat-value" id="kpiAvgRunSec">—</div>
+          <div class="stat-sub">Seconds per 89-window run</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Stream Throughput</div>
+          <div class="stat-value" id="kpiWinPerSec">—</div>
+          <div class="stat-sub">Windows / second evaluated</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Detector Throughput</div>
+          <div class="stat-value" id="kpiRowsPerSec">—</div>
+          <div class="stat-sub">Detector rows / second</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-title">
+          <span>Acceptance Protocol Verification</span>
+          <span class="badge" id="criteriaOverallBadge">Verifying...</span>
+        </div>
+        <div class="table-container">
+          <table id="criteriaTable">
+            <thead>
+              <tr>
+                <th>Criterion ID</th>
+                <th>Protocol Description</th>
+                <th>Target Threshold</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="4" style="text-align:center;">Loading acceptance criteria...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Aggregate Policy Results (Mean ± Std over Seeds 1 & 2)</span>
+          <span class="tag-badge">Onset Window = 30</span>
+        </div>
+        <div class="table-container">
+          <table id="summaryTable">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Policy</th>
+                <th>Retrains</th>
+                <th>Delay</th>
+                <th>False Alarms</th>
+                <th>Loss Avoided ($)</th>
+                <th>Retrain Cost ($)</th>
+                <th>Net Benefit ($)</th>
+                <th>Post PR-AUC</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="9" style="text-align:center;">Loading evaluation results...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: SCENARIO EXPLORER -->
+    <section id="pane-explorer" class="tab-pane">
+      <div class="controls-bar">
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Scenario</label>
+          <select id="explorerScenario" class="select-control" onchange="loadExplorerTrace()">
+            <option value="novel_pattern">novel_pattern (Unseen Category)</option>
+            <option value="covariate_shift">covariate_shift (Amounts & Distance)</option>
+            <option value="fraud_rate_shift">fraud_rate_shift (Prevalence surge)</option>
+            <option value="control">control (Stationary baseline)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Policy</label>
+          <select id="explorerPolicy" class="select-control" onchange="loadExplorerTrace()">
+            <option value="AdaptivePolicy(governed)">AdaptivePolicy (governed)</option>
+            <option value="AdaptivePolicy(naive + recalibrated threshold)">AdaptivePolicy (naive + recalibrated threshold)</option>
+            <option value="AdaptivePolicy(naive)">AdaptivePolicy (naive)</option>
+            <option value="ThresholdPolicy(naive)">ThresholdPolicy (naive)</option>
+            <option value="FixedSchedule(naive)">FixedSchedule (naive)</option>
+            <option value="NeverRetrain">NeverRetrain (static)</option>
+          </select>
+        </div>
+        <div style="margin-left:auto; display:flex; gap:0.5rem; align-items:flex-end;">
+          <button class="btn btn-secondary" onclick="openReplayModal()">⚡ Replay Trace</button>
+        </div>
+      </div>
+
+      <div class="grid-4" id="explorerMetricsBar">
+        <div class="card stat-card">
+          <div class="stat-label">Net Financial Benefit</div>
+          <div class="stat-value" id="traceNetBenefit">$0.00</div>
+          <div class="stat-sub">vs NeverRetrain baseline</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Detection Delay</div>
+          <div class="stat-value" id="traceDelay">—</div>
+          <div class="stat-sub">Windows after onset (t=30)</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Retrains Triggered</div>
+          <div class="stat-value" id="traceRetrains">0</div>
+          <div class="stat-sub" id="traceModelVersions">Model: v1.0</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Total Realised Cost</div>
+          <div class="stat-value" id="traceTotalCost">$0.00</div>
+          <div class="stat-sub">FN + FP + Retrain + Review</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-title">
+          <span>Drift Signals, Detection Alarms & Performance Timeline</span>
+          <span style="font-size:0.8rem; color:var(--text-muted);">Red dashed vertical = Drift Onset (Window 30)</span>
+        </div>
+        <div class="chart-box">
+          <canvas id="explorerSignalChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Per-Window Realised Financial Cost ($)</div>
+        <div class="chart-box" style="height: 240px;">
+          <canvas id="explorerCostChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: POLICY COMPARISON -->
+    <section id="pane-comparison" class="tab-pane">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Net Benefit by Scenario & Policy ($)</div>
+          <div class="chart-box">
+            <canvas id="comparisonNetBenefitChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Retrain Count by Scenario & Policy</div>
+          <div class="chart-box">
+            <canvas id="comparisonRetrainChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Key Architectural Insights: Recalibration vs Governance</div>
+        <div style="font-size:0.9rem; color:var(--text-muted); line-height:1.7;">
+          <p style="margin-bottom:0.75rem;">
+            <strong>1. Recalibration Ablation Isolation:</strong> Comparing <code class="mono">AdaptivePolicy(naive)</code> vs <code class="mono">AdaptivePolicy(naive + recalibrated)</code> demonstrates that threshold recalibration accounts for a major portion of recall recovery during prevalence surges (<code class="mono">fraud_rate_shift</code>).
+          </p>
+          <p style="margin-bottom:0.75rem;">
+            <strong>2. Holdout Gating & Rollback Protection:</strong> <code class="mono">AdaptivePolicy(governed)</code> prevents negative transfer when a challenger trained on biased covariate shift degrades generalisation, gating deployment and maintaining champion integrity without financial harm.
+          </p>
+          <p>
+            <strong>3. False Alarm Suppression in Control:</strong> Persistent alarm filtering ($N=2$) and multi-detector consensus ensure 0 false retrains and $\le 1$ false alarm across stationary periods, protecting against unnecessary compute and review expenditure.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: GOVERNANCE & AUDIT -->
+    <section id="pane-governance" class="tab-pane">
+      <div class="controls-bar" style="justify-content: space-between;">
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-danger" onclick="openRollbackModal()">↺ Emergency Rollback (Risk Owner)</button>
+          <button class="btn btn-secondary" onclick="loadGovernanceData()">↻ Refresh Audit Trail</button>
+        </div>
+        <span class="badge" id="registryActiveModelBadge">Champion: v1.0</span>
+      </div>
+
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-title">Model Version Registry & Governance State</div>
+        <div class="table-container">
+          <table id="modelsTable">
+            <thead>
+              <tr>
+                <th>Version</th>
+                <th>State</th>
+                <th>Decision Threshold</th>
+                <th>Trained At / Windows</th>
+                <th>Data Hash</th>
+                <th>Promotion Reason / Margin</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="6" style="text-align:center;">Loading model versions...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Immutable Audit Trail (LogStore)</div>
+        <div class="table-container">
+          <table id="auditTable">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Event Type</th>
+                <th>Actor Role</th>
+                <th>Version</th>
+                <th>Reason / Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="5" style="text-align:center;">Loading audit trail...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: LIVE PREDICTIONS -->
+    <section id="pane-live" class="tab-pane">
+      <div class="controls-bar">
+        <button class="btn" onclick="sendTestPrediction()">⚡ Send Live Prediction Test</button>
+        <button class="btn btn-secondary" onclick="loadLiveData()">↻ Refresh Live Feed</button>
+        <div style="margin-left:auto;">
+          <span class="badge" id="liveCountBadge">0 predictions</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-title">Recent Production Predictions (PII-Stripped & Hashed)</div>
+        <div class="table-container">
+          <table id="liveTable">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Fraud Probability</th>
+                <th>Decision</th>
+                <th>Model</th>
+                <th>Latency (ms)</th>
+                <th>Cardholder Hash</th>
+                <th>Derived Key Features</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="7" style="text-align:center;">No live predictions recorded yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ROLLBACK MODAL -->
+  <div class="modal-backdrop" id="rollbackModal">
+    <div class="modal-card">
+      <div class="modal-title">Trigger Model Rollback</div>
+      <div class="modal-desc">Authorized for Risk Owners only. Reverts active production champion and records an immutable audit entry.</div>
+      <div class="form-group">
+        <label class="form-label">Risk Owner API Key (X-API-Key)</label>
+        <input type="password" id="rollbackApiKey" class="form-input" placeholder="e.g. risk_owner_key_123">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Target Model Version</label>
+        <input type="text" id="rollbackTarget" class="form-input" value="v1.0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Justification / Audit Reason</label>
+        <input type="text" id="rollbackReason" class="form-input" value="Performance degradation observed post-deployment">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeRollbackModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="submitRollback()">Confirm Rollback</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPLAY MODAL -->
+  <div class="modal-backdrop" id="replayModal">
+    <div class="modal-card">
+      <div class="modal-title">Replay Simulation Trace</div>
+      <div class="modal-desc">Authorized for ML Engineers only. Queries precomputed evaluation traces and logs engineer activity.</div>
+      <div class="form-group">
+        <label class="form-label">ML Engineer API Key (X-API-Key)</label>
+        <input type="password" id="replayApiKey" class="form-input" placeholder="e.g. ml_engineer_key_456">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Scenario</label>
+        <select id="replayScenarioSelect" class="form-input">
+          <option value="novel_pattern">novel_pattern</option>
+          <option value="covariate_shift">covariate_shift</option>
+          <option value="fraud_rate_shift">fraud_rate_shift</option>
+          <option value="control">control</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Policy</label>
+        <select id="replayPolicySelect" class="form-input">
+          <option value="AdaptivePolicy(governed)">AdaptivePolicy(governed)</option>
+          <option value="AdaptivePolicy(naive + recalibrated threshold)">AdaptivePolicy(naive + recalibrated threshold)</option>
+          <option value="AdaptivePolicy(naive)">AdaptivePolicy(naive)</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeReplayModal()">Cancel</button>
+        <button class="btn" onclick="submitReplay()">Fetch & Log Replay</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('pane-' + tabId).classList.add('active');
+
+      if (tabId === 'explorer' && !window.explorerChartRendered) {
+        loadExplorerTrace();
+      } else if (tabId === 'comparison' && !window.comparisonChartsRendered) {
+        renderComparisonCharts();
+      } else if (tabId === 'governance') {
+        loadGovernanceData();
+      } else if (tabId === 'live') {
+        loadLiveData();
+      }
+    }
+
+    // Chart instances
+    let signalChart = null;
+    let costChart = null;
+    let netBenefitChart = null;
+    let retrainChart = null;
+
+    // Load initial data
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSummary();
+      loadGovernanceData();
+      loadLiveData();
+    });
+
+    async function loadSummary() {
+      try {
+        const res = await fetch('/observatory/api/summary');
+        const data = await res.json();
+
+        // Update KPIs
+        if (data.scalability) {
+          document.getElementById('kpiAvgRunSec').innerText = data.scalability.seconds_per_run_avg.toFixed(2) + 's';
+          document.getElementById('kpiWinPerSec').innerText = data.scalability.windows_per_second.toFixed(1) + '/s';
+          document.getElementById('kpiRowsPerSec').innerText = (data.scalability.detector_rows_per_second / 1000).toFixed(1) + 'k/s';
+        }
+        if (data.metadata) {
+          document.getElementById('kpiTotalRuns').innerText = data.metadata.total_runs || 48;
+        }
+
+        // Criteria table
+        const critBody = document.querySelector('#criteriaTable tbody');
+        critBody.innerHTML = '';
+        let allPassed = true;
+        if (data.acceptance_criteria) {
+          for (const [key, item] of Object.entries(data.acceptance_criteria)) {
+            const pass = item.passed;
+            if (!pass) allPassed = false;
+            critBody.innerHTML += `
+              <tr>
+                <td class="mono">${key}</td>
+                <td>${item.description}</td>
+                <td class="mono">${item.target}</td>
+                <td><span class="${pass ? 'tag-pass' : 'tag-fail'}">${pass ? 'PASSED' : 'FAILED'}</span></td>
+              </tr>
+            `;
+          }
+        }
+        const critBadge = document.getElementById('criteriaOverallBadge');
+        critBadge.className = 'badge ' + (allPassed ? 'tag-pass' : 'tag-fail');
+        critBadge.innerText = allPassed ? 'ALL CRITERIA PASSED' : 'SOME CRITERIA FAILED';
+
+        // Summary table
+        const sumBody = document.querySelector('#summaryTable tbody');
+        sumBody.innerHTML = '';
+        if (data.aggregated_results && data.aggregated_results.length > 0) {
+          data.aggregated_results.forEach(r => {
+            const delayStr = r.detection_delay_mean !== null ? `${r.detection_delay_mean.toFixed(1)} ± ${r.detection_delay_std.toFixed(1)}` : '—';
+            sumBody.innerHTML += `
+              <tr>
+                <td><strong>${r.scenario}</strong></td>
+                <td>${r.policy}</td>
+                <td class="mono">${r.n_retrains_mean.toFixed(1)} ± ${r.n_retrains_std.toFixed(1)}</td>
+                <td class="mono">${delayStr}</td>
+                <td class="mono">${r.false_alarms_mean.toFixed(1)} ± ${r.false_alarms_std.toFixed(1)}</td>
+                <td class="mono" style="color:#34d399;">$${r.loss_avoided_mean.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+                <td class="mono" style="color:#f87171;">$${r.retrain_cost_mean.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+                <td class="mono" style="font-weight:700; color:${r.net_benefit_mean >= 0 ? '#34d399' : '#f87171'};">
+                  $${r.net_benefit_mean.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}
+                </td>
+                <td class="mono">${r.mean_pr_auc_mean.toFixed(4)}</td>
+              </tr>
+            `;
+          });
+        }
+      } catch (err) {
+        console.error('Failed loading summary:', err);
+      }
+    }
+
+    async function loadExplorerTrace() {
+      const sc = document.getElementById('explorerScenario').value;
+      const pol = document.getElementById('explorerPolicy').value;
+
+      try {
+        const res = await fetch(`/observatory/api/trace/${sc}/${encodeURIComponent(pol)}`);
+        const data = await res.json();
+
+        // Update cards
+        document.getElementById('traceNetBenefit').innerText = '$' + (data.net_benefit || 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+        document.getElementById('traceDelay').innerText = data.detection_delay !== null ? `${data.detection_delay} windows` : '—';
+        document.getElementById('traceRetrains').innerText = data.n_retrains || 0;
+        document.getElementById('traceTotalCost').innerText = '$' + (data.total_cost || 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+
+        const traces = data.window_traces || [];
+        const labels = traces.map(t => `W${t.window_index}`);
+        const dataDrift = traces.map(t => (t.signals && t.signals.data_drift) || 0);
+        const novelty = traces.map(t => (t.signals && (t.signals.novel_pattern || t.signals.unseen_category)) || 0);
+        const recall = traces.map(t => (t.signals && t.signals.performance_recall) || 0);
+        const prAuc = traces.map(t => t.pr_auc || 0);
+        const costs = traces.map(t => t.per_window_cost || 0);
+
+        // Render Signals Chart
+        const ctxSig = document.getElementById('explorerSignalChart').getContext('2d');
+        if (signalChart) signalChart.destroy();
+
+        signalChart = new Chart(ctxSig, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Data Drift (PSI)',
+                data: dataDrift,
+                borderColor: '#38bdf8',
+                backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                borderWidth: 2,
+                pointRadius: 1,
+                tension: 0.2,
+              },
+              {
+                label: 'Novelty / Unseen Score',
+                data: novelty,
+                borderColor: '#a855f7',
+                borderWidth: 2,
+                pointRadius: 1,
+                tension: 0.2,
+              },
+              {
+                label: 'Delayed Recall',
+                data: recall,
+                borderColor: '#10b981',
+                borderWidth: 2,
+                pointRadius: 1,
+                tension: 0.2,
+              },
+              {
+                label: 'Window PR-AUC',
+                data: prAuc,
+                borderColor: '#f59e0b',
+                borderWidth: 2,
+                borderDash: [4, 4],
+                pointRadius: 1,
+                tension: 0.2,
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', maxTicksLimit: 15 } },
+              y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+            },
+            plugins: {
+              legend: { labels: { color: '#f1f5f9' } }
+            }
+          }
+        });
+
+        // Render Cost Chart
+        const ctxCost = document.getElementById('explorerCostChart').getContext('2d');
+        if (costChart) costChart.destroy();
+
+        costChart = new Chart(ctxCost, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Realised Cost ($)',
+              data: costs,
+              backgroundColor: 'rgba(244, 63, 94, 0.65)',
+              borderColor: '#f43f5e',
+              borderWidth: 1,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', maxTicksLimit: 15 } },
+              y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+
+        window.explorerChartRendered = true;
+      } catch (err) {
+        console.error('Failed loading trace:', err);
+      }
+    }
+
+    async function renderComparisonCharts() {
+      try {
+        const res = await fetch('/observatory/api/summary');
+        const data = await res.json();
+        const results = data.aggregated_results || [];
+
+        const scenarios = ['control', 'covariate_shift', 'fraud_rate_shift', 'novel_pattern'];
+        const policies = [
+          'NeverRetrain',
+          'FixedSchedule(naive)',
+          'ThresholdPolicy(naive)',
+          'AdaptivePolicy(naive)',
+          'AdaptivePolicy(naive + recalibrated threshold)',
+          'AdaptivePolicy(governed)',
+        ];
+
+        const colors = ['#64748b', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6', '#10b981'];
+
+        // Build datasets for Net Benefit
+        const nbDatasets = policies.map((pol, idx) => {
+          const vals = scenarios.map(sc => {
+            const match = results.find(r => r.scenario === sc && r.policy === pol);
+            return match ? match.net_benefit_mean : (pol === 'NeverRetrain' ? 0 : -200);
+          });
+          return {
+            label: pol,
+            data: vals,
+            backgroundColor: colors[idx % colors.length],
+            borderRadius: 4,
+          };
+        });
+
+        const ctxNB = document.getElementById('comparisonNetBenefitChart').getContext('2d');
+        if (netBenefitChart) netBenefitChart.destroy();
+        netBenefitChart = new Chart(ctxNB, {
+          type: 'bar',
+          data: { labels: scenarios, datasets: nbDatasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+              y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+            },
+            plugins: { legend: { labels: { color: '#f1f5f9', font: { size: 10 } } } }
+          }
+        });
+
+        // Build datasets for Retrain Count
+        const retrainDatasets = policies.map((pol, idx) => {
+          const vals = scenarios.map(sc => {
+            const match = results.find(r => r.scenario === sc && r.policy === pol);
+            return match ? match.n_retrains_mean : (pol === 'FixedSchedule(naive)' ? 4 : 0);
+          });
+          return {
+            label: pol,
+            data: vals,
+            backgroundColor: colors[idx % colors.length],
+            borderRadius: 4,
+          };
+        });
+
+        const ctxRet = document.getElementById('comparisonRetrainChart').getContext('2d');
+        if (retrainChart) retrainChart.destroy();
+        retrainChart = new Chart(ctxRet, {
+          type: 'bar',
+          data: { labels: scenarios, datasets: retrainDatasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+              y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', stepSize: 1 } }
+            },
+            plugins: { legend: { labels: { color: '#f1f5f9', font: { size: 10 } } } }
+          }
+        });
+
+        window.comparisonChartsRendered = true;
+      } catch (err) {
+        console.error('Failed rendering comparison charts:', err);
+      }
+    }
+
+    async function loadGovernanceData() {
+      try {
+        const [modRes, audRes] = await Promise.all([
+          fetch('/observatory/api/models'),
+          fetch('/observatory/api/audit')
+        ]);
+        const models = await modRes.json();
+        const audit = await audRes.json();
+
+        // Models
+        const modBody = document.querySelector('#modelsTable tbody');
+        modBody.innerHTML = '';
+        if (models && models.length > 0) {
+          models.forEach(m => {
+            modBody.innerHTML += `
+              <tr>
+                <td class="mono" style="font-weight:700;">${m.version || 'v1.0'}</td>
+                <td><span class="tag-badge">${m.state || 'CHAMPION'}</span></td>
+                <td class="mono">${m.threshold ? m.threshold.toFixed(4) : '0.9700'}</td>
+                <td class="mono">W${m.created_window || 0}</td>
+                <td class="mono" style="font-size:0.75rem;">${(m.data_hash || '').slice(0, 24)}...</td>
+                <td>${m.reason || 'Nominal production model'}</td>
+              </tr>
+            `;
+          });
+          document.getElementById('registryActiveModelBadge').innerText = 'Champion: ' + (models[models.length-1].version || 'v1.0');
+        }
+
+        // Audit
+        const audBody = document.querySelector('#auditTable tbody');
+        audBody.innerHTML = '';
+        if (audit && audit.length > 0) {
+          audit.slice(-50).reverse().forEach(a => {
+            audBody.innerHTML += `
+              <tr>
+                <td class="mono" style="font-size:0.75rem;">${(a.timestamp || '').slice(0, 19)}</td>
+                <td><span class="tag-badge">${a.event_type || 'DECISION'}</span></td>
+                <td class="mono">${a.role || 'system'}</td>
+                <td class="mono">${a.version || '—'}</td>
+                <td>${a.reason || JSON.stringify(a.details || {})}</td>
+              </tr>
+            `;
+          });
+        }
+      } catch (err) {
+        console.error('Failed loading governance data:', err);
+      }
+    }
+
+    async function loadLiveData() {
+      try {
+        const res = await fetch('/observatory/api/live');
+        const data = await res.json();
+
+        document.getElementById('backendBadge').innerText = 'Backend: ' + (data.backend || 'LogStore');
+        document.getElementById('liveCountBadge').innerText = (data.total_logged_predictions || 0) + ' predictions';
+
+        const liveBody = document.querySelector('#liveTable tbody');
+        liveBody.innerHTML = '';
+        const recs = data.recent_predictions || [];
+        if (recs.length > 0) {
+          recs.forEach(p => {
+            liveBody.innerHTML += `
+              <tr>
+                <td class="mono" style="font-size:0.75rem;">${(p.timestamp || '').slice(0, 19)}</td>
+                <td class="mono" style="font-weight:700; color:${p.score > 0.5 ? '#f43f5e' : '#34d399'};">${(p.score || 0).toFixed(4)}</td>
+                <td><span class="${p.decision === 'fraud' ? 'tag-fail' : 'tag-pass'}">${p.decision}</span></td>
+                <td class="mono">${p.model_version || 'v1.0'}</td>
+                <td class="mono">${(p.latency_ms || 0).toFixed(1)}</td>
+                <td class="mono">${p.id_hash || p.customer_id_hash || 'anon'}</td>
+                <td class="mono" style="font-size:0.75rem;">${JSON.stringify(p.features || {}).slice(0, 36)}...</td>
+              </tr>
+            `;
+          });
+        }
+      } catch (err) {
+        console.error('Failed loading live data:', err);
+      }
+    }
+
+    async function sendTestPrediction() {
+      try {
+        const payload = {
+          trans_date_trans_time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          category: "grocery_pos",
+          amt: 42.50,
+          gender: "M",
+          dob: "1988-04-12",
+          lat: 36.1,
+          long: -115.2,
+          city_pop: 50000,
+          merch_lat: 36.12,
+          merch_long: -115.21
+        };
+        const res = await fetch('/predict', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const out = await res.json();
+        alert(`Prediction Response: ${out.decision.toUpperCase()} (Score: ${out.fraud_probability}) - Logged to LogStore.`);
+        loadLiveData();
+      } catch (err) {
+        alert('Prediction request failed: ' + err);
+      }
+    }
+
+    // Modals
+    function openRollbackModal() { document.getElementById('rollbackModal').classList.add('open'); }
+    function closeRollbackModal() { document.getElementById('rollbackModal').classList.remove('open'); }
+    function openReplayModal() { document.getElementById('replayModal').classList.add('open'); }
+    function closeReplayModal() { document.getElementById('replayModal').classList.remove('open'); }
+
+    async function submitRollback() {
+      const apiKey = document.getElementById('rollbackApiKey').value;
+      const target = document.getElementById('rollbackTarget').value;
+      const reason = document.getElementById('rollbackReason').value;
+
+      try {
+        const res = await fetch('/observatory/api/rollback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': apiKey,
+          },
+          body: JSON.stringify({ target_version: target, reason: reason })
+        });
+        const out = await res.json();
+        if (res.ok) {
+          alert('Rollback Successful: ' + out.message);
+          closeRollbackModal();
+          loadGovernanceData();
+        } else {
+          alert(`Error ${res.status}: ${out.detail || 'Authorization failed'}`);
+        }
+      } catch (err) {
+        alert('Network error: ' + err);
+      }
+    }
+
+    async function submitReplay() {
+      const apiKey = document.getElementById('replayApiKey').value;
+      const sc = document.getElementById('replayScenarioSelect').value;
+      const pol = document.getElementById('replayPolicySelect').value;
+
+      try {
+        const res = await fetch('/observatory/api/replay', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': apiKey,
+          },
+          body: JSON.stringify({ scenario: sc, policy: pol })
+        });
+        const out = await res.json();
+        if (res.ok) {
+          alert(`Trace Replay logged for ML Engineer. Loaded ${out.window_traces ? out.window_traces.length : 0} windows.`);
+          closeReplayModal();
+          document.getElementById('explorerScenario').value = sc;
+          document.getElementById('explorerPolicy').value = pol;
+          loadExplorerTrace();
+          loadGovernanceData();
+        } else {
+          alert(`Error ${res.status}: ${out.detail || 'Authorization failed'}`);
+        }
+      } catch (err) {
+        alert('Network error: ' + err);
+      }
+    }
+  </script>
+</body>
+</html>
