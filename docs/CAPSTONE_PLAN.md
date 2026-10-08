@@ -122,15 +122,19 @@ Tests: All 49 Observatory tests passing ✅ | V1 suite: 49 passed, 1 failed + 3 
 ---
 
 ## Phase 5 — Evaluation Runner + Dashboard + Dockerfile + CI
-**Status: ⬜ NOT STARTED**
+**Status: ✅ COMPLETE**
 
-Files to create:
-- `experiments/run_all.py`
-- `docs/evaluation_protocol.md` (written BEFORE experiments)
-- `src/observatory/dashboard.html`
-- Updated `Dockerfile`
-- `.github/workflows/ci.yml`
-- `docs/model_card.md`
+Files created/updated:
+- `experiments/run_all.py`: Evaluation runner executing the frozen `eval-v1` suite across 4 scenarios $\times$ 6 policies $\times$ 2 seeds (48 runs total). Features progress tracking, run caching/resume capability, and window-level JSON trace generation.
+- `docs/results_summary.md`: Consolidated Phase 5 evaluation summary with mean $\pm$ std across seeds 1 and 2, hypothesis confirmations, and pre-registered acceptance criteria verification (AC-1 through AC-5 all passed).
+- `src/observatory/dashboard.html`: Complete CreditOps v2 Observatory web console with KPI cards, acceptance criteria status, interactive scenario explorer, policy comparison charts, governance & audit trail, and live simulation feeds.
+- `src/observatory/api.py`: REST API exposing summary metrics, run traces, live status, model registry, audit trails, and role-based actions (`/rollback`, `/replay`).
+- `Dockerfile`: Production multi-stage Docker build with dynamic `${PORT:-8000}` port binding, python-dotenv support, and `.dockerignore`.
+- `.github/workflows/ci.yml`: Automated CI workflow executing security dependency audit (`pip-audit`) and test suite (`pytest -v`) under SQLite isolation.
+- `docs/model_card.md`: Standard model card documenting champion models, operating metrics, governance gates, and synthetic data disclaimers.
+- `scripts/seed_demo.py`: Fully reproducible demo seed script populating live database (`FirebaseLogStore` or `SQLiteLogStore`) from real frozen evaluation traces with provenance hashes.
+
+Test Status: All 119 tests passing ✅ (49 V1 unit & integration tests + 70 Observatory capstone tests). All acceptance criteria verified.
 
 ---
 

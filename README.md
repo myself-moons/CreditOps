@@ -314,37 +314,72 @@ Any variation reported is simulation-internal, not real-world concept drift.
 
 ---
 
-## Capstone Extension: CreditOps Observatory & Governance Console
+## Capstone Extension: CreditOps v2 Continuous Drift Observatory & Governance Platform
 
-The CreditOps Observatory extends the pipeline with real-time stream drift injection, multi-detector monitoring, governed retraining policies, shadow validation, automated rollbacks, and interactive dashboard telemetry.
+CreditOps v2 extends the static production system with a continuous MLOps evaluation platform. It simulates real-time transaction streaming, tests multi-detector drift alarms, evaluates adaptive retraining policies, and enforces strict governance gates (holdout validation, threshold recalibration, shadow validation, and automated rollback).
 
-### Core Architecture & Endpoints
-- **Observatory Console (UI)**: `http://localhost:8000/observatory/` (and integrated within `/dashboard`)
+### Key Empirical Results (Frozen `eval-v1` Protocol across 48 Runs)
+
+| Scenario | Governed Adaptive Net Benefit ($) | Fixed Schedule Churn ($) | Governance Protection |
+| :--- | :---: | :---: | :--- |
+| **`control`** (Stationary) | **$0.00** (0 false retrains) | **-$113,620.00** (5 unnecessary retrains) | **AC-1 Passed**: 0 false alarms, 0 churn |
+| **`covariate_shift`** (Spending shift) | **+$39,785.00** (8 retrains) | **-$51,227.50** (12 windows delay) | Beats naive adaptive by +$34k; beats fixed schedule by +$90k |
+| **`fraud_rate_shift`** (3x surge) | **-$200.00** (Candidate rejected at gate) | **-$468,592.50** (Severe calibration loss) | **AC-2 Passed**: Gate blocks uncalibrated model, saving $370k+ |
+| **`novel_pattern`** (Zero-day attack) | **+$156,997.50** (0 windows delay) | **+$96,442.50** (12 windows delay) | Unseen category detector alarms on day 0 |
+
+*All results verified under pre-registered protocol [`docs/evaluation_protocol.md`](docs/evaluation_protocol.md) and summarized in [`docs/results_summary.md`](docs/results_summary.md).*
+
+### Architectural Differences: v1 vs v2
+
+| Dimension | CreditOps v1 (Production Base) | CreditOps v2 (Continuous Observatory) |
+| :--- | :--- | :--- |
+| **Inference Mode** | Real-time REST API scoring (`/predict`) | Streaming 2-day temporal window replay (`/observatory/api/live`) |
+| **Drift Detection** | Offline monthly PSI batch job | Real-time multi-signal detectors (Data Drift PSI/KS, Novelty, Fraud Score PSI, Delayed PR-AUC) |
+| **Retraining Decision** | Manual review threshold trigger | Cost-aware economic gating ($H=10$ windows expected horizon vs $c_{\text{retrain}}=\$200$) |
+| **Deployment Mode** | Direct model promotion | Governed deployment: holdout buffer ($K_{\text{val}}=3$), FP budget recalibration, shadow scoring ($M=5$), auto-rollback |
+| **Audit & Storage** | Append-only `predictions.jsonl` | Dual-backend `LogStore` (Firebase RTDB + SQLite) with cryptographic provenance & SHA-256 token hashing |
+
+### Core Observatory API & Endpoints
+- **Web Console UI**: `http://localhost:8000/observatory` (and linked from `/dashboard`)
 - **Summary & Criteria**: `GET /observatory/api/summary`
-- **Scenario Replay & Traces**: `GET /observatory/api/trace/{scenario}/{policy}`
-- **Model Registry & Governance Audit**: `GET /observatory/api/models`, `GET /observatory/api/audit`
-- **Live Realtime Telemetry**: `GET /observatory/api/live`
-- **Authorized Rollbacks (RBAC)**: `POST /observatory/api/rollback` (requires `risk_owner` API key in `X-API-Key`)
-- **Authorized Trace Replay (RBAC)**: `POST /observatory/api/replay` (requires `ml_engineer` API key in `X-API-Key`)
+- **Window Traces**: `GET /observatory/api/trace/{scenario}/{policy}`
+- **Model Registry & Audit Log**: `GET /observatory/api/models`, `GET /observatory/api/audit`
+- **Live Stream Telemetry**: `GET /observatory/api/live`
+- **Authorized Rollbacks (RBAC)**: `POST /observatory/api/rollback` (requires `risk_owner` token)
+- **Authorized Replay (RBAC)**: `POST /observatory/api/replay` (requires `ml_engineer` token)
 
 ### Quick Start (Demo Mode)
 ```bash
-# Seed demo run into Firebase/SQLite log store and launch API
+# Seed demo run into database (Firebase RTDB or SQLite) from real evaluation traces
 python scripts/seed_demo.py
+
+# Launch FastAPI application
 uvicorn src.main:app --host 127.0.0.1 --port 8000
 
-# Open dashboard in browser
-# http://127.0.0.1:8000/dashboard (Click 'Launch Observatory')
-# http://127.0.0.1:8000/observatory/
+# Open in browser:
+# http://127.0.0.1:8000/observatory
 ```
 
-### Reproducing Evaluation Suite
+### Reproducing the Complete 48-Run Evaluation Suite
 ```bash
-# Run frozen 48-run evaluation suite (resumes automatically if interrupted)
+# Run frozen evaluation suite (supports automatic resumption if interrupted)
 python experiments/run_all.py
 
-# Results saved to:
-# - results/results.csv (Summary mean ± std table)
-# - results/evaluation_report.json (Bitwise verification & scalability metrics)
-# - results/runs/*.json (Window-level traces for each scenario and policy)
+# Results and traces generated in:
+# - results/results.csv (Summary table)
+# - results/evaluation_report.json (Bitwise verification report)
+# - results/runs/*.json (Window-by-window detailed traces)
 ```
+
+---
+
+## Documentation Index
+
+- [CAPSTONE_PLAN.md](docs/CAPSTONE_PLAN.md) — Capstone development roadmap and phase completion log.
+- [results_summary.md](docs/results_summary.md) — Phase 5 final evaluation results, tables, and hypothesis tests.
+- [evaluation_protocol.md](docs/evaluation_protocol.md) — Pre-registered experimental setup, cost models, and acceptance thresholds.
+- [model_card.md](docs/model_card.md) — Official model card for V1 Champion and V2 Governed models.
+- [limitations.md](docs/limitations.md) — System boundaries, generative artifacts, and label delay assumptions.
+- [known_issues.md](docs/known_issues.md) — Operational notes, credential masking, and deployment details.
+- [data_disclosure.md](docs/data_disclosure.md) — Synthetic data provenance and license statements.
+- [observatory_data_dictionary.md](docs/observatory_data_dictionary.md) — Schema definitions for streaming windows, telemetry, and traces.
