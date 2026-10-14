@@ -1366,9 +1366,23 @@
 
       const traces = data.window_traces || [];
       const labels = traces.map(t => `W${t.window_index}`);
-      const dataDrift = traces.map(t => (t.signals && t.signals.data_drift) || 0);
-      const novelty = traces.map(t => (t.signals && (t.signals.novel_pattern || t.signals.unseen_category)) || 0);
-      const recall = traces.map(t => (t.signals && t.signals.performance_recall) || 0);
+      const dataDrift = traces.map(t => {
+        const s = t.signals || {};
+        return s.DataDrift !== undefined && s.DataDrift !== null ? s.DataDrift :
+               (s.data_drift !== undefined && s.data_drift !== null ? s.data_drift : (s.psi || 0));
+      });
+      const novelty = traces.map(t => {
+        const s = t.signals || {};
+        if (s.IsolationOutlier !== undefined && s.IsolationOutlier !== null) return s.IsolationOutlier;
+        if (s.UnseenCategory !== undefined && s.UnseenCategory !== null && s.UnseenCategory > 0) return Math.min(1.0, s.UnseenCategory / 10.0);
+        return s.novel_pattern !== undefined && s.novel_pattern !== null ? s.novel_pattern :
+               (s.unseen_category !== undefined && s.unseen_category !== null ? Math.min(1.0, s.unseen_category / 10.0) : (s.Novelty || 0));
+      });
+      const recall = traces.map(t => {
+        const s = t.signals || {};
+        return s.performance_recall !== undefined && s.performance_recall !== null ? s.performance_recall :
+               (s.recall !== undefined && s.recall !== null ? s.recall : 0);
+      });
       const prAuc = traces.map(t => t.pr_auc || 0);
       const costs = traces.map(t => t.per_window_cost || 0);
 
