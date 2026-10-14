@@ -284,6 +284,198 @@
     stroke-linecap: round; stroke-linejoin: round; fill: none; display: inline-block;
   }
   .icon-svg.sm { width: 14px; height: 14px; }
+
+  /* ========================================================================= */
+  /* Responsive Navigation & Mobile Adaptation                                 */
+  /* ========================================================================= */
+  .menu-toggle-btn {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .menu-toggle-btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+  }
+  .sidebar-header-row {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--sidebar-border);
+    background: var(--bg-sidebar);
+  }
+  .sidebar-header-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sidebar-muted);
+  }
+  .sidebar-close-btn {
+    background: var(--bg-sidebar-hover);
+    border: 1px solid var(--sidebar-border);
+    color: var(--sidebar-text);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .sidebar-close-btn:hover {
+    color: var(--accent-red);
+    border-color: var(--accent-red);
+  }
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 240;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .sidebar-backdrop.active {
+    display: block;
+    opacity: 1;
+  }
+
+  /* Desktop Sidebar Collapse */
+  @media (min-width: 861px) {
+    aside.sidebar {
+      transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, background-color 0.25s, border-color 0.25s;
+    }
+    body.sidebar-collapsed aside.sidebar {
+      margin-left: -240px;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  /* Tablet & Mobile Layout Adaptations */
+  @media (max-width: 860px) {
+    body {
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+    }
+    .sidebar-header-row {
+      display: flex;
+    }
+    aside.sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 280px;
+      max-width: 84vw;
+      z-index: 250;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+      transform: translateX(-100%);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    aside.sidebar.open,
+    body.sidebar-open aside.sidebar {
+      transform: translateX(0);
+    }
+    .layout-container {
+      position: relative;
+      overflow-x: hidden;
+      width: 100%;
+    }
+    main.workspace {
+      padding: 16px 14px 48px;
+      width: 100%;
+      min-width: 0;
+      gap: 20px;
+    }
+    header {
+      padding: 0 12px;
+      height: 52px;
+    }
+    .brand-sub {
+      display: none;
+    }
+    .notice-bar {
+      padding: 6px 12px;
+      font-size: 0.7rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .notice-bar > div:last-child {
+      display: none;
+    }
+    .hero-card {
+      padding: 22px 18px 24px;
+    }
+    .hero-title {
+      font-size: 1.45rem;
+      margin-bottom: 8px;
+    }
+    .hero-desc {
+      font-size: 0.88rem;
+      margin-bottom: 20px;
+    }
+    .hero-btns {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .btn-solid, .btn-outline {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .pipeline-flow {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .header-right {
+      gap: 8px;
+    }
+    .status-pill {
+      padding: 3px 6px;
+      font-size: 0.7rem;
+    }
+    .status-pill span:last-child {
+      display: none;
+    }
+    #themeLabel {
+      display: none;
+    }
+    .theme-toggle {
+      padding: 5px 8px;
+    }
+    .brand-title {
+      font-size: 0.95rem;
+    }
+    .pipeline-flow {
+      grid-template-columns: 1fr;
+    }
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 </head>
 <body>
@@ -302,6 +494,9 @@
 <!-- Header Bar -->
 <header>
   <div class="header-left">
+    <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Toggle navigation menu" title="Toggle Navigation (Menu)">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
     <a href="/" class="brand-logo">
       <div class="logo-icon">C</div>
       <div>
@@ -337,7 +532,13 @@
 
 <div class="layout-container">
   <!-- Unified Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-header-row">
+      <span class="sidebar-header-label">Navigation</span>
+      <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation menu" title="Close menu">
+        <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
     <div class="sidebar-nav-wrap">
 
       <!-- Group 1: System Overview (Top) -->
@@ -419,6 +620,7 @@
       </div>
     </div>
   </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
   <!-- Main Workspace -->
   <main class="workspace">
@@ -534,6 +736,62 @@ applyTheme(localStorage.getItem('creditops-theme') || 'dark');
 themeToggleBtn.addEventListener('click', () => {
   const current = document.documentElement.getAttribute('data-theme');
   applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+// Sidebar Toggle Controller (Mobile Drawer & Desktop Collapse)
+const menuToggleBtn = document.getElementById('menuToggleBtn');
+const sidebar = document.getElementById('appSidebar');
+const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+
+function isMobile() {
+  return window.innerWidth <= 860;
+}
+
+function openMobileSidebar() {
+  if (sidebar) sidebar.classList.add('open');
+  if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+  document.body.classList.add('sidebar-open');
+}
+
+function closeMobileSidebar() {
+  if (sidebar) sidebar.classList.remove('open');
+  if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+  document.body.classList.remove('sidebar-open');
+}
+
+function toggleSidebar() {
+  if (isMobile()) {
+    if (sidebar && sidebar.classList.contains('open')) {
+      closeMobileSidebar();
+    } else {
+      openMobileSidebar();
+    }
+  } else {
+    document.body.classList.toggle('sidebar-collapsed');
+    const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+    localStorage.setItem('creditops-sidebar-collapsed', isCollapsed ? 'true' : 'false');
+  }
+}
+
+if (!isMobile() && localStorage.getItem('creditops-sidebar-collapsed') === 'true') {
+  document.body.classList.add('sidebar-collapsed');
+}
+
+if (menuToggleBtn) menuToggleBtn.addEventListener('click', toggleSidebar);
+if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', closeMobileSidebar);
+if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeMobileSidebar);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && isMobile() && sidebar && sidebar.classList.contains('open')) {
+    closeMobileSidebar();
+  }
+});
+
+document.querySelectorAll('aside.sidebar .nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (isMobile()) closeMobileSidebar();
+  });
 });
 </script>
 </body>

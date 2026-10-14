@@ -18,3 +18,4 @@ secrets/
 .env
 *firebase*.json
 *serviceAccountKey*.json
+/Blackbook
