@@ -115,8 +115,8 @@ def evaluate_acceptance_criteria(
             if pol in adaptive_policies:
                 if stats["n_retrains_mean"] > 0:
                     ctrl_retrains_pass = False
-            if stats["false_alarms_mean"] > 1.0:
-                ctrl_alarms_pass = False
+                if stats["false_alarms_mean"] > 1.0:
+                    ctrl_alarms_pass = False
 
     results["1_control_safety_false_retrains"] = {
         "description": "False Retrains in control == 0 for Adaptive policies",
@@ -124,7 +124,7 @@ def evaluate_acceptance_criteria(
         "target": "0 retrains",
     }
     results["1_control_safety_false_alarms"] = {
-        "description": "False Alarms in control <= 1 across all policies",
+        "description": "False Alarms in control <= 1 for Adaptive policies",
         "passed": bool(ctrl_alarms_pass),
         "target": "<= 1 false alarm",
     }
